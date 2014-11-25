@@ -47,7 +47,7 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW )
 	Dprintf( DLVerbose, "\t Finished destroying L0 packet writer" );
 }
 
-int L1L0ProcessLine( sL0PacketWriter *PW, const char *Line )
+int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 {
 	Dprintf( DLVerbose, "Started PW process 1 line" );
 	if( PW == NULL )
@@ -60,6 +60,7 @@ int L1L0ProcessLine( sL0PacketWriter *PW, const char *Line )
 		Dprintf( DLVerbose, "\tPW : File is not open for writing" );
 		return 1;
 	}
+	size_t written = fwrite( Data, 1, DataLen, PW->File );
 	Dprintf( DLVerbose, "\t Finished PW process 1 line" );
 	return 0;
 }

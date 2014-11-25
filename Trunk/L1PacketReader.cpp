@@ -52,13 +52,13 @@ void DestroyL1PacketReader( sL1PacketReader **PR )
 int IsValidL1Symbol( char *Line )
 {
 	if( Line[0] != '0' && Line[0] != '1' && Line[1] != ' ' )
-		return 0;
+		return -1;
 
 	for( int i=0;i<L1SymbolListSize;i++)
-		if( stristr( L1SymbolList[i]->Name, &Line[2] ) )
-			return 1;
+		if( stristr( &Line[2], L1SymbolList[i]->Name ) )
+			return i;
 
-	return 0;
+	return -1;
 }
 
 int ReadNextLine( sL1PacketReader *PR )
@@ -82,12 +82,12 @@ int ReadNextLine( sL1PacketReader *PR )
 	}
 
 	char LineBuffer[MAX_READER_LINE_BUFFER_LENGTH];
-	strcpy_s( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, "" );
-	while( IsValidL1Symbol( LineBuffer ) == 0 && !feof( PR->File ) )
-	{
+	do {
 		char *ret = fgets( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, PR->File );
 		PR->LineCounter++;
 	}
+	while( IsValidL1Symbol( LineBuffer ) == -1 && !feof( PR->File ) );
+
 	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
@@ -104,8 +104,70 @@ int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
 	while( ReadNextLine( PR ) == 0 )
 	{
 		Dprintf( DLVerbose, "\t PR read line at %d : %s", PR->LineCounter, PR->LineBuffer );
-		L1L0ProcessLine( PW, PR->LineBuffer );
+
+		//try to build a packet that packet writer can write to file
+		BYTE	*OutData = NULL;
+		int		OutDataLen = 0;
+		int		SymbolDefIndex = IsValidL1Symbol( PR->LineBuffer );
+		L1SymbolList[SymbolDefIndex]->PacketBuilder( &OutData, &OutDataLen, PR->LineBuffer );
+
+		if( OutDataLen > 0 )
+		{
+			L1L0ProcessLine( PW, OutData, OutDataLen );
+			free( OutData );
+		}
 	}
 	Dprintf( DLVerbose, "\t Finished PR process whole file" );
 	return 0;
+}
+
+void	L1BuildPacketSTBL( BYTE **Data, int *DataLen, char *Line )
+{
+	*Data = (BYTE *)malloc( 1 );
+	(*Data)[0] = 1;
+	*DataLen = 1;
+}
+
+void	L1BuildPacketSTBH( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketSYN( BYTE **Data, int *DataLen, char *Line )
+{
+	*Data = (BYTE *)malloc( 2 );
+	(*Data)[0] = K285;	//cmd
+	(*Data)[1] = D315;	//syn
+	*DataLen = 2;
+}
+
+void	L1BuildPacketBSYN( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketDIR( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketLIDL( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketDIDL( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketSDB( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketSOP( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketEOP( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
+void	L1BuildPacketEDB( BYTE **Data, int *DataLen, char *Line )
+{
 }

@@ -25,5 +25,5 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW );
 /*
 Interpret an L1 command. Packetize the command. Write it to a binary file
 */
-int L1L0ProcessLine( sL0PacketWriter *PW, const char *Line );
+int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen );
 #endif

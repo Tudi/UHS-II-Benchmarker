@@ -34,4 +34,19 @@ Close files and free memory used by a reader
 */
 void DestroyL1PacketReader( sL1PacketReader **PR );
 
+/*
+Packet builders
+*/
+void	L1BuildPacketSTBL( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketSTBH( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketSYN( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketBSYN( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketDIR( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketLIDL( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketDIDL( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketSDB( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketSOP( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketEOP( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketEDB( BYTE **Data, int *DataLen, char *Line );
+
 #endif

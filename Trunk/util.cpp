@@ -104,11 +104,15 @@ char *stristr (char *ch1, char *ch2)
     chNdx = strstr(chN1, chN2);
     if( chNdx )
       chRet = ch1 + (chNdx - chN1);
-	else if( strcmp( chN1, chN2 ) )
-		chRet = ch1;
+/*	else 
+	{
+		int cmpres = strcmp( chN1, chN2 );
+		if( cmpres == 0 )
+			chRet = ch1;
+	} */
 
-	free (chN1);
-	free (chN2);
+	free(chN1);
+	free(chN2);
   }
 
   return chRet;

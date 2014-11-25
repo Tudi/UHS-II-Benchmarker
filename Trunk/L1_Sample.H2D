@@ -6,9 +6,17 @@ space ( as " " ) will be used to separate multiple symbols or data
 first column is used to mark the physical lane used
 
 Initialize the Lane.
-Repeate STB.L until Dormant state is exited and Device enters Wakeup State.
+Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State
 0 STB.L
 Repeate SYN until Wakeup state is exited and Device enters Config State
 0 SYN
 Repeate SYN until Config state is exited and Device enters Config State
 0 LIDL
+do some stuff here
+ex read
+ex more read
+go to dormant state
+0 LIDL
+0 GO_DORMANT
+0 LIDL
+0 STB.H

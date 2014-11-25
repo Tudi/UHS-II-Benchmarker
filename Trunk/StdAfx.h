@@ -10,6 +10,8 @@
 #include <io.h>
 #include <assert.h>
 
+typedef unsigned char BYTE;
+
 #include "util.h"
 #include "debug.h"
 #include "PacketCRC.h"
@@ -19,5 +21,6 @@
 #include "L1PacketReader.h"
 #include "SymbolEncoderDecoder.h"
 #include "L1Symbols.h"
+#include "LinkLayerPacket.h"
 
 #endif
