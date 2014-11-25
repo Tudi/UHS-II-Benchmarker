@@ -88,6 +88,7 @@ int ReadNextLine( sL1PacketReader *PR )
 	}
 	while( IsValidL1Symbol( LineBuffer ) == -1 && !feof( PR->File ) );
 
+	memset( PR->LineBuffer, 0, MAX_READER_LINE_BUFFER_LENGTH );	//just in case shit happens, we can be sure to not read from previous line data
 	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
@@ -121,15 +122,41 @@ int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
 	return 0;
 }
 
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count = 1 )
+{
+	if( Count <= 1 )
+		return *Data;
+	BYTE *ret = (BYTE *)malloc( *DataLen * ( 1 + Count ) );
+	for( int i=0;i<=Count;i++ )
+		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
+	*DataLen = *DataLen * ( Count + 1 );
+
+	free( *Data );
+	*Data = NULL;
+
+	return ret;
+}
+
+int GetRepeatCountFromLine( char *Line )
+{
+	int		LaneNumber;
+	char	CmdBuffer[MAX_READER_LINE_BUFFER_LENGTH];
+	int		RepeatCount;
+	sscanf( Line, "%d %s %d", &LaneNumber, CmdBuffer, &RepeatCount );
+	return RepeatCount;
+}
+
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
+{
+	return DuplicatePacket( Data, DataLen, GetRepeatCountFromLine( Line ) );
+}
+
 void	L1BuildPacketSTBL( BYTE **Data, int *DataLen, char *Line )
 {
 	*Data = (BYTE *)malloc( 1 );
 	(*Data)[0] = 1;
 	*DataLen = 1;
-}
-
-void	L1BuildPacketSTBH( BYTE **Data, int *DataLen, char *Line )
-{
+	*Data = DuplicatePacket( Data, DataLen, Line );
 }
 
 void	L1BuildPacketSYN( BYTE **Data, int *DataLen, char *Line )
@@ -138,7 +165,13 @@ void	L1BuildPacketSYN( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = K285;	//cmd
 	(*Data)[1] = D315;	//syn
 	*DataLen = 2;
+	*Data = DuplicatePacket( Data, DataLen, Line );
 }
+
+void	L1BuildPacketSTBH( BYTE **Data, int *DataLen, char *Line )
+{
+}
+
 
 void	L1BuildPacketBSYN( BYTE **Data, int *DataLen, char *Line )
 {

@@ -3,15 +3,18 @@ Each command needs to be written on a new line
 commands not recognized are interpreted as comments and are skipped
 commands are case insensitive
 space ( as " " ) will be used to separate multiple symbols or data
-first column is used to mark the physical lane used
+column 1 : is used to mark the physical lane used
+column 2 : is used to mark the packet handler we want to call. This might look like an L1 symbol sometimes, but it can be handled as we want inside the code
+column 3 : is used to count the number of times the packet should be sent repeatedly. Most packet should be sent twice
+
 
 Initialize the Lane.
 Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State
-0 STB.L
+0 STB.L 100
 Repeate SYN until Wakeup state is exited and Device enters Config State
-0 SYN
+0 SYN 4
 Repeate SYN until Config state is exited and Device enters Config State
-0 LIDL
+0 LIDL 1
 do some stuff here
 ex read
 ex more read
