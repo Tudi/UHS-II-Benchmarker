@@ -45,5 +45,7 @@ void InitL1SymbolList()
 	AddSymbol( "EOP",	"EOP",	"COMEOP",	( K285 << 0 ) | ( K297 << 8 ), L1BuildPacketEOP, "End of packet" );
 	AddSymbol( "EDB",	"EDB",	"COMEDB",	( K285 << 0 ) | ( K277 << 8 ), L1BuildPacketEDB, "End of data burst" );
 
+	AddSymbol( "DCMDR",	"",	"",	0, L1BuildPacketReadInitialize, "Request read data start" );
+
 	Dprintf( DLVerbose, "\tEnded L1 Symbol List intialization" );
 }

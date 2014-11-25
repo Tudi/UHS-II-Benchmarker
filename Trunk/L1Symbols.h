@@ -14,6 +14,10 @@
 #define D167 BinToDec( 11110001 )
 #define D122 BinToDec( 00101100 )
 
+#define LSS_COM	K285
+#define LSS_SOP	K281
+#define LSS_EOP	K297
+
 struct L1Symbol
 {
 	char	Name[MAX_L1_SYMBOL_LENGTH];	//as you can see it in the input file

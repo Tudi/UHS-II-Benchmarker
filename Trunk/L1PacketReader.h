@@ -48,5 +48,6 @@ void	L1BuildPacketSDB( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPacketSOP( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPacketEOP( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPacketEDB( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPacketReadInitialize( BYTE **Data, int *DataLen, char *Line );
 
 #endif

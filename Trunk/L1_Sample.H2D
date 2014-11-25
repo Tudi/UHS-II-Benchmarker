@@ -16,8 +16,26 @@ Repeate SYN until Wakeup state is exited and Device enters Config State
 Repeate SYN until Config state is exited and Device enters Config State
 0 LIDL 1
 do some stuff here
+
 ex read
-ex more read
+0 DCMDR	1 2 3	-> 	we want to read from address 2, data block count 3
+0 NOP 1		-> 	Device will send us RES
+0 NOP 1		->	Device will send us FCREQ
+0 FCRDY 1
+0 NOP N		->	Device will send us Data N times
+0 STAT 1 X	->	We confirm that we got data
+0 FCRDY 1	->	Allow device to send more
+0 NOP N		->	More data incomming
+0 STAT 1 X	->	Thank you for the data
+
+ex write
+0 DCMDW	1	->	we want to write
+0 NOP 1		->	device sends RES
+0 FCREQ 1	
+0 NOP 1		->	device sends us FCRDY
+0 DATA N Y
+0 NOP 1		->	device send us STAT
+
 go to dormant state
 0 LIDL
 0 GO_DORMANT

@@ -50,24 +50,23 @@ struct sLinkLayerPacketDCMD
 	int	TMode:4;
 	int	ReadWrite:1;
 	int	Reserved1:8;
+	int	Addr:32;
+	int	DataLen:32;
 };
-struct sLinkLayerPacket
+struct sFullLinkLayerPacketDCMD
 {
 	//start of the packet is sent first
-	char					SOPLSS[2];
+	BYTE					SOPLSS[2];
 	sLinkLayerPacketHeader	Header;
-	char					*Argument;
-	int						ArgumentSize;	//not sent
-	char					*Payload;
-	int						PayloadSize;	//not sent
-	char					CRC[2];			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	char					EOPLSS[2];
+	sLinkLayerPacketDCMD	Packet;
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
 };
 #pragma pack(pop)
 
 /*
 Create and initialize a command reader
 */
-sLinkLayerPacket *InitLLP( char *FName );
+//sLinkLayerPacket *InitLLP( char *FName );
 
 #endif

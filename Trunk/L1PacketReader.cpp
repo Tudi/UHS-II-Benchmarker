@@ -146,6 +146,24 @@ int GetRepeatCountFromLine( char *Line )
 	return RepeatCount;
 }
 
+char *ReadUntilNext( char *Line )
+{
+	while( *Line != 0 && *Line != ' ' )
+		Line++;
+	if( *Line == ' ' )
+		Line++;
+	return Line;
+}
+
+//param 0 comes after repeatcount
+int GetLineParamX( char *Line, int ParamIndex )
+{
+	int SkipCount = 2 + ParamIndex;
+	for( int i = 0; i < SkipCount; i++ )
+		Line = ReadUntilNext( Line );
+	return atoi( Line );
+}
+
 BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
 {
 	return DuplicatePacket( Data, DataLen, GetRepeatCountFromLine( Line ) );
@@ -165,6 +183,37 @@ void	L1BuildPacketSYN( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = K285;	//cmd
 	(*Data)[1] = D315;	//syn
 	*DataLen = 2;
+	*Data = DuplicatePacket( Data, DataLen, Line );
+}
+
+void	L1BuildPacketReadInitialize( BYTE **Data, int *DataLen, char *Line )
+{
+	*DataLen = sizeof( sFullLinkLayerPacketDCMD );
+	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)malloc( *DataLen );
+	*Data = (BYTE*)p;
+
+	p->SOPLSS[0] = LSS_COM;
+	p->SOPLSS[1] = LSS_SOP;
+
+	p->Header.DestinationID = 0;
+	p->Header.PacketType = LLPT_DCMD;
+	p->Header.NativePacket = 1;	
+	p->Header.TransactionID = 0;
+	p->Header.Reserved = 0;
+	p->Header.SourceID = 0;
+
+	p->Packet.Reserved0 = 0;
+	p->Packet.TMode = LSS_COM;
+	p->Packet.ReadWrite = 0;
+	p->Packet.Reserved1 = 0;
+	p->Packet.Addr = GetLineParamX( Line, 0 );
+	p->Packet.DataLen = GetLineParamX( Line, 1 );
+
+	p->CRC = crc16_ccitt( *Data + 2, *DataLen - 2 );
+
+	p->EOPLSS[0] = LSS_COM;
+	p->EOPLSS[1] = LSS_EOP;
+
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }
 
