@@ -215,6 +215,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketCRC.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketCRC.h"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.h"
 				>
 			</File>

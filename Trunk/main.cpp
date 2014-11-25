@@ -39,7 +39,9 @@ int main( int argc, char *argv[] )
 		Dprintf( DLVerbose, "Started exe mode H2D" );
 
 		sL1PacketReader *PR = InitL1PacketReader( argv[3] );
-		sL0PacketWriter *PW = InitL0PacketWriter( argv[4] );
+		sL0PacketWriter *PW = InitL0PacketWriter( argv[4], 0, 1, 0 );
+
+		ProcessFile( PR, PW );
 
 		DestroyL1PacketReader( &PR );
 		DestroyL0PacketWriter( &PW );

@@ -48,3 +48,52 @@ void DestroyL1PacketReader( sL1PacketReader **PR )
 	*PR = NULL;
 	Dprintf( DLVerbose, "\t Finished destroying L1 packet reader" );
 }
+
+int IsValidL1Symbol( const char *Line )
+{
+	return 1;
+}
+
+int ReadNextLine( sL1PacketReader *PR )
+{
+	Dprintf( DLVerbose, "Started PR Read 1 line" );
+	if( PR == NULL )
+	{
+		Dprintf( DLVerbose, "\tPR : No valid reader specified" );
+		return 1;
+	}
+	if( PR->File == NULL )
+	{
+		Dprintf( DLVerbose, "\tPR : File is not open for reading" );
+		return 1;
+	}
+	if( feof( PR->File ) )
+	{
+		Dprintf( DLVerbose, "\tPR : End of file reached" );
+		strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, "" );
+		return 2;
+	}
+
+	char LineBuffer[MAX_READER_LINE_BUFFER_LENGTH];
+	strcpy_s( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, "" );
+	while( IsValidL1Symbol( LineBuffer ) == 0 && !feof( PR->File ) )
+	{
+		fscanf_s( PR->File, "%s\n", LineBuffer );
+	}
+	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
+
+	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
+	return 0;
+}
+
+int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
+{
+	Dprintf( DLVerbose, "Started PR process whole file" );
+	while( ReadNextLine( PR ) == 0 )
+	{
+		Dprintf( DLVerbose, "\t\t PR read line %s", PR->LineBuffer );
+		L1L0ProcessLine( PW, PR->LineBuffer );
+	}
+	Dprintf( DLVerbose, "\t Finished PR process whole file" );
+	return 0;
+}

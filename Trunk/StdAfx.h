@@ -11,6 +11,7 @@
 
 #include "util.h"
 #include "debug.h"
+#include "PacketCRC.h"
 #include "L0Packet.h"
 #include "L0PacketReader.h"
 #include "L0PacketWriter.h"

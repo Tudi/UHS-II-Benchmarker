@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-sL0PacketWriter *InitL0PacketWriter( char *FName )
+sL0PacketWriter *InitL0PacketWriter( char *FName, int pLaneNr, int pHostID, int pDeviceID )
 {
 	Dprintf( DLVerbose, "Started creating L0 packet writer" );
 
@@ -20,6 +20,10 @@ sL0PacketWriter *InitL0PacketWriter( char *FName )
 
 	PW->FileName = _strdup( FName );
 
+	PW->Lane = pLaneNr;
+	PW->HostID = pHostID;
+	PW->DeviceID = pDeviceID;
+
 	Dprintf( DLVerbose, "\t Finished creating L0 packet writer. All OK" );
 
 	return PW;
@@ -27,6 +31,7 @@ sL0PacketWriter *InitL0PacketWriter( char *FName )
 
 void DestroyL0PacketWriter( sL0PacketWriter **PW )
 {
+	Dprintf( DLVerbose, "Started destroying L0 packet writer" );
 	if( (*PW)->FileName )
 	{
 		free( (*PW)->FileName );
@@ -39,4 +44,22 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW )
 	}
 	free( (*PW) );
 	*PW = NULL;
+	Dprintf( DLVerbose, "\t Finished destroying L0 packet writer" );
+}
+
+int L1L0ProcessLine( sL0PacketWriter *PW, const char *Line )
+{
+	Dprintf( DLVerbose, "Started PW process 1 line" );
+	if( PW == NULL )
+	{
+		Dprintf( DLVerbose, "\tPW : No valid reader specified" );
+		return 1;
+	}
+	if( PW->File == NULL )
+	{
+		Dprintf( DLVerbose, "\tPW : File is not open for writing" );
+		return 1;
+	}
+	Dprintf( DLVerbose, "\t Finished PW process 1 line" );
+	return 0;
 }
