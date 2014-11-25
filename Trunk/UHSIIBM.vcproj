@@ -171,7 +171,43 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\L0Packet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\L0Packet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\L0PacketReader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\L0PacketReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\L0PacketWriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\L0PacketWriter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\util.h"
 				>
 			</File>
 		</Filter>
