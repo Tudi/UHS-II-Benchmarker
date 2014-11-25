@@ -49,9 +49,16 @@ void DestroyL1PacketReader( sL1PacketReader **PR )
 	Dprintf( DLVerbose, "\t Finished destroying L1 packet reader" );
 }
 
-int IsValidL1Symbol( const char *Line )
+int IsValidL1Symbol( char *Line )
 {
-	return 1;
+	if( Line[0] != '0' && Line[0] != '1' && Line[1] != ' ' )
+		return 0;
+
+	for( int i=0;i<L1SymbolListSize;i++)
+		if( stristr( L1SymbolList[i]->Name, &Line[2] ) )
+			return 1;
+
+	return 0;
 }
 
 int ReadNextLine( sL1PacketReader *PR )
@@ -78,11 +85,16 @@ int ReadNextLine( sL1PacketReader *PR )
 	strcpy_s( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, "" );
 	while( IsValidL1Symbol( LineBuffer ) == 0 && !feof( PR->File ) )
 	{
-		fscanf_s( PR->File, "%s\n", LineBuffer );
+		char *ret = fgets( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, PR->File );
+		PR->LineCounter++;
 	}
 	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
+
+	if( feof( PR->File ) )
+		return 1;
+
 	return 0;
 }
 
@@ -91,7 +103,7 @@ int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
 	Dprintf( DLVerbose, "Started PR process whole file" );
 	while( ReadNextLine( PR ) == 0 )
 	{
-		Dprintf( DLVerbose, "\t\t PR read line %s", PR->LineBuffer );
+		Dprintf( DLVerbose, "\t PR read line at %d : %s", PR->LineCounter, PR->LineBuffer );
 		L1L0ProcessLine( PW, PR->LineBuffer );
 	}
 	Dprintf( DLVerbose, "\t Finished PR process whole file" );

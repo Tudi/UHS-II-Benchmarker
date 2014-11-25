@@ -14,6 +14,7 @@ struct sL1PacketReader
 	FILE	*File;
 	char	*FileName;
 	char	LineBuffer[MAX_READER_LINE_BUFFER_LENGTH];
+	int		LineCounter;
 };
 
 /*

@@ -8,7 +8,7 @@ void Dprintf( int pDebugLevel, const char* format,... )
 {
 	char AllAsString[MAX_FORMAT_BUFFER_SIZE];
 
-	if( format = NULL )
+	if( format == NULL )
 		return;
 
 	if( pDebugLevel < DebugLevel )
@@ -16,7 +16,7 @@ void Dprintf( int pDebugLevel, const char* format,... )
 
 	va_list vlist;
 	va_start( vlist, format );
-	vsnprintf_s( AllAsString, MAX_FORMAT_BUFFER_SIZE, MAX_PARAM_COUNT, format, vlist);
+	vsnprintf_s( AllAsString, MAX_FORMAT_BUFFER_SIZE / MAX_PARAM_COUNT, MAX_PARAM_COUNT, format, vlist);
 	va_end( vlist );
 
 	if( EnableFileDebug == 1 )

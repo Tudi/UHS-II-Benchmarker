@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <io.h>
+#include <assert.h>
 
 #include "util.h"
 #include "debug.h"
@@ -17,5 +18,6 @@
 #include "L0PacketWriter.h"
 #include "L1PacketReader.h"
 #include "SymbolEncoderDecoder.h"
+#include "L1Symbols.h"
 
 #endif

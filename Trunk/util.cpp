@@ -81,10 +81,11 @@ char *stristr (char *ch1, char *ch2)
 {
   char  *chN1, *chN2;
   char  *chNdx;
-  char  *chRet        = NULL;
+  char  *chRet = NULL;
  
   chN1 = _strdup(ch1);
   chN2 = _strdup(ch2);
+
   if(chN1 && chN2)
   {
     chNdx = chN1;
@@ -99,16 +100,36 @@ char *stristr (char *ch1, char *ch2)
       *chNdx = (char) tolower(*chNdx);
       chNdx++;
     }
+
     chNdx = strstr(chN1, chN2);
-    if (chNdx)
+    if( chNdx )
       chRet = ch1 + (chNdx - chN1);
+	else if( strcmp( chN1, chN2 ) )
+		chRet = ch1;
+
+	free (chN1);
+	free (chN2);
   }
-  free (chN1);
-  free (chN2);
+
   return chRet;
 }
 
 int FileExists( const char *fName )
 {
 	return ( ( _access( fName, 0 ) != -1 ) );
+}
+
+int	BinToDec( int N )
+{
+	int ret = 0;
+	int Index = 1;
+	while( N )
+	{
+		assert( ( N & 0x01 ) == 0 || ( N & 0x01 ) == 1 );
+		ret += ( N & 0x01 ) * Index;
+		N = N / 10;
+		Index *= 2;
+	}
+	assert( ret <= 255 );
+	return ret;
 }

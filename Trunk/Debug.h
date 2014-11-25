@@ -15,7 +15,7 @@ enum enumDebugLevels
 };
 
 #define MAX_FORMAT_BUFFER_SIZE	65535
-#define MAX_PARAM_COUNT			20
+#define MAX_PARAM_COUNT			200
 
 void Dprintf( int pDebugLevel = 0, const char* format = NULL,... );
 
