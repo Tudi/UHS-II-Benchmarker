@@ -171,6 +171,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Debug.h"
+				>
+			</File>
+			<File
 				RelativePath=".\L0Packet.cpp"
 				>
 			</File>
@@ -195,11 +203,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\L1PacketReader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\L1PacketReader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SymbolEncoderDecoder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SymbolEncoderDecoder.h"
 				>
 			</File>
 			<File

@@ -1,9 +1,15 @@
 #include "StdAfx.h"
 
+enum eValidExeModes
+{
+	EXE_MODE_H2D_L0	=	1,
+	EXE_MODE_D2H_L0	=	2,
+};
+
 int IsValidMode( char *mode )
 {
 	if( stristr( mode, "h2d" ) == mode )
-		return 1;
+		return EXE_MODE_H2D_L0;
 	return 0;
 }
 
@@ -27,6 +33,17 @@ int main( int argc, char *argv[] )
 	{
 		printf( "Selected mode %s is not valid. Exiting.\n", argv[1]);
 		return 0;
+	}
+	if( IsValidMode( argv[1] ) == EXE_MODE_H2D_L0 )
+	{
+		Dprintf( DLVerbose, "Started exe mode H2D" );
+
+		sL1PacketReader *PR = InitL1PacketReader( argv[3] );
+		sL0PacketWriter *PW = InitL0PacketWriter( argv[4] );
+
+		DestroyL1PacketReader( &PR );
+		DestroyL0PacketWriter( &PW );
+		Dprintf( DLVerbose, "\t Finished exe mode H2D" );
 	}
 	return 0;
 }

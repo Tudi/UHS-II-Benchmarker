@@ -4,5 +4,6 @@
 int GetStrHash( const char *str );
 
 char *stristr (char *ch1, char *ch2);
+int FileExists( const char *fName );
 
 #endif

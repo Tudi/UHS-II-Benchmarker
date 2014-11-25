@@ -107,3 +107,8 @@ char *stristr (char *ch1, char *ch2)
   free (chN2);
   return chRet;
 }
+
+int FileExists( const char *fName )
+{
+	return ( ( _access( fName, 0 ) != -1 ) );
+}
