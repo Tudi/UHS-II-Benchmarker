@@ -142,7 +142,7 @@ int GetRepeatCountFromLine( char *Line )
 	int		LaneNumber;
 	char	CmdBuffer[MAX_READER_LINE_BUFFER_LENGTH];
 	int		RepeatCount;
-	sscanf( Line, "%d %s %d", &LaneNumber, CmdBuffer, &RepeatCount );
+	sscanf_s( Line, "%d %s %d", &LaneNumber, CmdBuffer, MAX_READER_LINE_BUFFER_LENGTH, &RepeatCount );
 	return RepeatCount;
 }
 
