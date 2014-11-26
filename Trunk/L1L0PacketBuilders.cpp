@@ -48,6 +48,15 @@ void	L1BuildPacketReadInitialize( BYTE **Data, int *DataLen, char *Line )
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }
 
+void	L1BuildPacketLIDL( BYTE **Data, int *DataLen, char *Line )
+{
+	*Data = (BYTE *)malloc( 2 );
+	(*Data)[0] = LSS_COM;
+	(*Data)[1] = LSS_LIDL0;
+	*DataLen = 2;
+	*Data = DuplicatePacket( Data, DataLen, Line );
+}
+/*
 void	L1BuildPacketSTBH( BYTE **Data, int *DataLen, char *Line )
 {
 }
@@ -58,10 +67,6 @@ void	L1BuildPacketBSYN( BYTE **Data, int *DataLen, char *Line )
 }
 
 void	L1BuildPacketDIR( BYTE **Data, int *DataLen, char *Line )
-{
-}
-
-void	L1BuildPacketLIDL( BYTE **Data, int *DataLen, char *Line )
 {
 }
 
@@ -84,3 +89,4 @@ void	L1BuildPacketEOP( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPacketEDB( BYTE **Data, int *DataLen, char *Line )
 {
 }
+*/

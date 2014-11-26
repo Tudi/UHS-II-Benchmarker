@@ -11,7 +11,7 @@ sL1PacketWriter *InitL1PacketWriter( char *FName, int pLaneNr, int pHostID, int 
 	}
 	memset( PW, 0, sizeof( sL1PacketWriter ) );
 
-	errno_t er = fopen_s( &PW->File, FName, "wb" );
+	errno_t er = fopen_s( &PW->File, FName, "wt" );
 	if( PW->File == NULL )
 	{
 		Dprintf( DLDebug, "\t PW : Could not open %s file for write access. Error code %d. Exiting", FName, er );
@@ -47,7 +47,7 @@ void DestroyL1PacketWriter( sL1PacketWriter **PW )
 	Dprintf( DLVerbose, "\t Finished destroying L1 packet writer" );
 }
 
-int L0L1ProcessPacket( sL1PacketWriter *PW, const BYTE *Packet )
+int L0L1ProcessPacket( sL1PacketWriter *PW, const char *Line )
 {
 	Dprintf( DLVerbose, "Started PW process 1 packet" );
 	if( PW == NULL )
@@ -60,6 +60,8 @@ int L0L1ProcessPacket( sL1PacketWriter *PW, const BYTE *Packet )
 		Dprintf( DLVerbose, "\tPW : File is not open for writing" );
 		return 1;
 	}
+
+	fprintf( PW->File, "%s\n", Line );
 
 //	size_t written = fwrite( Data, 1, DataLen, PW->File );
 

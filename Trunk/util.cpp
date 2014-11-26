@@ -123,7 +123,7 @@ int FileExists( const char *fName )
 	return ( ( _access( fName, 0 ) != -1 ) );
 }
 
-int	BinToDec( int N )
+BYTE BinToDec( int N )
 {
 	int ret = 0;
 	int Index = 1;
@@ -135,7 +135,7 @@ int	BinToDec( int N )
 		Index *= 2;
 	}
 	assert( ret <= 255 );
-	return ret;
+	return (BYTE)ret;
 }
 
 BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )

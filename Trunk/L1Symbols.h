@@ -35,7 +35,7 @@ struct L1Symbol
 //	int		Duration;	//number of times needed to be sent. Not used yet
 	char	Description[MAX_L1_SYMBOL_LENGTH];	
 	void	(*PacketBuilder)( BYTE **Data, int *DataLen, char *Line );
-	BYTE	*(*PacketParser)( BYTE *Data );
+	char	*(*PacketParser)( BYTE **Data, int *AvailableBytes );
 };
 
 extern L1Symbol **L1SymbolList;

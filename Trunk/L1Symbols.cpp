@@ -10,7 +10,7 @@ L1Symbol *InitSymbol()
 	return ret;
 }
 
-int AddSymbol( const char *Name, BYTE pS1, BYTE pS01, BYTE pS02, void (*PB)( BYTE**, int*, char* ), BYTE* (*PP)( BYTE* ), const char *Desc )
+int AddSymbol( const char *Name, BYTE pS1, BYTE pS01, BYTE pS02, void (*PB)( BYTE**, int*, char* ), char* (*PP)( BYTE**, int * ), const char *Desc )
 {
 	Dprintf( DLVerbose, "\t\tL1 Symbol List %d: adding %s - %s", L1SymbolListSize, Name, Desc );
 

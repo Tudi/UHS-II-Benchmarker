@@ -19,7 +19,7 @@ sL0PacketReader *InitL0PacketReader( char *FName )
 	}
 	memset( PR, 0, sizeof( sL0PacketReader ) );
 
-	errno_t er = fopen_s( &PR->File, FName, "rt" );
+	errno_t er = fopen_s( &PR->File, FName, "rb" );
 	if( PR->File == NULL )
 	{
 		Dprintf( DLDebug, "\t PR : Could not open %s file for read access. Error code %d. Exiting", FName, er );
@@ -51,7 +51,22 @@ void DestroyL0PacketReader( sL0PacketReader **PR )
 	Dprintf( DLVerbose, "\t Finished destroying L0 packet reader" );
 }
 
-int ReadNextLine( sL0PacketReader *PR )
+int IsValidPacket( BYTE *ByteStream, int *AvailableBytes )
+{
+	for( int i=0;i<L1SymbolListSize;i++)
+	{
+		BYTE *PacketEndAt = ByteStream;
+		char *StringPacket = L1SymbolList[i]->PacketParser( &PacketEndAt, AvailableBytes );
+		if( StringPacket != NULL )
+		{
+			free( StringPacket );
+			return i;
+		}
+	}
+	return -1;
+}
+
+int ReadNextPacket( sL0PacketReader *PR )
 {
 	Dprintf( DLVerbose, "Started PR Read 1 line" );
 	if( PR == NULL )
@@ -71,42 +86,68 @@ int ReadNextLine( sL0PacketReader *PR )
 		return 2;
 	}
 
-/*	char LineBuffer[MAX_READER_LINE_BUFFER_LENGTH];
-	do {
-		char *ret = fgets( LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, PR->File );
-		PR->LineCounter++;
-	}
-	while( IsValidL0Symbol( LineBuffer ) == -1 && !feof( PR->File ) );
+	BYTE	PacketBuffer[MAX_PACKET_SIZE];
+	int		ReadIndex = 0;
 
-	memset( PR->LineBuffer, 0, MAX_READER_LINE_BUFFER_LENGTH );	//just in case shit happens, we can be sure to not read from previous line data
-	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer ); */
+	int ReadCount = fread( PacketBuffer, 1, MAX_PACKET_SIZE, PR->File );
+
+	//read unknown data until next resync marker. Best case this is "0" length
+	int AvailableBytes = ReadCount;
+	int SelectedHandler;
+	while( SelectedHandler = IsValidPacket( &PacketBuffer[ReadIndex], &AvailableBytes ) == -1 && ReadIndex < MAX_PACKET_SIZE )
+	{
+		ReadIndex++;
+		AvailableBytes = ReadCount - ReadIndex;
+	}
+
+	if( ReadIndex > 0 )
+		SelectedHandler = UNKNOWN_BYTES_PACKET_HANDLER_INDEX;
+
+	//rewind file of unused bytes
+	fseek( PR->File, -AvailableBytes, SEEK_CUR );
+	PR->PacketCounter++;
+	PR->StreamBytesRead += ReadCount - AvailableBytes;
+
+	//backup previous packet in case we need it later to see if a packet is getting repeated
+	memset( PR->PacketBufferPrevious, 0, MAX_PACKET_SIZE );	
+	PR->PacketSizePrev = PR->PacketSize;
+	memcpy( PR->PacketBufferPrevious, PR->PacketBuffer, PR->PacketSizePrev );
+
+	//copy from temp to storage our packet or block of data that we can handle
+	memset( PR->PacketBuffer, 0, MAX_PACKET_SIZE );	//just in case shit happens, we can be sure to not read from previous line data
+	PR->PacketSize = ReadCount - AvailableBytes;
+	memcpy( PR->PacketBuffer, PacketBuffer, PR->PacketSize );
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
 
 	if( feof( PR->File ) )
-		return 1;
+		return -1;
 
-	return 0;
+	return SelectedHandler;
 }
 
 int L0PacketReaderProcessFile( sL0PacketReader *PR, sL1PacketWriter *PW )
 {
 	Dprintf( DLVerbose, "Started PR process whole file" );
-	while( ReadNextLine( PR ) == 0 )
+	int RetHandlerIndex = 0;
+	while( RetHandlerIndex = ReadNextPacket( PR ) > -1 )
 	{
 		Dprintf( DLVerbose, "\t PR read packet at stamp %d, at buffer index 0x%04X, packet Nr %04d", PR->StreamBytesRead, PR->StreamBytesRead, PR->PacketCounter );
 
 		//try to build a packet that packet writer can write to file
-/*		BYTE	*OutData = NULL;
-		int		OutDataLen = 0;
-		int		SymbolDefIndex = IsValidL0Symbol( PR->LineBuffer );
-		L0SymbolList[SymbolDefIndex]->PacketBuilder( &OutData, &OutDataLen, PR->LineBuffer );
+		BYTE	*NextPacketAt = PR->PacketBuffer;
+		int		RemainingBytes = PR->PacketSize;
+		char	*String;
 
-		if( OutDataLen > 0 )
-		{
-			L0L0ProcessLine( PW, OutData, OutDataLen );
-			free( OutData );
-		} */
+		if( RetHandlerIndex != UNKNOWN_BYTES_PACKET_HANDLER_INDEX )
+			String = L1SymbolList[ RetHandlerIndex ]->PacketParser( &NextPacketAt, &RemainingBytes );
+		else
+			String = UnkPacketParserHandler( &NextPacketAt, &RemainingBytes );
+
+		if( String ! NULL )
+			L0L1ProcessPacket( PW, String );
+
+		free( String );
 	}
 	Dprintf( DLVerbose, "\t Finished PR process whole file" );
 	return 0;

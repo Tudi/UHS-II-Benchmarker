@@ -25,5 +25,5 @@ void DestroyL1PacketWriter( sL1PacketWriter **PW );
 /*
 Interpret an L1 command. Packetize the command. Write it to a text file
 */
-int L0L1ProcessPacket( sL1PacketWriter *PW, const BYTE *Packet );
+int L0L1ProcessPacket( sL1PacketWriter *PW, const char *Line );
 #endif

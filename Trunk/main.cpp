@@ -39,6 +39,7 @@ int main( int argc, char *argv[] )
 
 	InitL1SymbolList();
 
+	// h2d0 L1_Sample.H2D L0_Sample_out.H2D
 	if( IsValidMode( argv[1] ) == EXE_MODE_H2D_L0 )
 	{
 		Dprintf( DLVerbose, "Started exe mode H2D" );
@@ -53,6 +54,7 @@ int main( int argc, char *argv[] )
 
 		Dprintf( DLVerbose, "\t Finished exe mode H2D" );
 	}
+	// d2H0 L0_Sample_out.H2D L1_Sample_out.H2D
 	else if( IsValidMode( argv[1] ) == EXE_MODE_D2H_L0 )
 	{
 		Dprintf( DLVerbose, "Started exe mode D2H" );

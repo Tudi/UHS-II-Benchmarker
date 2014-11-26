@@ -38,6 +38,9 @@ Close files and free memory used by a reader
 */
 void DestroyL0PacketReader( sL0PacketReader **PR );
 
-BYTE *DummyPacketParserHandler( BYTE * );
+#define UNKNOWN_BYTES_PACKET_HANDLER_INDEX		666
+
+char *UnkPacketParserHandler( BYTE **, int *);
+char *DummyPacketParserHandler( BYTE **, int *);
 
 #endif
