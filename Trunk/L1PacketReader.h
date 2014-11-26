@@ -28,7 +28,7 @@ int ReadNextLine( sL1PacketReader *PR );
 /*
 process a whole file
 */
-int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW );
+int L1PacketReaderProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW );
 /*
 Close files and free memory used by a reader
 */

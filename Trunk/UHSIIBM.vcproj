@@ -179,11 +179,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\L0Packet.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\L0Packet.h"
+				RelativePath=".\L0L1PacketParsers.cpp"
 				>
 			</File>
 			<File
@@ -212,6 +208,14 @@
 			</File>
 			<File
 				RelativePath=".\L1PacketReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\L1PacketWriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\L1PacketWriter.h"
 				>
 			</File>
 			<File
@@ -244,14 +248,6 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SymbolEncoderDecoder.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SymbolEncoderDecoder.h"
 				>
 			</File>
 			<File

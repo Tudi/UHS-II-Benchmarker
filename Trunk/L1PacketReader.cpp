@@ -99,7 +99,7 @@ int ReadNextLine( sL1PacketReader *PR )
 	return 0;
 }
 
-int ProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
+int L1PacketReaderProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
 {
 	Dprintf( DLVerbose, "Started PR process whole file" );
 	while( ReadNextLine( PR ) == 0 )

@@ -15,11 +15,10 @@ typedef unsigned char BYTE;
 #include "util.h"
 #include "debug.h"
 #include "PacketCRC.h"
-#include "L0Packet.h"
 #include "L0PacketReader.h"
 #include "L0PacketWriter.h"
 #include "L1PacketReader.h"
-#include "SymbolEncoderDecoder.h"
+#include "L1PacketWriter.h"
 #include "L1Symbols.h"
 #include "LinkLayerPacket.h"
 

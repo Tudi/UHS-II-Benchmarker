@@ -10,6 +10,8 @@ int IsValidMode( char *mode )
 {
 	if( stristr( mode, "h2d" ) == mode )
 		return EXE_MODE_H2D_L0;
+	if( stristr( mode, "d2h" ) == mode )
+		return EXE_MODE_D2H_L0;
 	return 0;
 }
 
@@ -44,11 +46,26 @@ int main( int argc, char *argv[] )
 		sL1PacketReader *PR = InitL1PacketReader( argv[2] );
 		sL0PacketWriter *PW = InitL0PacketWriter( argv[3], 0, 1, 0 );
 
-		ProcessFile( PR, PW );
+		L1PacketReaderProcessFile( PR, PW );
 
 		DestroyL1PacketReader( &PR );
 		DestroyL0PacketWriter( &PW );
+
 		Dprintf( DLVerbose, "\t Finished exe mode H2D" );
+	}
+	else if( IsValidMode( argv[1] ) == EXE_MODE_D2H_L0 )
+	{
+		Dprintf( DLVerbose, "Started exe mode D2H" );
+
+		sL0PacketReader *PR = InitL0PacketReader( argv[2] );
+		sL1PacketWriter *PW = InitL1PacketWriter( argv[3], 0, 1, 0 );
+
+		L0PacketReaderProcessFile( PR, PW );
+
+		DestroyL0PacketReader( &PR );
+		DestroyL1PacketWriter( &PW );
+
+		Dprintf( DLVerbose, "\t Finished exe mode D2H" );
 	}
 	return 0;
 }
