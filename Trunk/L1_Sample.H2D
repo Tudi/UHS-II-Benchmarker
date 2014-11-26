@@ -10,7 +10,7 @@ column 3 : is used to count the number of times the packet should be sent repeat
 
 Initialize the Lane.
 Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State
-0 STB.L 100
+0 STB.L 10
 Repeate SYN until Wakeup state is exited and Device enters Config State
 0 SYN 4
 Repeate SYN until Config state is exited and Device enters Config State

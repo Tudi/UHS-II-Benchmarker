@@ -94,14 +94,21 @@ int ReadNextPacket( sL0PacketReader *PR )
 	//read unknown data until next resync marker. Best case this is "0" length
 	int AvailableBytes = ReadCount;
 	int SelectedHandler;
-	while( SelectedHandler = IsValidPacket( &PacketBuffer[ReadIndex], &AvailableBytes ) == -1 && ReadIndex < MAX_PACKET_SIZE )
+	SelectedHandler = IsValidPacket( &PacketBuffer[ReadIndex], &AvailableBytes );
+	//how many non valid bytes can we read one by one ?
+	while( SelectedHandler == -1 && ReadIndex < ReadCount )
 	{
 		ReadIndex++;
 		AvailableBytes = ReadCount - ReadIndex;
+		SelectedHandler = IsValidPacket( &PacketBuffer[ReadIndex], &AvailableBytes );
 	}
 
 	if( ReadIndex > 0 )
+	{
+		if( ReadCount > 1 )
+			AvailableBytes++;
 		SelectedHandler = UNKNOWN_BYTES_PACKET_HANDLER_INDEX;
+	}
 
 	//rewind file of unused bytes
 	fseek( PR->File, -AvailableBytes, SEEK_CUR );
@@ -129,8 +136,8 @@ int ReadNextPacket( sL0PacketReader *PR )
 int L0PacketReaderProcessFile( sL0PacketReader *PR, sL1PacketWriter *PW )
 {
 	Dprintf( DLVerbose, "Started PR process whole file" );
-	int RetHandlerIndex = 0;
-	while( RetHandlerIndex = ReadNextPacket( PR ) > -1 )
+	int RetHandlerIndex = ReadNextPacket( PR );
+	while( RetHandlerIndex > -1 )
 	{
 		Dprintf( DLVerbose, "\t PR read packet at stamp %d, at buffer index 0x%04X, packet Nr %04d", PR->StreamBytesRead, PR->StreamBytesRead, PR->PacketCounter );
 
@@ -144,10 +151,12 @@ int L0PacketReaderProcessFile( sL0PacketReader *PR, sL1PacketWriter *PW )
 		else
 			String = UnkPacketParserHandler( &NextPacketAt, &RemainingBytes );
 
-		if( String ! NULL )
+		if( String != NULL )
 			L0L1ProcessPacket( PW, String );
 
 		free( String );
+
+		RetHandlerIndex = ReadNextPacket( PR );
 	}
 	Dprintf( DLVerbose, "\t Finished PR process whole file" );
 	return 0;

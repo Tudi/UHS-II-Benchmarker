@@ -24,6 +24,8 @@
 #define LSS_LIDL0	K283
 #define LSS_LIDL1	D167
 
+#define STBL		0
+
 struct L1Symbol
 {
 	char	Name[MAX_L1_SYMBOL_LENGTH];	//as you can see it in the input file

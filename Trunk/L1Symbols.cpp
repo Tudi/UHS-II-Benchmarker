@@ -37,10 +37,10 @@ void InitL1SymbolList()
 {
 	Dprintf( DLVerbose, "Started L1 Symbol List intialization" );
 
-	AddSymbol( "STB.L", 0,			0,			0,			L1BuildPacketSTBL,				DummyPacketParserHandler, "Wakeup signal" );
-	AddSymbol( "SYN",	LSS_COM,	LSS_SYN0,	LSS_SYN1,	L1BuildPacketSYN,				DummyPacketParserHandler, "Sync for exiting STB" );
-	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPacketLIDL,				DummyPacketParserHandler, "Logical idle" );
-	AddSymbol( "DCMDR",	LSS_COM,	LSS_SOP,	0,			L1BuildPacketReadInitialize,	DummyPacketParserHandler, "Request read data start" );
+	AddSymbol( "STB.L", STBL,		STBL,		STBL,		L1BuildPacketSTBL,				PacketParserHandlerSTBL,	"Wakeup signal" );
+	AddSymbol( "SYN",	LSS_COM,	LSS_SYN0,	LSS_SYN1,	L1BuildPacketSYN,				PacketParserHandlerSYN,		"Sync for exiting STB" );
+	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPacketLIDL,				PacketParserHandlerLIDL,	"Logical idle" );
+	AddSymbol( "DCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPacketReadInitialize,	DummyPacketParserHandler,	"Request read data start" );
 //	AddSymbol( "STB.H", "STB.H", "STB.H",	( 2 << 0 ) | ( 2 << 8 ), L1BuildPacketSTBH, "Shutdown signal" );
 //	AddSymbol( "BSYN",	"BSYN", "COMBSYN0", ( K285 << 0 ) | ( D45 << 8 ), L1BuildPacketBSYN, "Sync for exiting STB and boot code loading");
 //	AddSymbol( "DIR",	"DIR",	"COMDIR",	( K285 << 0 ) | ( D312 << 8 ), L1BuildPacketDIR, "Direction switch" );

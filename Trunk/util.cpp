@@ -142,10 +142,10 @@ BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )
 {
 	if( Count <= 1 )
 		return *Data;
-	BYTE *ret = (BYTE *)malloc( *DataLen * ( 1 + Count ) );
-	for( int i=0;i<=Count;i++ )
+	BYTE *ret = (BYTE *)malloc( *DataLen * ( 0 + Count ) );
+	for( int i=0;i<Count;i++ )
 		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
-	*DataLen = *DataLen * ( Count + 1 );
+	*DataLen = *DataLen * ( Count + 0 );
 
 	free( *Data );
 	*Data = NULL;
@@ -160,7 +160,7 @@ BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
 
 char *ReadUntilNextWord( char *Line )
 {
-	while( *Line != 0 && *Line != ' ' )
+	while( *Line != 0 && *Line != ' ' && *Line != '\n' && *Line != '\r' )
 		Line++;
 	if( *Line == ' ' )
 		Line++;
@@ -170,7 +170,7 @@ char *ReadUntilNextWord( char *Line )
 //param 0 comes after repeatcount
 int GetLineParamXInteger( char *Line, int ParamIndex )
 {
-	int SkipCount = 2 + ParamIndex;
+	int SkipCount = 3 + ParamIndex;
 	for( int i = 0; i < SkipCount; i++ )
 		Line = ReadUntilNextWord( Line );
 	return atoi( Line );

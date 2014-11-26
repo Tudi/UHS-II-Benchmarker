@@ -42,5 +42,8 @@ void DestroyL0PacketReader( sL0PacketReader **PR );
 
 char *UnkPacketParserHandler( BYTE **, int *);
 char *DummyPacketParserHandler( BYTE **, int *);
+char *PacketParserHandlerSTBL( BYTE **, int *);
+char *PacketParserHandlerSYN( BYTE **, int *);
+char *PacketParserHandlerLIDL( BYTE **, int *);
 
 #endif
