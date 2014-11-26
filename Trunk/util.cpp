@@ -137,3 +137,51 @@ int	BinToDec( int N )
 	assert( ret <= 255 );
 	return ret;
 }
+
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )
+{
+	if( Count <= 1 )
+		return *Data;
+	BYTE *ret = (BYTE *)malloc( *DataLen * ( 1 + Count ) );
+	for( int i=0;i<=Count;i++ )
+		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
+	*DataLen = *DataLen * ( Count + 1 );
+
+	free( *Data );
+	*Data = NULL;
+
+	return ret;
+}
+
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
+{
+	return DuplicatePacket( Data, DataLen, GetLineParamXInteger( Line, -1 ) );
+}
+
+char *ReadUntilNextWord( char *Line )
+{
+	while( *Line != 0 && *Line != ' ' )
+		Line++;
+	if( *Line == ' ' )
+		Line++;
+	return Line;
+}
+
+//param 0 comes after repeatcount
+int GetLineParamXInteger( char *Line, int ParamIndex )
+{
+	int SkipCount = 2 + ParamIndex;
+	for( int i = 0; i < SkipCount; i++ )
+		Line = ReadUntilNextWord( Line );
+	return atoi( Line );
+}
+
+
+int GetRepeatCountFromLine( char *Line )
+{
+	int		LaneNumber;
+	char	CmdBuffer[MAX_READER_LINE_BUFFER_LENGTH];
+	int		RepeatCount;
+	sscanf_s( Line, "%d %s %d", &LaneNumber, CmdBuffer, MAX_READER_LINE_BUFFER_LENGTH, &RepeatCount );
+	return RepeatCount;
+}

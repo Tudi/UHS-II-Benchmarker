@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\L1L0PacketBuilders.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\L1PacketReader.cpp"
 				>
 			</File>

@@ -9,4 +9,6 @@ struct sL0PacketReader
 
 };
 
+BYTE *DummyPacketParserHandler( BYTE * );
+
 #endif
