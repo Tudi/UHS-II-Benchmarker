@@ -11,10 +11,10 @@
 #define K297 0xFD
 #define D045 BinToDec( 10100100 )
 #define D167 BinToDec( 11110001 )
-#define D122 BinToDec( 00101100 )
-#define D262 BinToDec( 01011010 )
-#define D312 BinToDec( 01011111 )
-#define D315 BinToDec( 01011111 )
+#define D122 BinToDec(   101100 )
+#define D262 BinToDec(  1011010 )
+#define D312 BinToDec(  1011111 )
+#define D315 BinToDec(  1011111 )
 
 #define LSS_COM		K285
 #define LSS_SOP		K281

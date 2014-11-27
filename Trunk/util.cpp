@@ -123,14 +123,14 @@ int FileExists( const char *fName )
 	return ( ( _access( fName, 0 ) != -1 ) );
 }
 
-BYTE BinToDec( int N )
+BYTE BinToDec( __int64 N )
 {
 	int ret = 0;
 	int Index = 1;
 	while( N )
 	{
-		assert( ( N & 0x01 ) == 0 || ( N & 0x01 ) == 1 );
-		ret += ( N & 0x01 ) * Index;
+		assert( ( N % 10 ) == 0 || ( N % 10 ) == 1 );
+		ret += ( N % 10 ) * Index;
 		N = N / 10;
 		Index *= 2;
 	}

@@ -16,7 +16,7 @@ int FileExists( const char *fName );
 /*
 Reinterpret a number that is supposed to be binary into decimal
 */
-BYTE BinToDec( int N );
+BYTE BinToDec( __int64 N );
 /*
 Reallocate buffer and copy old content N times into the new buffer
 */
