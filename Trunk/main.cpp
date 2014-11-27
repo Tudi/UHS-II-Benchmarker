@@ -24,6 +24,8 @@ int main( int argc, char *argv[] )
 		printf( "available modes : \n");
 		printf( "\t h2d0 - Host to device, packetize Link Layer to Physical Layer\n");
 		printf( "\t d2h0 - Device to Host, Unpack Physical Layer packet to Link Layer commands\n");
+		printf( "ex1 : UHSIIBM.exe h2d0 L1_Sample.H2D L0_Sample_out.H2D \n");
+		printf( "ex2 : UHSIIBM.exe d2H0 L0_Sample_out.H2D L1_Sample_out.H2D \n");
 		return 0;
 	}
 	else if( argc < 4 )

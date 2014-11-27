@@ -22,36 +22,36 @@ enum eCTG_IDX_Types
 #pragma pack(push,1)
 struct sLinkLayerPacketHeader
 {
-	int	DestinationID:4;
-	int	PacketType:3;
-	int NativePacket:1;
-	int	TransactionID:3;
-	int	Reserved:1;
-	int SourceID:4;
+	BYTE	DestinationID:4,
+			PacketType:3,
+			NativePacket:1;
+	BYTE	TransactionID:3,
+			Reserved:1,
+			SourceID:4;
 };
 struct sLinkLayerPacketMSG
 {
-	int	IDX:4;
-	int	Reserved:1;
-	int CTG:3;
-	int	Code:8;
+	BYTE	IDX:4,
+			Reserved:1,
+			CTG:3;
+	BYTE	Code:8;
 };
 struct sLinkLayerPacketCCMD
 {
-	int	IOADDR0:4;
-	int	PLEN:2;
-	int Reserved:1;
-	int	ReadWrite:1;
-	int	IOADDR1:8;
+	BYTE	IOADDR0:4,
+			PLEN:2,
+			Reserved:1,
+			ReadWrite:1;
+	BYTE	IOADDR1:8;
 };
 struct sLinkLayerPacketDCMD
 {
-	int	Reserved0:3;
-	int	TMode:4;
-	int	ReadWrite:1;
-	int	Reserved1:8;
-	int	Addr:32;
-	int	DataLen:32;
+	BYTE	Reserved0:3,
+			TMode:4,
+			ReadWrite:1;
+	BYTE	Reserved1:8;
+	int		Addr:32;
+	int		DataLen:32;
 };
 struct sFullLinkLayerPacketDCMD
 {

@@ -84,6 +84,7 @@ char *PacketParserHandlerGenericPacket( BYTE **ReadStream, int *AvailableBytes )
 	int		subAvailable = *AvailableBytes;
 	BYTE	*SubReadStream = *ReadStream;
 	char	*Ret = NULL;
+
 	if( PH->PacketType == LLPT_DCMD )
 	{
 		Ret = PacketParserHandlerDCMD( &SubReadStream, &subAvailable );
@@ -91,19 +92,6 @@ char *PacketParserHandlerGenericPacket( BYTE **ReadStream, int *AvailableBytes )
 
 	if( Ret != NULL )
 	{
-		//check the CRC of the packet
-		int PacketCRCFromUs = crc16_ccitt( *ReadStream + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
-		int PacketCRCFromPacket = *(unsigned short *)SubReadStream;
-		if( PacketCRCFromUs != PacketCRCFromPacket )
-		{
-			free( Ret );
-
-			Ret = (char *)malloc( 1000 );
-			sprintf_s( &Ret[0], 1000, "0 CRC (us)%d - (packet)%d Failed on packet : ", PacketCRCFromUs, PacketCRCFromPacket );
-			for( int i=0;i<(int)( SubReadStream - *ReadStream);i++)
-				sprintf_s( Ret, 1000, "%s%02X", Ret, RS[ i ] );
-
-		}
 		*ReadStream = SubReadStream;
 		*AvailableBytes = subAvailable;
 	}
@@ -127,14 +115,20 @@ char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
 		return NULL;
 
+	//check the CRC of the packet
+	int PacketCRCFromUs = crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
+	int PacketCRCFromPacket = PDCMD->CRC;
+
 	char *Ret = (char *)malloc( 1000 );
-	sprintf_s( &Ret[0], 1000, "0 DCMD 1 : " );
-	for( int i=0;i<2;i++)
+	int DCMDPacketSize = sizeof( sFullLinkLayerPacketDCMD );
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( &Ret[0], 1000, "0 DCMD_CRC_FAILED_(us)%d-(packet)%d_packet : ", PacketCRCFromUs, PacketCRCFromPacket );
+	else
+		sprintf_s( &Ret[0], 1000, "0 DCMD 1 : " );
+	for( int i=0;i<DCMDPacketSize;i++)
 		sprintf_s( Ret, 1000, "%s%02X", Ret, RS[ i ] );
 
-	int DCMDPacketSize = sizeof( sFullLinkLayerPacketDCMD );
 	*AvailableBytes = *AvailableBytes - DCMDPacketSize;
-
 	*ReadStream = *ReadStream + DCMDPacketSize;
 
 	return Ret;
