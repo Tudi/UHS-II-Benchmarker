@@ -45,5 +45,7 @@ char *DummyPacketParserHandler( BYTE **, int *);
 char *PacketParserHandlerSTBL( BYTE **, int *);
 char *PacketParserHandlerSYN( BYTE **, int *);
 char *PacketParserHandlerLIDL( BYTE **, int *);
+char *PacketParserHandlerGenericPacket( BYTE **, int *);
+char *PacketParserHandlerDCMD( BYTE **, int *);
 
 #endif

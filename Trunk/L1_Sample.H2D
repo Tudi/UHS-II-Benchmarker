@@ -8,13 +8,17 @@ column 2 : is used to mark the packet handler we want to call. This might look l
 column 3 : is used to count the number of times the packet should be sent repeatedly. Most packet should be sent twice
 
 
-Initialize the Lane.
+Initialize the Lane : Dormant -> Wakup 
 Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State
 0 STB.L 10
 Repeate SYN until Wakeup state is exited and Device enters Config State
 0 SYN 4
 Repeate SYN until Config state is exited and Device enters Config State
 0 LIDL 1
+
+Initialize the Lane :  Config -> Active
+
+
 do some stuff here
 
 ex read
