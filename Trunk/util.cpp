@@ -160,9 +160,9 @@ BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
 
 char *ReadUntilNextWord( char *Line )
 {
-	while( *Line != 0 && *Line != ' ' && *Line != '\n' && *Line != '\r' )
+	while( *Line != 0 && *Line != ' ' && *Line != '\t' && *Line != '\n' && *Line != '\r' )
 		Line++;
-	if( *Line == ' ' )
+	if( *Line == ' ' || *Line == '\t' )
 		Line++;
 	return Line;
 }
@@ -175,8 +175,7 @@ int GetLineParamXInteger( char *Line, int ParamIndex )
 		Line = ReadUntilNextWord( Line );
 	return atoi( Line );
 }
-
-
+/*
 int GetRepeatCountFromLine( char *Line )
 {
 	int		LaneNumber;
@@ -184,7 +183,7 @@ int GetRepeatCountFromLine( char *Line )
 	int		RepeatCount;
 	sscanf_s( Line, "%d %s %d", &LaneNumber, CmdBuffer, MAX_READER_LINE_BUFFER_LENGTH, &RepeatCount );
 	return RepeatCount;
-}
+}*/
 
 int CheckPacketDuplicat( BYTE *packet1, BYTE *packet2, int PacketSize, int *VariableLocations, int *VariableLocValues )
 {

@@ -136,5 +136,12 @@ char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( PacketCRCFromUs != PacketCRCFromPacket )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
 
+	if( PDCMD->Packet.ReadWrite == 0 )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Read", Ret );
+	else
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Write", Ret );
+
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Addr( %d ) Count( %d ) Mode( %d )", Ret, PDCMD->Packet.Addr, PDCMD->Packet.DataLen, PDCMD->Packet.TMode );
+
 	return Ret;
 }

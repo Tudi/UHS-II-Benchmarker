@@ -10,11 +10,11 @@ column 3 : is used to count the number of times the packet should be sent repeat
 
 Initialize the Lane : Dormant -> Wakup 
 Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State. You need to repeat STB.L signal many enough times until Device replies with same STB.L
-0 STB.L 10
+0 STB.L	10
 Repeate SYN until Wakeup state is exited and Device enters Config State. If you want to load special boot code you will need to send BSYN
-0 SYN 4
+0 SYN 	4
 Repeate SYN until Config state is exited and Device enters Active State
-0 LIDL 1
+0 LIDL 	1
 
 Initialize the Lane :  Config -> Active
 
@@ -23,11 +23,11 @@ do some stuff here
 
 ex read
 0 DCMDR	2 2 3	-> 	we want to read from address 2, data block count 3
-0 NOP 1		-> 	Device will send us RES
-0 NOP 1		->	Device will send us FCREQ
+0 NOP 	1		-> 	Device will send us RES
+0 NOP 	1		->	Device will send us FCREQ
 0 FCRDY 1
-0 NOP N		->	Device will send us Data N times
-0 STAT 1 X	->	We confirm that we got data
+0 NOP 	N		->	Device will send us Data N times
+0 STAT 	1 X	->	We confirm that we got data
 0 FCRDY 1	->	Allow device to send more
 0 NOP N		->	More data incomming
 0 STAT 1 X	->	Thank you for the data
