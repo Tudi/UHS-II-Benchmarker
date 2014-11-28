@@ -45,6 +45,5 @@ char *L0ParsePckt_STBL( BYTE **, int *);
 char *L0ParsePckt_SYN( BYTE **, int *);
 char *L0ParsePckt_LIDL( BYTE **, int *);
 char *L0ParsePckt_DCMD( BYTE **, int *);
-//char *L0ParsePckt_GenericPacket( BYTE **, int *);
 
 #endif

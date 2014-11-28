@@ -229,13 +229,13 @@ int CountPacketDuplicat( BYTE **PacketList, int *AvailableBytes, int PacketSize,
 char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int PacketSize, char *PacketName )
 {
 	int PacketCount = ProcessedByteCount / PacketSize;
-	char *Ret = (char *)malloc( MAX_PACKET_SIZE );
-	sprintf_s( &Ret[0], MAX_PACKET_SIZE, "0 %s %d : ", PacketName, PacketCount );
+	char *Ret = (char *)malloc( MAX_PACKET_SIZE * 3 );
+	sprintf_s( &Ret[0], MAX_PACKET_SIZE * 3, "0 %s %d : ", PacketName, PacketCount );
 	for( int i=0;i<ProcessedByteCount;i++)
 	{
 		if( PacketCount > 1 && i % PacketSize == 0 )
-			sprintf_s( Ret, MAX_PACKET_SIZE, "%s ", Ret );
-		sprintf_s( Ret, MAX_PACKET_SIZE, "%s%02X", Ret, ByteStream[ i ] );
+			sprintf_s( Ret, MAX_PACKET_SIZE * 3, "%s ", Ret );
+		sprintf_s( Ret, MAX_PACKET_SIZE * 3, "%s%02X", Ret, ByteStream[ i ] );
 	}
 	return Ret;
 }
