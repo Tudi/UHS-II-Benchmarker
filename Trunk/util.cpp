@@ -185,3 +185,58 @@ int GetRepeatCountFromLine( char *Line )
 	sscanf_s( Line, "%d %s %d", &LaneNumber, CmdBuffer, MAX_READER_LINE_BUFFER_LENGTH, &RepeatCount );
 	return RepeatCount;
 }
+
+int CheckPacketDuplicat( BYTE *packet1, BYTE *packet2, int PacketSize, int *VariableLocations, int *VariableLocValues )
+{
+	int NextPacketIsDuplicat = 1;
+	for( int i = 0; i < PacketSize; i++ )
+	{
+		//is this location a canskip location ?
+		for( int j = 0; j < 1000 && VariableLocations[j] != -1;  j++ )
+			if( i == VariableLocations[j] && ( VariableLocValues[ j ] == -1 || packet2[i] == VariableLocValues[ j ] ) )
+				goto SKIP_CHECKING_PACKET_LOACTION;
+		if( packet1[i] != packet2[i] )
+		{
+			NextPacketIsDuplicat = 0;
+			break;
+		}
+SKIP_CHECKING_PACKET_LOACTION:
+		;
+	}
+
+	return NextPacketIsDuplicat;
+}
+
+int CountPacketDuplicat( BYTE **PacketList, int *AvailableBytes, int PacketSize, int *VariableLocations, int *VariableLocValues )
+{
+	int PacketCount = 1;
+	while( *AvailableBytes >= PacketSize )
+	{
+		BYTE *CurPacket = *PacketList;
+
+		*AvailableBytes = *AvailableBytes - PacketSize;
+		*PacketList = *PacketList + PacketSize;
+
+		int		NextPacketIsDuplicat = CheckPacketDuplicat( CurPacket, *PacketList, PacketSize, VariableLocations, VariableLocValues );
+
+		if( NextPacketIsDuplicat == 1 && *AvailableBytes >= PacketSize )
+			PacketCount++;
+		else
+			break;
+	}
+	return PacketCount;
+}
+
+char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int PacketSize, char *PacketName )
+{
+	int PacketCount = ProcessedByteCount / PacketSize;
+	char *Ret = (char *)malloc( MAX_PACKET_SIZE );
+	sprintf_s( &Ret[0], MAX_PACKET_SIZE, "0 %s %d : ", PacketName, PacketCount );
+	for( int i=0;i<ProcessedByteCount;i++)
+	{
+		if( PacketCount > 1 && i % PacketSize == 0 )
+			sprintf_s( Ret, MAX_PACKET_SIZE, "%s ", Ret );
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s%02X", Ret, ByteStream[ i ] );
+	}
+	return Ret;
+}

@@ -9,10 +9,10 @@ char *UnkPacketParserHandler( BYTE **ReadStream, int *AvailableBytes )
 {
 	if( *AvailableBytes <= 0 )
 		return NULL;
-	char *Ret = (char *)malloc( 100 + *AvailableBytes * 2 + 3 );
-	sprintf_s( Ret, 100, "0 UnkData %04d : ", *AvailableBytes );
+	char *Ret = (char *)malloc( MAX_PACKET_SIZE + *AvailableBytes * 2 + 3 );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "0 UnkData %04d : ", *AvailableBytes );
 	for( int i=0;i<*AvailableBytes;i++)
-		sprintf_s( Ret, 100 + *AvailableBytes * 2 + 3, "%s%02X", Ret, (*ReadStream)[i] );
+		sprintf_s( Ret, MAX_PACKET_SIZE + *AvailableBytes * 2 + 3, "%s%02X", Ret, (*ReadStream)[i] );
 
 	*ReadStream = &(*ReadStream)[ *AvailableBytes - 1 ];
 	*AvailableBytes = 0;
@@ -27,12 +27,14 @@ char *PacketParserHandlerSTBL( BYTE **ReadStream, int *AvailableBytes )
 	if( RS[0] != STBL )
 		return NULL;
 
-	char *Ret = (char *)malloc( 103 );
-	sprintf_s( &Ret[0], 103, "0 STBL 1 : 0x%02X", RS[0] );
+	int		PacketSize = 1;
+	int		CanSkipLocations[] = { -1 };
+	int		CanSkipLocationValue[] = { -1 };
+	// try to detect and handle packet duplication
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
 
-	*ReadStream = &RS[ 1 ];
-	*AvailableBytes = *AvailableBytes - 1;
-	return Ret;
+	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "STB.L" );
 }
 
 char *PacketParserHandlerSYN( BYTE **ReadStream, int *AvailableBytes )
@@ -43,14 +45,14 @@ char *PacketParserHandlerSYN( BYTE **ReadStream, int *AvailableBytes )
 	if( RS[0] != LSS_COM || ( RS[1] != LSS_SYN0 && RS[1] != LSS_SYN1 ) )
 		return NULL;
 
-	char *Ret = (char *)malloc( 104 );
-	sprintf_s( &Ret[0], 104, "0 SYN 1 : " );
-	for( int i=0;i<2;i++)
-		sprintf_s( Ret, 104, "%s%02X", Ret, RS[ i ] );
+	int		PacketSize = 2;
+	int		CanSkipLocations[] = { -1 };
+	int		CanSkipLocationValue[] = { -1 };
+	// try to detect and handle packet duplication
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
 
-	*ReadStream = &RS[ 2 ];
-	*AvailableBytes = *AvailableBytes - 2;
-	return Ret;
+	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "SYN" );
 }
 
 char *PacketParserHandlerLIDL( BYTE **ReadStream, int *AvailableBytes )
@@ -61,14 +63,14 @@ char *PacketParserHandlerLIDL( BYTE **ReadStream, int *AvailableBytes )
 	if( RS[0] != LSS_COM || ( RS[1] != LSS_LIDL0 && RS[1] != LSS_LIDL1 ) )
 		return NULL;
 
-	char *Ret = (char *)malloc( 104 );
-	sprintf_s( &Ret[0], 104, "0 LIDL 1 : " );
-	for( int i=0;i<2;i++)
-		sprintf_s( Ret, 104, "%s%02X", Ret, RS[ i ] );
+	int		PacketSize = 2;
+	int		CanSkipLocations[] = { -1 };
+	int		CanSkipLocationValue[] = { -1 };
+	// try to detect and handle packet duplication
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
 
-	*ReadStream = &RS[ 2 ];
-	*AvailableBytes = *AvailableBytes - 2;
-	return Ret;
+	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "LIDL" );
 }
 
 char *PacketParserHandlerGenericPacket( BYTE **ReadStream, int *AvailableBytes )
@@ -115,21 +117,24 @@ char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
 		return NULL;
 
+	int PacketSize = sizeof( sFullLinkLayerPacketDCMD );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
 	//check the CRC of the packet
 	int PacketCRCFromUs = crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
 	int PacketCRCFromPacket = PDCMD->CRC;
 
-	char *Ret = (char *)malloc( 1000 );
-	int DCMDPacketSize = sizeof( sFullLinkLayerPacketDCMD );
-	if( PacketCRCFromUs != PacketCRCFromPacket )
-		sprintf_s( &Ret[0], 1000, "0 DCMD_CRC_FAILED_(us)%d-(packet)%d_packet : ", PacketCRCFromUs, PacketCRCFromPacket );
-	else
-		sprintf_s( &Ret[0], 1000, "0 DCMD 1 : " );
-	for( int i=0;i<DCMDPacketSize;i++)
-		sprintf_s( Ret, 1000, "%s%02X", Ret, RS[ i ] );
+	int		CanSkipLocations[] = { -1 };
+	int		CanSkipLocationValue[] = { -1 };
+	// try to detect and handle packet duplication
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
 
-	*AvailableBytes = *AvailableBytes - DCMDPacketSize;
-	*ReadStream = *ReadStream + DCMDPacketSize;
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DCMD" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
 
 	return Ret;
 }
