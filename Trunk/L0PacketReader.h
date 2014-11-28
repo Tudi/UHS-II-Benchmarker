@@ -40,12 +40,11 @@ void DestroyL0PacketReader( sL0PacketReader **PR );
 
 #define UNKNOWN_BYTES_PACKET_HANDLER_INDEX		666
 
-char *UnkPacketParserHandler( BYTE **, int *);
-char *DummyPacketParserHandler( BYTE **, int *);
-char *PacketParserHandlerSTBL( BYTE **, int *);
-char *PacketParserHandlerSYN( BYTE **, int *);
-char *PacketParserHandlerLIDL( BYTE **, int *);
-char *PacketParserHandlerGenericPacket( BYTE **, int *);
-char *PacketParserHandlerDCMD( BYTE **, int *);
+char *L0ParsePckt_Unk( BYTE **, int *);
+char *L0ParsePckt_STBL( BYTE **, int *);
+char *L0ParsePckt_SYN( BYTE **, int *);
+char *L0ParsePckt_LIDL( BYTE **, int *);
+char *L0ParsePckt_DCMD( BYTE **, int *);
+//char *L0ParsePckt_GenericPacket( BYTE **, int *);
 
 #endif

@@ -149,7 +149,7 @@ int L0PacketReaderProcessFile( sL0PacketReader *PR, sL1PacketWriter *PW )
 		if( RetHandlerIndex != UNKNOWN_BYTES_PACKET_HANDLER_INDEX )
 			String = L1SymbolList[ RetHandlerIndex ]->PacketParser( &NextPacketAt, &RemainingBytes );
 		else
-			String = UnkPacketParserHandler( &NextPacketAt, &RemainingBytes );
+			String = L0ParsePckt_Unk( &NextPacketAt, &RemainingBytes );
 
 		if( String != NULL )
 			L0L1ProcessPacket( PW, String );

@@ -37,18 +37,18 @@ void InitL1SymbolList()
 {
 	Dprintf( DLVerbose, "Started L1 Symbol List intialization" );
 
-	AddSymbol( "STB.L", STBL,		STBL,		STBL,		L1BuildPacketSTBL,				PacketParserHandlerSTBL,			"Wakeup signal" );
-	AddSymbol( "SYN",	LSS_COM,	LSS_SYN0,	LSS_SYN1,	L1BuildPacketSYN,				PacketParserHandlerSYN,				"Sync for exiting STB" );
-	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPacketLIDL,				PacketParserHandlerLIDL,			"Logical idle" );
-	AddSymbol( "DCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPacketReadInitialize,	PacketParserHandlerGenericPacket,	"Request read data start" );
-//	AddSymbol( "STB.H", "STB.H", "STB.H",	( 2 << 0 ) | ( 2 << 8 ), L1BuildPacketSTBH, "Shutdown signal" );
-//	AddSymbol( "BSYN",	"BSYN", "COMBSYN0", ( K285 << 0 ) | ( D45 << 8 ), L1BuildPacketBSYN, "Sync for exiting STB and boot code loading");
-//	AddSymbol( "DIR",	"DIR",	"COMDIR",	( K285 << 0 ) | ( D312 << 8 ), L1BuildPacketDIR, "Direction switch" );
-//	AddSymbol( "DIDL",	"DIDL", "DIDL0",	( K285 << 0 ) | ( D122 << 8 ), L1BuildPacketDIDL, "Logical idle during data transmission" );
-//	AddSymbol( "SDB",	"SDB",	"COMSDB",	( K285 << 0 ) | ( K280 << 8 ), L1BuildPacketSDB, "Start of data burst" );
-//	AddSymbol( "SOP",	"SOP",	"COMSOP",	( K285 << 0 ) | ( K281 << 8 ), L1BuildPacketSOP, "Start of packet" );
-//	AddSymbol( "EOP",	"EOP",	"COMEOP",	( K285 << 0 ) | ( K297 << 8 ), L1BuildPacketEOP, "End of packet" );
-//	AddSymbol( "EDB",	"EDB",	"COMEDB",	( K285 << 0 ) | ( K277 << 8 ), L1BuildPacketEDB, "End of data burst" );
+	AddSymbol( "STB.L", STBL,		STBL,		STBL,		L1BuildPckt_STBL,	L0ParsePckt_STBL,	"Wakeup signal" );
+	AddSymbol( "SYN",	LSS_COM,	LSS_SYN0,	LSS_SYN1,	L1BuildPckt_SYN,	L0ParsePckt_SYN,	"Sync for exiting STB" );
+	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPckt_LIDL,	L0ParsePckt_LIDL,	"Logical idle" );
+	AddSymbol( "DCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DCMDR,	L0ParsePckt_DCMD,	"Request read/write data start" );
+//	AddSymbol( "STB.H", "STB.H", "STB.H",	( 2 << 0 ) | ( 2 << 8 ), L1BuildPckt_STBH, "Shutdown signal" );
+//	AddSymbol( "BSYN",	"BSYN", "COMBSYN0", ( K285 << 0 ) | ( D45 << 8 ), L1BuildPckt_BSYN, "Sync for exiting STB and boot code loading");
+//	AddSymbol( "DIR",	"DIR",	"COMDIR",	( K285 << 0 ) | ( D312 << 8 ), L1BuildPckt_DIR, "Direction switch" );
+//	AddSymbol( "DIDL",	"DIDL", "DIDL0",	( K285 << 0 ) | ( D122 << 8 ), L1BuildPckt_DIDL, "Logical idle during data transmission" );
+//	AddSymbol( "SDB",	"SDB",	"COMSDB",	( K285 << 0 ) | ( K280 << 8 ), L1BuildPckt_SDB, "Start of data burst" );
+//	AddSymbol( "SOP",	"SOP",	"COMSOP",	( K285 << 0 ) | ( K281 << 8 ), L1BuildPckt_SOP, "Start of packet" );
+//	AddSymbol( "EOP",	"EOP",	"COMEOP",	( K285 << 0 ) | ( K297 << 8 ), L1BuildPckt_EOP, "End of packet" );
+//	AddSymbol( "EDB",	"EDB",	"COMEDB",	( K285 << 0 ) | ( K277 << 8 ), L1BuildPckt_EDB, "End of data burst" );
 
 	Dprintf( DLVerbose, "\tEnded L1 Symbol List intialization" );
 }

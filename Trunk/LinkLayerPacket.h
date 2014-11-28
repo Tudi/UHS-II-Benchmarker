@@ -64,9 +64,4 @@ struct sFullLinkLayerPacketDCMD
 };
 #pragma pack(pop)
 
-/*
-Create and initialize a command reader
-*/
-//sLinkLayerPacket *InitLLP( char *FName );
-
 #endif

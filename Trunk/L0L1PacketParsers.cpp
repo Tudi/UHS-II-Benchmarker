@@ -1,11 +1,6 @@
 #include "StdAfx.h"
 
-char *DummyPacketParserHandler( BYTE **ReadStream, int *AvailableBytes )
-{
-	return NULL;
-}
-
-char *UnkPacketParserHandler( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_Unk( BYTE **ReadStream, int *AvailableBytes )
 {
 	if( *AvailableBytes <= 0 )
 		return NULL;
@@ -19,7 +14,7 @@ char *UnkPacketParserHandler( BYTE **ReadStream, int *AvailableBytes )
 	return Ret;
 }
 
-char *PacketParserHandlerSTBL( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_STBL( BYTE **ReadStream, int *AvailableBytes )
 {
 	if( *AvailableBytes <= 0 )
 		return NULL;
@@ -37,7 +32,7 @@ char *PacketParserHandlerSTBL( BYTE **ReadStream, int *AvailableBytes )
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "STB.L" );
 }
 
-char *PacketParserHandlerSYN( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_SYN( BYTE **ReadStream, int *AvailableBytes )
 {
 	if( *AvailableBytes <= 0 )
 		return NULL;
@@ -55,7 +50,7 @@ char *PacketParserHandlerSYN( BYTE **ReadStream, int *AvailableBytes )
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "SYN" );
 }
 
-char *PacketParserHandlerLIDL( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_LIDL( BYTE **ReadStream, int *AvailableBytes )
 {
 	if( *AvailableBytes <= 0 )
 		return NULL;
@@ -73,37 +68,13 @@ char *PacketParserHandlerLIDL( BYTE **ReadStream, int *AvailableBytes )
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "LIDL" );
 }
 
-char *PacketParserHandlerGenericPacket( BYTE **ReadStream, int *AvailableBytes )
-{
-	if( *AvailableBytes <= 0 )
-		return NULL;
-	BYTE *RS = *ReadStream;
-	if( RS[0] != LSS_COM || RS[1] != LSS_SOP )
-		return NULL;
-
-	sLinkLayerPacketHeader *PH = (sLinkLayerPacketHeader *)&RS[2];
-
-	int		subAvailable = *AvailableBytes;
-	BYTE	*SubReadStream = *ReadStream;
-	char	*Ret = NULL;
-
-	if( PH->PacketType == LLPT_DCMD )
-	{
-		Ret = PacketParserHandlerDCMD( &SubReadStream, &subAvailable );
-	}
-
-	if( Ret != NULL )
-	{
-		*ReadStream = SubReadStream;
-		*AvailableBytes = subAvailable;
-	}
-
-	return Ret;
-}
-
-char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 {
 	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketDCMD );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
 	sLinkLayerPacketHeader *PH = (sLinkLayerPacketHeader *)&RS[2];
 
 	if( PH->PacketType != LLPT_DCMD )
@@ -115,10 +86,6 @@ char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
 		return NULL;
 
 	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
-		return NULL;
-
-	int PacketSize = sizeof( sFullLinkLayerPacketDCMD );
-	if( *AvailableBytes < PacketSize )
 		return NULL;
 
 	//check the CRC of the packet
@@ -145,3 +112,32 @@ char *PacketParserHandlerDCMD( BYTE **ReadStream, int *AvailableBytes )
 
 	return Ret;
 }
+
+/*
+char *L0ParsePckt_GenericPacket( BYTE **ReadStream, int *AvailableBytes )
+{
+	if( *AvailableBytes <= 0 )
+		return NULL;
+	BYTE *RS = *ReadStream;
+	if( RS[0] != LSS_COM || RS[1] != LSS_SOP )
+		return NULL;
+
+	sLinkLayerPacketHeader *PH = (sLinkLayerPacketHeader *)&RS[2];
+
+	int		subAvailable = *AvailableBytes;
+	BYTE	*SubReadStream = *ReadStream;
+	char	*Ret = NULL;
+
+	if( PH->PacketType == LLPT_DCMD )
+	{
+		Ret = L0ParsePckt_DCMD( &SubReadStream, &subAvailable );
+	}
+
+	if( Ret != NULL )
+	{
+		*ReadStream = SubReadStream;
+		*AvailableBytes = subAvailable;
+	}
+
+	return Ret;
+}*/
