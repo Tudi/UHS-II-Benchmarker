@@ -27,14 +27,14 @@ int CanAllocAtThisLocationWithoutOverWrite( void *loc )
 		memset( DebugMemoryOverwriteList, 0, sizeof( DebugMemoryOverwriteList ) );
 	}
 	for( int i=0; i<MaxAllocLocationsToDebug; i++ )
-		if( DebugMemoryOverwriteList[ i ] <= loc )
+		if( DebugMemoryOverwriteList[ i ] <= loc && DebugMemoryOverwriteList[ i ] != 0 )
 		{
 			int *AllocatedMemory = (int*)DebugMemoryOverwriteList[ i ];
 			int SizeOfAlloc = AllocatedMemory[-1];
 			if( (char*)DebugMemoryOverwriteList[ i ] + SizeOfAlloc > loc )
-				return 0;
+				return 1;
 		}
-	return 1;
+	return 0;
 }
 
 void AddAllocatedLocation( void *loc )
@@ -97,6 +97,7 @@ void *EmbededMalloc( size_t size )
 	void *ret = &StaticBuffer[ AllocatorIndex + 4 ];
 	AllocatorIndex += size;
 
+	assert( CanAllocAtThisLocationWithoutOverWrite( ret ) == 0 );
 	AddAllocatedLocation( ret );
 	AddBoundsChecker( ret, OrigSize );
 
