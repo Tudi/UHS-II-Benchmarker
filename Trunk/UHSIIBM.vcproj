@@ -179,6 +179,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EmbededMalloc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EmbededMalloc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\L0L1PacketParsers.cpp"
 				>
 			</File>

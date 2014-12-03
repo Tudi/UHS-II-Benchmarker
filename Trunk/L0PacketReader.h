@@ -12,7 +12,7 @@ struct sL1PacketWriter;
 struct sL0PacketReader
 {
 	FILE	*File;
-	char	*FileName;
+//	char	*FileName;
 	BYTE	PacketBuffer[MAX_PACKET_SIZE];
 	int		PacketSize;
 	BYTE	PacketBufferPrevious[MAX_PACKET_SIZE];

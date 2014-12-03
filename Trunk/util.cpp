@@ -83,8 +83,8 @@ char *stristr (char *ch1, char *ch2)
   char  *chNdx;
   char  *chRet = NULL;
  
-  chN1 = _strdup(ch1);
-  chN2 = _strdup(ch2);
+  chN1 = EmbededStrDup(ch1);
+  chN2 = EmbededStrDup(ch2);
 
   if(chN1 && chN2)
   {
@@ -111,8 +111,8 @@ char *stristr (char *ch1, char *ch2)
 			chRet = ch1;
 	} */
 
-	free(chN1);
-	free(chN2);
+	EmbededFree(chN1);
+	EmbededFree(chN2);
   }
 
   return chRet;
@@ -142,12 +142,12 @@ BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )
 {
 	if( Count <= 1 )
 		return *Data;
-	BYTE *ret = (BYTE *)malloc( *DataLen * ( 0 + Count ) );
+	BYTE *ret = (BYTE *)EmbededMalloc( *DataLen * ( 0 + Count ) );
 	for( int i=0;i<Count;i++ )
 		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
 	*DataLen = *DataLen * ( Count + 0 );
 
-	free( *Data );
+	EmbededFree( *Data );
 	*Data = NULL;
 
 	return ret;
@@ -229,7 +229,7 @@ int CountPacketDuplicat( BYTE **PacketList, int *AvailableBytes, int PacketSize,
 char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int PacketSize, char *PacketName )
 {
 	int PacketCount = ProcessedByteCount / PacketSize;
-	char *Ret = (char *)malloc( MAX_PACKET_SIZE * 3 );
+	char *Ret = (char *)EmbededMalloc( MAX_PACKET_SIZE * 3 );
 	sprintf_s( &Ret[0], MAX_PACKET_SIZE * 3, "0 %s %d : ", PacketName, PacketCount );
 	for( int i=0;i<ProcessedByteCount;i++)
 	{

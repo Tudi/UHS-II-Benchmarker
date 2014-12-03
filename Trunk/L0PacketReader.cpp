@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 
-#include "StdAfx.h"
+#ifdef USE_INTERNAL_ALLOCATOR
+sL0PacketReader StaticL0Reader;
+#endif
 
 sL0PacketReader *InitL0PacketReader( char *FName )
 {
@@ -12,7 +14,11 @@ sL0PacketReader *InitL0PacketReader( char *FName )
 		return NULL;
 	}
 
-	sL0PacketReader *PR = (sL0PacketReader*)malloc( sizeof( sL0PacketReader ) );
+#ifdef USE_INTERNAL_ALLOCATOR
+	sL0PacketReader *PR = &StaticL0Reader;
+#else
+	sL0PacketReader *PR = (sL0PacketReader*)EmbededMalloc( sizeof( sL0PacketReader ) );
+#endif
 	if( PR == NULL )
 	{
 		return NULL;
@@ -26,7 +32,7 @@ sL0PacketReader *InitL0PacketReader( char *FName )
 		return NULL;
 	}
 
-	PR->FileName = _strdup( FName );
+//	PR->FileName = EmbededStrDup( FName );
 
 	Dprintf( DLVerbose, "\t Finished creating L0 packet reader. All OK" );
 
@@ -36,17 +42,19 @@ sL0PacketReader *InitL0PacketReader( char *FName )
 void DestroyL0PacketReader( sL0PacketReader **PR )
 {
 	Dprintf( DLVerbose, "Started destroying L0 packet reader" );
-	if( (*PR)->FileName )
-	{
-		free( (*PR)->FileName );
-		(*PR)->FileName = NULL;
-	}
+//	if( (*PR)->FileName )
+//	{
+//		EmbededFree( (*PR)->FileName );
+//		(*PR)->FileName = NULL;
+//	}
 	if( (*PR)->File )
 	{
 		fclose( (*PR)->File );
 		(*PR)->File = NULL;
 	}
-	free( (*PR) );
+#ifndef USE_INTERNAL_ALLOCATOR
+	EmbededFree( (*PR) );
+#endif
 	*PR = NULL;
 	Dprintf( DLVerbose, "\t Finished destroying L0 packet reader" );
 }
@@ -59,7 +67,7 @@ int IsValidPacket( BYTE *ByteStream, int *AvailableBytes )
 		char *StringPacket = L1SymbolList[i]->PacketParser( &PacketEndAt, AvailableBytes );
 		if( StringPacket != NULL )
 		{
-			free( StringPacket );
+			EmbededFree( StringPacket );
 			return i;
 		}
 	}
@@ -154,7 +162,7 @@ int L0PacketReaderProcessFile( sL0PacketReader *PR, sL1PacketWriter *PW )
 		if( String != NULL )
 			L0L1ProcessPacket( PW, String );
 
-		free( String );
+		EmbededFree( String );
 
 		RetHandlerIndex = ReadNextPacket( PR );
 	}

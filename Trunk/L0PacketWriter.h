@@ -8,7 +8,7 @@ Write a binary file that can be sent as USH II physical layer communication pack
 struct sL0PacketWriter
 {
 	FILE	*File;
-	char	*FileName;
+//	char	*FileName;
 	int		Lane;	//SD card can have more than 1 data lanes. These need to be configured for Send / Receive mode. Duplex / half duplex
 	int		HostID;
 	int		DeviceID;

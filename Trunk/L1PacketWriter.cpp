@@ -1,10 +1,18 @@
 #include "StdAfx.h"
 
+#ifdef USE_INTERNAL_ALLOCATOR
+sL1PacketWriter StaticL1Writer;
+#endif
+
 sL1PacketWriter *InitL1PacketWriter( char *FName, int pLaneNr, int pHostID, int pDeviceID )
 {
 	Dprintf( DLVerbose, "Started creating L1 packet writer" );
 
-	sL1PacketWriter *PW = (sL1PacketWriter*)malloc( sizeof( sL1PacketWriter ) );
+#ifdef USE_INTERNAL_ALLOCATOR
+	sL1PacketWriter *PW = &StaticL1Writer;
+#else
+	sL1PacketWriter *PW = (sL1PacketWriter*)EmbededMalloc( sizeof( sL1PacketWriter ) );
+#endif
 	if( PW == NULL )
 	{
 		return NULL;
@@ -18,7 +26,7 @@ sL1PacketWriter *InitL1PacketWriter( char *FName, int pLaneNr, int pHostID, int 
 		return NULL;
 	}
 
-	PW->FileName = _strdup( FName );
+//	PW->FileName = _strdup( FName );
 
 	PW->Lane = pLaneNr;
 	PW->HostID = pHostID;
@@ -34,7 +42,7 @@ void DestroyL1PacketWriter( sL1PacketWriter **PW )
 	Dprintf( DLVerbose, "Started destroying L1 packet writer" );
 	if( (*PW)->FileName )
 	{
-		free( (*PW)->FileName );
+		EmbededFree( (*PW)->FileName );
 		(*PW)->FileName = NULL;
 	}
 	if( (*PW)->File )
@@ -42,7 +50,9 @@ void DestroyL1PacketWriter( sL1PacketWriter **PW )
 		fclose( (*PW)->File );
 		(*PW)->File = NULL;
 	}
-	free( (*PW) );
+#ifndef USE_INTERNAL_ALLOCATOR
+	EmbededFree( (*PW) );
+#endif
 	*PW = NULL;
 	Dprintf( DLVerbose, "\t Finished destroying L1 packet writer" );
 }

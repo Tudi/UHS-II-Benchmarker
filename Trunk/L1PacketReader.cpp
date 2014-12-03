@@ -1,5 +1,9 @@
 #include "StdAfx.h"
 
+#ifdef USE_INTERNAL_ALLOCATOR
+sL1PacketReader StaticL1Reader;
+#endif
+
 sL1PacketReader *InitL1PacketReader( char *FName )
 {
 	Dprintf( DLVerbose, "Started creating L1 packet reader" );
@@ -10,7 +14,11 @@ sL1PacketReader *InitL1PacketReader( char *FName )
 		return NULL;
 	}
 
-	sL1PacketReader *PR = (sL1PacketReader*)malloc( sizeof( sL1PacketReader ) );
+#ifdef USE_INTERNAL_ALLOCATOR
+	sL1PacketReader *PR = &StaticL1Reader;
+#else
+	sL1PacketReader *PR = (sL1PacketReader*)EmbededMalloc( sizeof( sL1PacketReader ) );
+#endif
 	if( PR == NULL )
 	{
 		return NULL;
@@ -24,7 +32,7 @@ sL1PacketReader *InitL1PacketReader( char *FName )
 		return NULL;
 	}
 
-	PR->FileName = _strdup( FName );
+//	PR->FileName = _strdup( FName );
 
 	Dprintf( DLVerbose, "\t Finished creating L1 packet reader. All OK" );
 
@@ -36,7 +44,7 @@ void DestroyL1PacketReader( sL1PacketReader **PR )
 	Dprintf( DLVerbose, "Started destroying L1 packet reader" );
 	if( (*PR)->FileName )
 	{
-		free( (*PR)->FileName );
+		EmbededFree( (*PR)->FileName );
 		(*PR)->FileName = NULL;
 	}
 	if( (*PR)->File )
@@ -44,7 +52,9 @@ void DestroyL1PacketReader( sL1PacketReader **PR )
 		fclose( (*PR)->File );
 		(*PR)->File = NULL;
 	}
-	free( (*PR) );
+#ifndef USE_INTERNAL_ALLOCATOR
+	EmbededFree( (*PR) );
+#endif
 	*PR = NULL;
 	Dprintf( DLVerbose, "\t Finished destroying L1 packet reader" );
 }
@@ -115,7 +125,7 @@ int L1PacketReaderProcessFile( sL1PacketReader *PR, sL0PacketWriter *PW )
 		if( OutDataLen > 0 )
 		{
 			L1L0ProcessLine( PW, OutData, OutDataLen );
-			free( OutData );
+			EmbededFree( OutData );
 		}
 	}
 	Dprintf( DLVerbose, "\t Finished PR process whole file" );

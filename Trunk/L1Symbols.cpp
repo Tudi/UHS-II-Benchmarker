@@ -1,11 +1,24 @@
 #include "StdAfx.h"
 
-L1Symbol **L1SymbolList = NULL;
 int L1SymbolListSize = 0;
+
+#ifndef USE_INTERNAL_ALLOCATOR
+	L1Symbol **L1SymbolList = NULL;
+#else
+	#define MAX_SIMBOLS_CAN_DEFINE	50
+	L1Symbol L1SymbolListStatic[ MAX_SIMBOLS_CAN_DEFINE ];
+	L1Symbol *L1SymbolListListStatic[ MAX_SIMBOLS_CAN_DEFINE ];
+	L1Symbol **L1SymbolList = L1SymbolListListStatic;
+#endif
 
 L1Symbol *InitSymbol()
 {
-	L1Symbol *ret = (L1Symbol *)malloc( sizeof( L1Symbol ) );
+#ifndef USE_INTERNAL_ALLOCATOR
+	L1Symbol *ret = (L1Symbol *)EmbededMalloc( sizeof( L1Symbol ) );
+#else
+	assert( L1SymbolListSize < MAX_SIMBOLS_CAN_DEFINE );
+	L1Symbol *ret = &L1SymbolListStatic[ L1SymbolListSize ];
+#endif
 	memset( ret, 0, sizeof( L1Symbol ) );
 	return ret;
 }
@@ -15,7 +28,9 @@ int AddSymbol( const char *Name, BYTE pS1, BYTE pS01, BYTE pS02, void (*PB)( BYT
 	Dprintf( DLVerbose, "\t\tL1 Symbol List %d: adding %s - %s", L1SymbolListSize, Name, Desc );
 
 	L1Symbol *NS = InitSymbol();
+#ifndef USE_INTERNAL_ALLOCATOR
 	L1SymbolList = (L1Symbol**)realloc( L1SymbolList, ( L1SymbolListSize + 1 ) * sizeof( L1Symbol* ) );
+#endif
 	L1SymbolList[ L1SymbolListSize ] = NS;
 	L1SymbolListSize++;
 

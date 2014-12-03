@@ -2,7 +2,7 @@
 
 void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)malloc( 1 );
+	*Data = (BYTE *)EmbededMalloc( 1 );
 	(*Data)[0] = 0;
 	*DataLen = 1;
 	*Data = DuplicatePacket( Data, DataLen, Line );
@@ -10,7 +10,7 @@ void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 
 void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)malloc( 2 );
+	*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = LSS_SYN0;
 	*DataLen = 2;
@@ -20,7 +20,7 @@ void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketDCMD );
-	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)malloc( *DataLen );
+	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)EmbededMalloc( *DataLen );
 	*Data = (BYTE*)p;
 
 	p->SOPLSS[0] = LSS_COM;
@@ -50,7 +50,7 @@ void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
 
 void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)malloc( 2 );
+	*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = LSS_LIDL0;
 	*DataLen = 2;

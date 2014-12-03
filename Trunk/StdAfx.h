@@ -2,13 +2,17 @@
 #define _STDAFX_H_
 
 #include <stdio.h>
-#include <string.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdarg.h>
 #include <io.h>
 #include <assert.h>
+#include <string.h>
+
+//this was added because embeded API does not support malloc. !!! Current implementation does not support more than 1 reader / writer and has limited memory allocation
+#define USE_INTERNAL_ALLOCATOR
+
+#include "EmbededMalloc.h"
 
 typedef unsigned char BYTE;
 

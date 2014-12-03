@@ -40,8 +40,13 @@ struct L1Symbol
 	char	*(*PacketParser)( BYTE **Data, int *AvailableBytes );
 };
 
-extern L1Symbol **L1SymbolList;
 extern int L1SymbolListSize;
+extern L1Symbol **L1SymbolList;
+#ifdef USE_INTERNAL_ALLOCATOR
+	#define MAX_SIMBOLS_CAN_DEFINE	50
+	extern L1Symbol L1SymbolListStatic[ MAX_SIMBOLS_CAN_DEFINE ];
+	extern L1Symbol *L1SymbolListListStatic[ MAX_SIMBOLS_CAN_DEFINE ];
+#endif
 
 void InitL1SymbolList();
 
