@@ -41,8 +41,8 @@ char *L0ParsePckt_SYN( BYTE **ReadStream, int *AvailableBytes )
 		return NULL;
 
 	int	PacketSize = 2;
-	int	CanSkipLocations[] = { -1 };
-	int	CanSkipLocationValue[] = { -1 };
+	int	CanSkipLocations[] = { 1, 1, -1 };
+	int	CanSkipLocationValue[] = { LSS_SYN0, LSS_SYN1, -1 };
 	int	PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
@@ -58,8 +58,8 @@ char *L0ParsePckt_LIDL( BYTE **ReadStream, int *AvailableBytes )
 		return NULL;
 
 	int	PacketSize = 2;
-	int	CanSkipLocations[] = { -1 };
-	int	CanSkipLocationValue[] = { -1 };
+	int	CanSkipLocations[] = { 1, 1, -1 };
+	int	CanSkipLocationValue[] = { LSS_LIDL0, LSS_LIDL1, -1 };
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
