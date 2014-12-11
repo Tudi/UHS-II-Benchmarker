@@ -27,6 +27,7 @@
 #define LSS_LIDL1	D167
 #define LSS_DIDL0	K286
 #define LSS_DIDL1	D122
+#define PAD			K237
 
 #define STBL		0
 

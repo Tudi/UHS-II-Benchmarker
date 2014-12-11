@@ -103,14 +103,17 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
 		return NULL;
 
-	//check the CRC of the packet
-	int PacketCRCFromUs = crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
-	int PacketCRCFromPacket = PDCMD->CRC;
-
 	int	CanSkipLocations[] = { -1 };
 	int	CanSkipLocationValue[] = { -1 };
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	// Only scramble if you are sure this packet is for us or else it will be scrambled more than once !
+	ScramblePacket( RS + 2, PacketSize - 4);
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
+	int PacketCRCFromPacket = PDCMD->CRC;
 
 	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DCMD" );
 

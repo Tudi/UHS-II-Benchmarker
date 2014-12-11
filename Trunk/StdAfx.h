@@ -19,6 +19,7 @@ typedef unsigned char BYTE;
 #include "util.h"
 #include "debug.h"
 #include "PacketCRC.h"
+#include "PacketScramble.h"
 #include "L0PacketReader.h"
 #include "L0PacketWriter.h"
 #include "L1PacketReader.h"

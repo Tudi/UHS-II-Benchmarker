@@ -255,6 +255,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketScramble.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketScramble.h"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.h"
 				>
 			</File>
