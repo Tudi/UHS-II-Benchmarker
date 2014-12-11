@@ -38,4 +38,6 @@ static const unsigned short crc16tab[256] = {
 
 unsigned short crc16_ccitt(const BYTE *buf, int len);
 
+#define CRC_LSB_SWAP( x ) ( ( ( x & 0xFF ) << 8 ) | ( ( x & 0xFF00 ) >> 8 ) )
+
 #endif

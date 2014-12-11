@@ -112,7 +112,7 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	ScramblePacket( RS + 2, PacketSize - 4);
 
 	//check the CRC of the packet
-	int PacketCRCFromUs = crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) ) );
 	int PacketCRCFromPacket = PDCMD->CRC;
 
 	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DCMD" );

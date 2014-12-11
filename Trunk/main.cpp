@@ -17,6 +17,21 @@ int IsValidMode( char *mode )
 
 int main( int argc, char *argv[] )
 {
+	//scramble test from doc
+	BYTE data[10];
+	data[0] = 0xB1;
+	data[1] = 0x00;
+	data[2] = 0xAA;
+	data[3] = 0xBB;
+	data[4] = 0xCC;
+	data[5] = PAD;
+	*(unsigned short*)&data[6] = CRC_LSB_SWAP( crc16_ccitt( data, 6 ) );
+	if( data[6] != 0xFE || data[7] != 0x1E )
+		printf( "CRC generation and write failed!\n");
+	ScramblePacket( data, 8 );
+	if( data[0] != 0x4E || data[1] != 0x17 || data[2] != 0xC0 || data[3] != 0x14 || data[4] != 0xB2 || data[5] != PAD || data[6] != 0xFE || data[7] != 0x1E )
+		printf( "Scrambler is not working as expected!!! \n" );
+
 	if( argc == 0 )
 	{
 		printf( "UHS II protocol benchmarker\n");

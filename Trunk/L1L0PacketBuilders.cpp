@@ -40,7 +40,7 @@ void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
 	p->Packet.Addr = GetLineParamXInteger( Line, 0 );
 	p->Packet.DataLen = GetLineParamXInteger( Line, 1 );
 
-	p->CRC = crc16_ccitt( *Data + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
+	p->CRC = CRC_LSB_SWAP( crc16_ccitt( *Data + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) ) );
 
 	p->EOPLSS[0] = LSS_COM;
 	p->EOPLSS[1] = LSS_EOP;
