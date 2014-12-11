@@ -3,11 +3,13 @@
 
 #define MAX_L1_SYMBOL_LENGTH	1000
 
+#define K237 0xF7
 #define K277 0xFB
 #define K280 0x1C
 #define K281 0x3C
 #define K283 0x7C
 #define K285 0xBC
+#define K286 0xDC
 #define K297 0xFD
 #define D045 BinToDec( 10100100 )
 #define D167 BinToDec( 11110001 )
@@ -23,6 +25,8 @@
 #define LSS_SYN1	D262
 #define LSS_LIDL0	K283
 #define LSS_LIDL1	D167
+#define LSS_DIDL0	K286
+#define LSS_DIDL1	D122
 
 #define STBL		0
 

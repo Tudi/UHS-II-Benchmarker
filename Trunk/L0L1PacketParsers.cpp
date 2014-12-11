@@ -66,6 +66,23 @@ char *L0ParsePckt_LIDL( BYTE **ReadStream, int *AvailableBytes )
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "LIDL" );
 }
 
+char *L0ParsePckt_DIDL( BYTE **ReadStream, int *AvailableBytes )
+{
+	if( *AvailableBytes <= 0 )
+		return NULL;
+	BYTE *RS = *ReadStream;
+	if( RS[0] != LSS_COM || ( RS[1] != LSS_DIDL0 && RS[1] != LSS_DIDL1 ) )
+		return NULL;
+
+	int	PacketSize = 2;
+	int	CanSkipLocations[] = { 1, 1, -1 };
+	int	CanSkipLocationValue[] = { LSS_DIDL0, LSS_DIDL1, -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DIDL" );
+}
+
 char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 {
 	BYTE *RS = *ReadStream;
@@ -108,4 +125,9 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Addr( %d ) Count( %d ) Mode( %d )", Ret, PDCMD->Packet.Addr, PDCMD->Packet.DataLen, PDCMD->Packet.TMode );
 
 	return Ret;
+}
+
+char *L0ParsePckt_FCRDY( BYTE **ReadStream, int *AvailableBytes )
+{
+	return NULL;
 }

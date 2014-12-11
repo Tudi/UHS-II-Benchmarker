@@ -49,5 +49,7 @@ void	L1BuildPckt_SOP( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_EOP( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_EDB( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPckt_FCRDY( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPckt_FCREQ( BYTE **Data, int *DataLen, char *Line );
 
 #endif

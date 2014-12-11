@@ -22,23 +22,24 @@ Initialize the Lane :  Config -> Active
 do some stuff here
 
 ex read
-0 DCMDR	2 2 3	-> 	we want to read from address 2, data block count 3
-0 NOP 	1		-> 	Device will send us RES
-0 NOP 	1		->	Device will send us FCREQ
-0 FCRDY 1
-0 NOP 	N		->	Device will send us Data N times
-0 STAT 	1 X	->	We confirm that we got data
-0 FCRDY 1	->	Allow device to send more
-0 NOP N		->	More data incomming
-0 STAT 1 X	->	Thank you for the data
+0 DCMDR	2 2 3	-> 	we want to read from address 2, data block count 3. Repeat it until client starts sending RES
+0 LIDL	10		->	waiting for device to send us LIDL
+0 LIDL	10		->	waiting for device to send us FCREQ
+0 FCRDY 10		->	waiting for device to send us DIDL		
+0 LIDL	10		->	waiting for device to send us SDB
+0 LIDL	10		->	waiting for device to send us DATA
+0 LIDL	10		->	waiting for device to send us EDB
+0 STAT 	1 X		->	We confirm that we got data, device will send us LIDL
 
 ex write
-0 DCMDW	1	->	we want to write
-0 NOP 1		->	device sends RES
-0 FCREQ 1	
-0 NOP 1		->	device sends us FCRDY
-0 DATA N Y
-0 NOP 1		->	device send us STAT
+0 DCMDW	1	->	we want to write. Repeat it until client starts sending RES
+0 LIDL 1	->	device sends LIDL
+0 FCREQ 1	->	device sends LIDL
+0 DLIDL 1	->	device sends FCRDY
+0 SDB 1		->	device sends us LIDL
+0 DATA N Y	->	device sends us LIDL
+0 EDB 1		->	device sends us LIDL
+0 LIDL 1	->	device send us STAT
 
 go to dormant state
 0 LIDL

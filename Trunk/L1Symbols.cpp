@@ -55,7 +55,10 @@ void InitL1SymbolList()
 	AddSymbol( "STB.L", STBL,		STBL,		STBL,		L1BuildPckt_STBL,	L0ParsePckt_STBL,	"Wakeup signal" );
 	AddSymbol( "SYN",	LSS_COM,	LSS_SYN0,	LSS_SYN1,	L1BuildPckt_SYN,	L0ParsePckt_SYN,	"Sync for exiting STB" );
 	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPckt_LIDL,	L0ParsePckt_LIDL,	"Logical idle" );
+	AddSymbol( "DIDL",	LSS_COM,	LSS_DIDL0,	LSS_DIDL1,	L1BuildPckt_DIDL,	L0ParsePckt_DIDL,	"Data idle" );
 	AddSymbol( "DCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DCMDR,	L0ParsePckt_DCMD,	"Request read/write data start" );
+//	AddSymbol( "FCRDY",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCRDY,	L0ParsePckt_FCRDY,	"signal ready read data" );
+//	AddSymbol( "FCREQ",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCREQ,	L0ParsePckt_FCREQ,	"signal ready write data" );
 //	AddSymbol( "STB.H", "STB.H", "STB.H",	( 2 << 0 ) | ( 2 << 8 ), L1BuildPckt_STBH, "Shutdown signal" );
 //	AddSymbol( "BSYN",	"BSYN", "COMBSYN0", ( K285 << 0 ) | ( D45 << 8 ), L1BuildPckt_BSYN, "Sync for exiting STB and boot code loading");
 //	AddSymbol( "DIR",	"DIR",	"COMDIR",	( K285 << 0 ) | ( D312 << 8 ), L1BuildPckt_DIR, "Direction switch" );

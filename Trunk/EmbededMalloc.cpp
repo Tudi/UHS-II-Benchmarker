@@ -5,6 +5,8 @@
 	#define PREALLOCATED_ROUND_ROBIN_BUFFER_SIZE	65535 * 10
 
 	int	AllocatorIndex = 0;
+
+	//the below variables are for the sake of debugging and avoiding mistakes.
 	int	FreeSum = 0;
 	int AllocSum = 0;
 

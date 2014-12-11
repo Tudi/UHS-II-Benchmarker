@@ -44,6 +44,9 @@ char *L0ParsePckt_Unk( BYTE **, int *);
 char *L0ParsePckt_STBL( BYTE **, int *);
 char *L0ParsePckt_SYN( BYTE **, int *);
 char *L0ParsePckt_LIDL( BYTE **, int *);
+char *L0ParsePckt_DIDL( BYTE **, int *);
 char *L0ParsePckt_DCMD( BYTE **, int *);
+char *L0ParsePckt_FCRDY( BYTE **, int *);
+char *L0ParsePckt_FCREQ( BYTE **, int *);
 
 #endif

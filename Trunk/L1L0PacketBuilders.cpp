@@ -35,7 +35,7 @@ void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
 
 	p->Packet.Reserved0 = 0;
 	p->Packet.TMode = LSS_COM;
-	p->Packet.ReadWrite = 0;
+	p->Packet.ReadWrite = 0;	//needs to be 0 for read
 	p->Packet.Reserved1 = 0;
 	p->Packet.Addr = GetLineParamXInteger( Line, 0 );
 	p->Packet.DataLen = GetLineParamXInteger( Line, 1 );
@@ -56,37 +56,43 @@ void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }
-/*
-void	L1BuildPckt_STBH( BYTE **Data, int *DataLen, char *Line )
-{
-}
-
-
-void	L1BuildPckt_BSYN( BYTE **Data, int *DataLen, char *Line )
-{
-}
-
-void	L1BuildPckt_DIR( BYTE **Data, int *DataLen, char *Line )
-{
-}
 
 void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
 {
+	*Data = (BYTE *)EmbededMalloc( 2 );
+	(*Data)[0] = LSS_COM;
+	(*Data)[1] = LSS_DIDL0;
+	*DataLen = 2;
+	*Data = DuplicatePacket( Data, DataLen, Line );
 }
 
-void	L1BuildPckt_SDB( BYTE **Data, int *DataLen, char *Line )
+void	L1BuildPckt_FCRDY( BYTE **Data, int *DataLen, char *Line )
 {
-}
+	*DataLen = sizeof( sFullLinkLayerPacketDCMD );
+	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)EmbededMalloc( *DataLen );
+	*Data = (BYTE*)p;
 
-void	L1BuildPckt_SOP( BYTE **Data, int *DataLen, char *Line )
-{
-}
+	p->SOPLSS[0] = LSS_COM;
+	p->SOPLSS[1] = LSS_SOP;
 
-void	L1BuildPckt_EOP( BYTE **Data, int *DataLen, char *Line )
-{
-}
+	p->Header.DestinationID = 0;
+	p->Header.PacketType = LLPT_DCMD;
+	p->Header.NativePacket = 1;	
+	p->Header.TransactionID = 0;
+	p->Header.Reserved = 0;
+	p->Header.SourceID = 0;
 
-void	L1BuildPckt_EDB( BYTE **Data, int *DataLen, char *Line )
-{
+	p->Packet.Reserved0 = 0;
+	p->Packet.TMode = LSS_COM;
+	p->Packet.ReadWrite = 0;
+	p->Packet.Reserved1 = 0;
+	p->Packet.Addr = GetLineParamXInteger( Line, 0 );
+	p->Packet.DataLen = GetLineParamXInteger( Line, 1 );
+
+	p->CRC = crc16_ccitt( *Data + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) );
+
+	p->EOPLSS[0] = LSS_COM;
+	p->EOPLSS[1] = LSS_EOP;
+
+	*Data = DuplicatePacket( Data, DataLen, Line );
 }
-*/
