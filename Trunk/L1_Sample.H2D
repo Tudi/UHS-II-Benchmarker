@@ -7,7 +7,13 @@ column 1 : is used to mark the physical lane used
 column 2 : is used to mark the packet handler we want to call. This might look like an L1 symbol sometimes, but it can be handled as we want inside the code
 column 3 : is used to count the number of times the packet should be sent repeatedly. Most packet should be sent twice
 
+CCMD comand usage : 
+	CCMDR [IOADDR]
+	CCMDW [PAYLOAD SIZE(real payload is size * 4 bytes)] [IOADDR] [PAYLOAD as HEXSTRING]
 
+DCMD command usage ( see table 6-3 in PDF for available mode combinations ):
+	DCMDR	[Read/Write] [duplex mode] [length mode] [unit mode] [access mode] [ADDR]	[LEN]
+	
 Initialize the Lane : Dormant -> Wakup 
 Repeate STB.L(DIF-L) until Dormant state is exited and Device enters Wakeup State. You need to repeat STB.L signal many enough times until Device replies with same STB.L
 0 STB.L	10
@@ -17,12 +23,12 @@ Repeate SYN until Config state is exited and Device enters Active State
 0 LIDL 	1
 
 Initialize the Lane :  Config -> Active
-0 CCMD	FULL_RESET -> device will reply with RES
+0 CCMDW	1	1	1 -> device will reply with RES
 
 do some stuff here
 
 ex read
-0 DCMDR	2 2 3	-> 	we want to read from address 2, data block count 3. Repeat it until client starts sending RES
+0 DCMD	2 0 0 1 0 16 2 3	-> 	read comand, FD mode, Block read, fixed address, addr 2, block count 3. Repeat it until client starts sending RES
 0 LIDL	10		->	waiting for device to send us LIDL
 0 LIDL	10		->	waiting for device to send us FCREQ
 0 FCRDY 10		->	waiting for device to send us DIDL		
@@ -41,6 +47,8 @@ ex write
 0 EDB 1		->	device sends us LIDL
 0 LIDL 1	->	device send us STAT
 
+testing random packets
+0 RES	2	1234 -> response packet to some command. In this example i simulate a response to the read request. Host does not send response packets. He only reads them
 go to dormant state
 0 LIDL
 0 GO_DORMANT

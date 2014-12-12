@@ -65,7 +65,7 @@ int IsValidL1Symbol( char *Line )
 		return -1;
 
 	for( int i=0;i<L1SymbolListSize;i++)
-		if( stristr( &Line[2], L1SymbolList[i]->Name ) )
+		if( stristr( &Line[2], L1SymbolList[i]->Name ) == &Line[2] )
 			return i;
 
 	return -1;
@@ -99,6 +99,13 @@ int ReadNextLine( sL1PacketReader *PR )
 	while( IsValidL1Symbol( LineBuffer ) == -1 && !feof( PR->File ) );
 
 	memset( PR->LineBuffer, 0, MAX_READER_LINE_BUFFER_LENGTH );	//just in case shit happens, we can be sure to not read from previous line data
+
+	if( feof( PR->File ) )
+	{
+		Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
+		return 1;
+	}
+
 	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
 	
 	//replace EOL for the sake of nice formatting
@@ -107,9 +114,6 @@ int ReadNextLine( sL1PacketReader *PR )
 			PR->LineBuffer[i] = 0;
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
-
-	if( feof( PR->File ) )
-		return 1;
 
 	return 0;
 }

@@ -12,6 +12,7 @@ char *L0ParsePckt_Unk( BYTE **ReadStream, int *AvailableBytes )
 	int	PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
+	Dprintf( DLVerbose, "\t PP read UNK packet. Total size : %d bytes", ProcessedByteCount );
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "UnkData" );
 }
 
@@ -29,6 +30,7 @@ char *L0ParsePckt_STBL( BYTE **ReadStream, int *AvailableBytes )
 	int	PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
+	Dprintf( DLVerbose, "\t PP read STB.L packet. Total size : %d bytes", ProcessedByteCount );
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "STB.L" );
 }
 
@@ -46,6 +48,7 @@ char *L0ParsePckt_SYN( BYTE **ReadStream, int *AvailableBytes )
 	int	PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
+	Dprintf( DLVerbose, "\t PP read SYN packet. Total size : %d bytes", ProcessedByteCount );
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "SYN" );
 }
 
@@ -63,6 +66,7 @@ char *L0ParsePckt_LIDL( BYTE **ReadStream, int *AvailableBytes )
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
+	Dprintf( DLVerbose, "\t PP read LIDL packet. Total size : %d bytes", ProcessedByteCount );
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "LIDL" );
 }
 
@@ -80,6 +84,7 @@ char *L0ParsePckt_DIDL( BYTE **ReadStream, int *AvailableBytes )
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
+	Dprintf( DLVerbose, "\t PP read DIDL packet. Total size : %d bytes", ProcessedByteCount );
 	return GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DIDL" );
 }
 
@@ -90,11 +95,6 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( *AvailableBytes < PacketSize )
 		return NULL;
 
-	sLinkLayerPacketHeader *PH = (sLinkLayerPacketHeader *)&RS[2];
-
-	if( PH->PacketType != LLPT_DCMD )
-		return NULL;
-
 	sFullLinkLayerPacketDCMD *PDCMD = (sFullLinkLayerPacketDCMD *)*ReadStream;
 
 	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
@@ -103,17 +103,22 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
 		return NULL;
 
+	sFullLinkLayerPacketDCMD TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_DCMD )
+		return NULL;
+
 	int	CanSkipLocations[] = { -1 };
 	int	CanSkipLocationValue[] = { -1 };
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
-	// Only scramble if you are sure this packet is for us or else it will be scrambled more than once !
-	ScramblePacket( RS + 2, PacketSize - 4);
-
 	//check the CRC of the packet
-	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( RS + 2, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) ) );
-	int PacketCRCFromPacket = PDCMD->CRC;
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketDCMD ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
 
 	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DCMD" );
 
@@ -125,12 +130,68 @@ char *L0ParsePckt_DCMD( BYTE **ReadStream, int *AvailableBytes )
 	else
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Write", Ret );
 
-	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Addr( %d ) Count( %d ) Mode( %d )", Ret, PDCMD->Packet.Addr, PDCMD->Packet.DataLen, PDCMD->Packet.TMode );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Addr( %d ) Count( %d ) Duplex Mode( %d ) Length Mode( %d ) Unit Mode( %d ) Data Access Mode( %d )", Ret, TempPacket.Packet.Addr, TempPacket.Packet.DataLen, TempPacket.Packet.TModeDuplexMode, TempPacket.Packet.TModeLengthMode, TempPacket.Packet.TModeTLUnitMode, TempPacket.Packet.TModeDataAccessMode );
 
+	Dprintf( DLVerbose, "\t PP read DCMD packet. Total size : %d bytes", ProcessedByteCount );
+	return Ret;
+}
+
+char *L0ParsePckt_RES( BYTE **ReadStream, int *AvailableBytes )
+{
+	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketDCMD );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketRES *PDCMD = (sFullLinkLayerPacketRES *)*ReadStream;
+
+	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	sFullLinkLayerPacketRES TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_RES )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "RES" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	if( PDCMD->Packet.NAck == 0 )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Accepted", Ret );
+	else
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Rejected", Ret );
+
+	int FullCommand = PDCMD->Packet.CMD_ECHO_BACK0 | ( PDCMD->Packet.CMD_ECHO_BACK0 << 7 );
+
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Command( %d )", Ret, FullCommand );
+
+	Dprintf( DLVerbose, "\t PP read RES packet. Total size : %d bytes", ProcessedByteCount );
 	return Ret;
 }
 
 char *L0ParsePckt_FCRDY( BYTE **ReadStream, int *AvailableBytes )
+{
+	return NULL;
+}
+
+char *L0ParsePckt_CCMD( BYTE **ReadStream, int *AvailableBytes )
 {
 	return NULL;
 }

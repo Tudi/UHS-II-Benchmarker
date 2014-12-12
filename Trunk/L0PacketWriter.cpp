@@ -75,7 +75,7 @@ int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 	char FormattedPacket[ MAX_PACKET_SIZE ];
 	strcpy_s( FormattedPacket, MAX_PACKET_SIZE, "" );
 	for( int i=0;i<DataLen && i<MAX_PACKET_SIZE;i++)
-		sprintf_s( FormattedPacket, MAX_PACKET_SIZE, "%s%02X", FormattedPacket, Data[i] );
+		sprintf_s( FormattedPacket, MAX_PACKET_SIZE, "%s %02X", FormattedPacket, Data[i] );
 
 	Dprintf( DLVerbose, "\t Finished PW process 1 line : %s", FormattedPacket );
 	return 0;

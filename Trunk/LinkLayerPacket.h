@@ -38,20 +38,29 @@ struct sLinkLayerPacketMSG
 };
 struct sLinkLayerPacketCCMD
 {
-	BYTE	IOADDR0:4,
+	BYTE	IOADDR1:4,	//MSB
 			PLEN:2,
 			Reserved:1,
 			ReadWrite:1;
-	BYTE	IOADDR1:8;
+	BYTE	IOADDR0:8;	//LSB
 };
 struct sLinkLayerPacketDCMD
 {
 	BYTE	Reserved0:3,
-			TMode:4,
+			TModeDuplexMode:1,
+			TModeLengthMode:1,
+			TModeTLUnitMode:1,
+			TModeDataAccessMode:1,
 			ReadWrite:1;
 	BYTE	Reserved1:8;
 	int		Addr:32;
 	int		DataLen:32;
+};
+struct sLinkLayerPacketRES
+{
+	BYTE	NAck:1,
+			CMD_ECHO_BACK0:7;
+	BYTE	CMD_ECHO_BACK1:8;
 };
 struct sFullLinkLayerPacketDCMD
 {
@@ -59,6 +68,37 @@ struct sFullLinkLayerPacketDCMD
 	BYTE					SOPLSS[2];
 	sLinkLayerPacketHeader	Header;
 	sLinkLayerPacketDCMD	Packet;
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
+struct sFullLinkLayerPacketCCMDR
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketCCMD	Packet;
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
+//write packet has variable length payload
+struct sFullLinkLayerPacketCCMDW0
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketCCMD	Packet;
+};
+struct sFullLinkLayerPacketCCMDW1
+{
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
+struct sFullLinkLayerPacketRES
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketRES		Packet;
 	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
 	BYTE					EOPLSS[2];
 };
