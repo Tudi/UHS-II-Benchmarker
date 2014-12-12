@@ -10,7 +10,7 @@
 #include <string.h>
 
 //this was added because embeded API does not support malloc. !!! Current implementation does not support more than 1 reader / writer and has limited memory allocation
-#define USE_INTERNAL_ALLOCATOR
+//#define USE_INTERNAL_ALLOCATOR
 
 #include "EmbededMalloc.h"
 
@@ -20,6 +20,7 @@ typedef unsigned char BYTE;
 #include "debug.h"
 #include "PacketCRC.h"
 #include "PacketScramble.h"
+#include "PacketPseudoRandomizer.h"
 #include "L0PacketReader.h"
 #include "L0PacketWriter.h"
 #include "L1PacketReader.h"

@@ -19,7 +19,6 @@
 
 	#define UseBoundsCheckerSize	4 * 4		//must be multiple of four 
 	#define	BoundsCheckerPattern	0x0BADBEEF
-#endif
 
 int CanAllocAtThisLocationWithoutOverWrite( void *loc )
 {
@@ -71,6 +70,7 @@ int CheckBoundsIntegrity( void *loc, int size )
 			return 1;
 	return 0;
 }
+#endif
 
 void *EmbededMalloc( size_t size )
 {

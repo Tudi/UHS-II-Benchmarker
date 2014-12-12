@@ -255,6 +255,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketPseudoRandomizer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketPseudoRandomizer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketScramble.cpp"
 				>
 			</File>

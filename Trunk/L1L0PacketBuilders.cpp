@@ -12,7 +12,7 @@ void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 {
 	*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
-	(*Data)[1] = LSS_SYN0;
+	(*Data)[1] = GetRandomizedOpcode( LSS_SYN0 );
 	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }
@@ -54,7 +54,7 @@ void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 {
 	*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
-	(*Data)[1] = LSS_LIDL0;
+	(*Data)[1] = GetRandomizedOpcode( LSS_LIDL0 );
 	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }
@@ -63,7 +63,7 @@ void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
 {
 	*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
-	(*Data)[1] = LSS_DIDL0;
+	(*Data)[1] = GetRandomizedOpcode( LSS_DIDL0 );
 	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line );
 }

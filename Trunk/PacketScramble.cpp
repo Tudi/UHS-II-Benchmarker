@@ -27,6 +27,8 @@ unsigned char lfsr_gucGetChar(unsigned int &ulLfsrData)
 
 void ScramblePacket(BYTE *buf, int len)
 {
+	assert( len < MAX_PACKET_SIZE );
+
 	BYTE	TempPacket[ MAX_PACKET_SIZE ];
 	memcpy( TempPacket, buf, len );
 
@@ -34,10 +36,10 @@ void ScramblePacket(BYTE *buf, int len)
 
 	for( int counter = 0; counter < len; counter++)
     {
-		int scrambler = lfsr_gucGetChar( ulLfsrData );
+		unsigned char scrambler = lfsr_gucGetChar( ulLfsrData );
 //printf("%0X ",scrambler);
-		buf[counter] = buf[counter] ^ ( scrambler & 0xFF );
-    } /**/
+		buf[counter] = buf[counter] ^ scrambler;
+    }
 
 	//padding must be restored
 	for( int counter = 0; counter < len; counter++)
@@ -59,5 +61,8 @@ void ScramblePacket(BYTE *buf, int len)
 		printf( "CRC generation and write failed!\n");
 	ScramblePacket( data, 8 );
 	if( data[0] != 0x4E || data[1] != 0x17 || data[2] != 0x6A || data[3] != 0xAF || data[4] != 0x7E || data[5] != PAD || data[6] != 0xFC || data[7] != 0x9C )
+		printf( "Scrambler is not working as expected!!! \n" );
+	ScramblePacket( data, 8 );
+	if( data[0] != 0xB1 || data[1] != 0x00 || data[2] != 0xAA || data[3] != 0xBB || data[4] != 0xCC || data[5] != PAD || data[6] != 0xFE || data[7] != 0x1E )
 		printf( "Scrambler is not working as expected!!! \n" );
 */
