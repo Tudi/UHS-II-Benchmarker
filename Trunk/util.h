@@ -20,11 +20,11 @@ BYTE BinToDec( __int64 N );
 /*
 Reallocate buffer and copy old content N times into the new buffer
 */
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count = 1 );
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count = 1, int OpcodeLocation = -1);
 /*
 Same as above, just the lazy man version
 */
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line );
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line, int OpcodeLocation = -1 );
 /*
 Words are separated by " ". Skip N words and read the specific "int"
 Line consists of : Lane Command Repeat Param0 Param1...ParamN

@@ -138,13 +138,17 @@ BYTE BinToDec( __int64 N )
 	return (BYTE)ret;
 }
 
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count, int OpcodeLocation )
 {
 	if( Count <= 1 )
 		return *Data;
 	BYTE *ret = (BYTE *)EmbededMalloc( *DataLen * ( 0 + Count ) );
 	for( int i=0;i<Count;i++ )
+	{
 		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
+		if( OpcodeLocation >= 0 )
+			ret[ i * *DataLen + OpcodeLocation ] = GetRandomizedOpcode( ret[ i * *DataLen + OpcodeLocation ] );
+	}
 	*DataLen = *DataLen * ( Count + 0 );
 
 	EmbededFree( *Data );
@@ -153,9 +157,9 @@ BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count )
 	return ret;
 }
 
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line )
+BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line, int OpcodeLocation )
 {
-	return DuplicatePacket( Data, DataLen, GetLineParamXInteger( Line, -1 ) );
+	return DuplicatePacket( Data, DataLen, GetLineParamXInteger( Line, -1 ), OpcodeLocation );
 }
 
 char *ReadUntilNextWord( char *Line )

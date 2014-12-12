@@ -100,6 +100,11 @@ int ReadNextLine( sL1PacketReader *PR )
 
 	memset( PR->LineBuffer, 0, MAX_READER_LINE_BUFFER_LENGTH );	//just in case shit happens, we can be sure to not read from previous line data
 	strcpy_s( PR->LineBuffer, MAX_READER_LINE_BUFFER_LENGTH, LineBuffer );
+	
+	//replace EOL for the sake of nice formatting
+	for( int i=0;i<MAX_READER_LINE_BUFFER_LENGTH && PR->LineBuffer[i] != 0; i++ )
+		if( PR->LineBuffer[i] == '\n' || PR->LineBuffer[i] == '\r' )
+			PR->LineBuffer[i] = 0;
 
 	Dprintf( DLVerbose, "\t Finished PR Read 1 line" );
 

@@ -59,7 +59,7 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW )
 
 int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 {
-	Dprintf( DLVerbose, "Started PW process 1 line" );
+	Dprintf( DLVerbose, "Started PW process 1 line. Write %d bytes", DataLen );
 	if( PW == NULL )
 	{
 		Dprintf( DLVerbose, "\tPW : No valid reader specified" );
@@ -71,6 +71,12 @@ int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 		return 1;
 	}
 	size_t written = fwrite( Data, 1, DataLen, PW->File );
-	Dprintf( DLVerbose, "\t Finished PW process 1 line" );
+
+	char FormattedPacket[ MAX_PACKET_SIZE ];
+	strcpy_s( FormattedPacket, MAX_PACKET_SIZE, "" );
+	for( int i=0;i<DataLen && i<MAX_PACKET_SIZE;i++)
+		sprintf_s( FormattedPacket, MAX_PACKET_SIZE, "%s%02X", FormattedPacket, Data[i] );
+
+	Dprintf( DLVerbose, "\t Finished PW process 1 line : %s", FormattedPacket );
 	return 0;
 }

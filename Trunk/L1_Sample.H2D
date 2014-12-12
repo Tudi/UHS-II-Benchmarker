@@ -17,7 +17,7 @@ Repeate SYN until Config state is exited and Device enters Active State
 0 LIDL 	1
 
 Initialize the Lane :  Config -> Active
-
+0 CCMD	FULL_RESET -> device will reply with RES
 
 do some stuff here
 

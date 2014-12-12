@@ -6,6 +6,7 @@ void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = 0;
 	*DataLen = 1;
 	*Data = DuplicatePacket( Data, DataLen, Line );
+	Dprintf( DLVerbose, "\t PB built STBL packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
@@ -14,7 +15,8 @@ void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_SYN0 );
 	*DataLen = 2;
-	*Data = DuplicatePacket( Data, DataLen, Line );
+	*Data = DuplicatePacket( Data, DataLen, Line, 1 );
+	Dprintf( DLVerbose, "\t PB built SYN packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
@@ -48,6 +50,7 @@ void	L1BuildPckt_DCMDR( BYTE **Data, int *DataLen, char *Line )
 	ScramblePacket( *Data + 2 , *DataLen - 4 );
 
 	*Data = DuplicatePacket( Data, DataLen, Line );
+	Dprintf( DLVerbose, "\t PB built DCMDR packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
@@ -56,7 +59,8 @@ void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_LIDL0 );
 	*DataLen = 2;
-	*Data = DuplicatePacket( Data, DataLen, Line );
+	*Data = DuplicatePacket( Data, DataLen, Line, 1 );
+	Dprintf( DLVerbose, "\t PB built LIDL packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
@@ -65,7 +69,8 @@ void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_DIDL0 );
 	*DataLen = 2;
-	*Data = DuplicatePacket( Data, DataLen, Line );
+	*Data = DuplicatePacket( Data, DataLen, Line, 1 );
+	Dprintf( DLVerbose, "\t PB built DIDL packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_FCRDY( BYTE **Data, int *DataLen, char *Line )
