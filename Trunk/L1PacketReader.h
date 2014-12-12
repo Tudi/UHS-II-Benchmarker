@@ -51,6 +51,7 @@ void	L1BuildPckt_EDB( BYTE **Data, int *DataLen, char *Line );
 //read PDF page 140
 void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line );
+void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line );
 //read PDF page 136
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_CCMDW( BYTE **Data, int *DataLen, char *Line );

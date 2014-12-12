@@ -179,6 +179,39 @@ int GetLineParamXInteger( char *Line, int ParamIndex )
 		Line = ReadUntilNextWord( Line );
 	return atoi( Line );
 }
+
+int HexToInt4Bit( char Hex )
+{
+	static const char HexValues1[17] = "0123456789ABCDEF";
+	static const char HexValues2[17] = "0123456789abcdef";
+	for( int i = 0; i < 16; i++ )
+		if( Hex == HexValues1[i] || Hex == HexValues2[i] )
+			return i;
+	return 256 * 2;
+}
+
+int HexToInt8Bit( char Hex1, char Hex2 )
+{
+	int Hexi1 = HexToInt4Bit( Hex1 );
+	int Hexi2 = HexToInt4Bit( Hex2 );
+	return (Hexi1 << 4) | Hexi2;
+}
+//param 0 comes after repeatcount
+int GetLineParamXHexSTR( char *Line, int ParamIndex, BYTE *Out, int MaxCount )
+{
+	int SkipCount = 3 + ParamIndex;
+	for( int i = 0; i < SkipCount; i++ )
+		Line = ReadUntilNextWord( Line );
+	int i;
+	for( i = 0; i < MaxCount; i+=2 )
+	{
+		int Hex = HexToInt8Bit( Line[i], Line[i + 1] );
+		if( Hex < 0 || Hex > 255 )
+			return i/2;
+		Out[i/2] = Hex;
+	}
+	return i/2;
+}
 /*
 int GetRepeatCountFromLine( char *Line )
 {

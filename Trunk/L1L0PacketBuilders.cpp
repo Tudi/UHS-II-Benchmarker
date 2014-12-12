@@ -108,6 +108,39 @@ void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line )
 	Dprintf( DLVerbose, "\t PB built RES packet. Total size : %d bytes", *DataLen );
 }
 
+void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line )
+{
+	BYTE Payload[ MAX_PACKET_SIZE ];
+	int PayloadLength = GetLineParamXHexSTR( Line, 0, Payload, MAX_PACKET_SIZE );
+
+	*DataLen = sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength + sizeof( sFullLinkLayerPacketDATA1 );
+	sFullLinkLayerPacketDATA0 *p0 = (sFullLinkLayerPacketDATA0 *)EmbededMalloc( *DataLen );
+	*Data = (BYTE*)p0;
+	sFullLinkLayerPacketDATA1 *p1 = (sFullLinkLayerPacketDATA1 *)( *Data + sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength );
+
+	p0->SOPLSS[0] = LSS_COM;
+	p0->SOPLSS[1] = LSS_SOP;
+
+	p0->Header.DestinationID = 0;
+	p0->Header.PacketType = LLPT_DATA;
+	p0->Header.NativePacket = 1;	
+	p0->Header.TransactionID = 0;
+	p0->Header.Reserved = 0;
+	p0->Header.SourceID = 0;
+
+	memcpy( *Data + sizeof( sFullLinkLayerPacketDATA0 ), Payload, PayloadLength );
+
+	p1->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p0->Header, sizeof( sLinkLayerPacketHeader ) + PayloadLength ) );
+
+	p1->EOPLSS[0] = LSS_COM;
+	p1->EOPLSS[1] = LSS_EOP;
+
+	ScramblePacket( (BYTE*)&p0->Header, sizeof( sLinkLayerPacketHeader ) + PayloadLength + sizeof( p1->CRC ) );
+
+	*Data = DuplicatePacket( Data, DataLen, Line );
+	Dprintf( DLVerbose, "\t PB built DATA packet. Total size : %d bytes", *DataLen );
+}
+
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line )
 {
 

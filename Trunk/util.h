@@ -31,6 +31,11 @@ Line consists of : Lane Command Repeat Param0 Param1...ParamN
 */
 int GetLineParamXInteger( char *Line, int ParamIndex );
 /*
+Words are separated by " ". Skip N words and read the specific "int"
+Line consists of : Lane Command Repeat Param0 Param1...ParamN
+*/
+int GetLineParamXHexSTR( char *Line, int ParamIndex, BYTE *Out, int MaxCount );
+/*
 Check if a packet is a replica of the previosu packet
 */
 int CheckPacketDuplicat( BYTE *packet1, BYTE *packet2, int PacketSize, int *VariableLocations, int *VariableLocValues );

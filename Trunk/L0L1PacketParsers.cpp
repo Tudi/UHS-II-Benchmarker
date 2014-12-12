@@ -186,6 +186,51 @@ char *L0ParsePckt_RES( BYTE **ReadStream, int *AvailableBytes )
 	return Ret;
 }
 
+char *L0ParsePckt_DATA( BYTE **ReadStream, int *AvailableBytes )
+{
+	BYTE *RS = *ReadStream;
+	int PayloadLength = READ_WRITE_BLOCK_LENGTH;
+	int PacketSize = sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength + sizeof( sFullLinkLayerPacketDATA1 );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketDATA0 *PDCMD0 = (sFullLinkLayerPacketDATA0 *)*ReadStream;
+	sFullLinkLayerPacketDATA1 *PDCMD1 = (sFullLinkLayerPacketDATA1 *)(*ReadStream + sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength);
+
+	if( PDCMD0->SOPLSS[0] != LSS_COM || PDCMD0->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD1->EOPLSS[0] != LSS_COM || PDCMD1->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	BYTE	TempPacket[ MAX_PACKET_SIZE ];
+
+	memcpy( TempPacket, RS, PacketSize );
+	ScramblePacket( TempPacket + 2, PacketSize - 4 );
+	PDCMD0 = (sFullLinkLayerPacketDATA0 *)TempPacket;
+	PDCMD1 = (sFullLinkLayerPacketDATA1 *)(TempPacket + sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength);
+
+	if( PDCMD0->Header.PacketType != LLPT_DATA )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&PDCMD0->Header, sizeof( sLinkLayerPacketHeader ) + PayloadLength ) );
+	int PacketCRCFromPacket = PDCMD1->CRC;
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "DATA" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	Dprintf( DLVerbose, "\t PP read DATA packet. Total size : %d bytes", ProcessedByteCount );
+	return Ret;
+}
+
 char *L0ParsePckt_FCRDY( BYTE **ReadStream, int *AvailableBytes )
 {
 	return NULL;

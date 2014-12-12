@@ -31,6 +31,8 @@
 
 #define STBL		0
 
+#define READ_WRITE_BLOCK_LENGTH	4
+
 struct L1Symbol
 {
 	char	Name[MAX_L1_SYMBOL_LENGTH];	//as you can see it in the input file

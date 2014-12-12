@@ -23,7 +23,7 @@ Repeate SYN until Config state is exited and Device enters Active State
 0 LIDL 	1
 
 Initialize the Lane :  Config -> Active
-0 CCMDW	1	1	1 -> device will reply with RES
+0 CCMDW 1 1 1 4 -> Set read /write block length to 4 bytes for reading or writing. Device will reply with RES
 
 do some stuff here
 
@@ -38,12 +38,12 @@ ex read
 0 STAT 	1 X		->	We confirm that we got data, device will send us LIDL
 
 ex write
-0 DCMDW	1	->	we want to write. Repeat it until client starts sending RES
+0 DCMD	2 1 0 1 0 4 3 4	-> 	write comand, FD mode, Block read, fixed address, addr 3, block count 4
 0 LIDL 1	->	device sends LIDL
 0 FCREQ 1	->	device sends LIDL
 0 DLIDL 1	->	device sends FCRDY
 0 SDB 1		->	device sends us LIDL
-0 DATA N Y	->	device sends us LIDL
+0 DATA 2 BADBEEF0	->	device sends us LIDL. !!block length amount . Padding not yet implemented
 0 EDB 1		->	device sends us LIDL
 0 LIDL 1	->	device send us STAT
 
