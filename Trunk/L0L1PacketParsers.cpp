@@ -235,7 +235,7 @@ char *L0ParsePckt_DATA( BYTE **ReadStream, int *AvailableBytes )
 	return Ret;
 }
 
-//this is a big hack to simulate device initialization multiple states parsing the same packet differently
+//this is a big hack to simulate device initialization multiple states parsing the same packet differently. This hack presumes we can not reinitialize device using software( or you need to remove this hack )
 static int DeviceIsInitialized = 0;
 static int DeviceIsEnumerated = 0;
 
@@ -336,6 +336,60 @@ char *L0ParsePckt_CCDMDE_H( BYTE **ReadStream, int *AvailableBytes )
 	Dprintf( DLVerbose, "\t PP read CCMDDE packet. Total size : %d bytes", ProcessedByteCount );
 
 	DeviceIsEnumerated = DeviceIsEnumerated + 1;
+
+	return Ret;
+}
+
+char *L0ParsePckt_GETSETREG( BYTE **ReadStream, int *AvailableBytes )
+{
+	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketRegisterInquery );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketRegisterInquery *PDCMD = (sFullLinkLayerPacketRegisterInquery *)*ReadStream;
+
+	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	sFullLinkLayerPacketRegisterInquery TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( TempPacket.data ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_CCMD )
+		return NULL;
+
+	if( DeviceIsEnumerated <= 1 || DeviceIsInitialized <= 1 )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( TempPacket.data ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "REGISTER" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	if( TempPacket.HeaderCCMD.ReadWrite == 1 )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s OP(W)", Ret );
+	else
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s OP(R)", Ret );
+
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Unscrambled data :", Ret );
+	for( int i=0;i<sizeof( TempPacket.data );i++)
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s %02X", Ret, TempPacket.data[ i ] );
+
+	Dprintf( DLVerbose, "\t PP read REGISTER packet. Total size : %d bytes", ProcessedByteCount );
 
 	return Ret;
 }

@@ -151,6 +151,16 @@ struct sFullLinkLayerPacketCCMDDE
 	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
 	BYTE					EOPLSS[2];
 };
+struct sFullLinkLayerPacketRegisterInquery
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketCCMD	HeaderCCMD;
+	BYTE					data[8];		//no idea about size. Maybe 8 bytes ? Depends on register location ?
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
 #pragma pack(pop)
 
 #endif

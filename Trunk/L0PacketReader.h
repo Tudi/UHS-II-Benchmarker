@@ -50,6 +50,7 @@ char *L0ParsePckt_RES( BYTE **, int *);
 char *L0ParsePckt_DATA( BYTE **, int *);
 char *L0ParsePckt_CCDMDI_H( BYTE **, int *);
 char *L0ParsePckt_CCDMDE_H( BYTE **, int *);
+char *L0ParsePckt_GETSETREG( BYTE **, int *);
 char *L0ParsePckt_CCMD( BYTE **, int *);
 char *L0ParsePckt_FCRDY( BYTE **, int *);
 char *L0ParsePckt_FCREQ( BYTE **, int *);

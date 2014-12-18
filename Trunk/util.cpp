@@ -202,15 +202,15 @@ int GetLineParamXHexSTR( char *Line, int ParamIndex, BYTE *Out, int MaxCount )
 	int SkipCount = 3 + ParamIndex;
 	for( int i = 0; i < SkipCount; i++ )
 		Line = ReadUntilNextWord( Line );
-	int i;
-	for( i = 0; i < MaxCount; i+=2 )
+	int j;
+	for( j = 0; j < MaxCount * 2; j+=2 )
 	{
-		int Hex = HexToInt8Bit( Line[i], Line[i + 1] );
+		int Hex = HexToInt8Bit( Line[j], Line[j + 1] );
 		if( Hex < 0 || Hex > 255 )
-			return i/2;
-		Out[i/2] = Hex;
+			return j/2;
+		Out[j/2] = Hex;
 	}
-	return i/2;
+	return j/2;
 }
 /*
 int GetRepeatCountFromLine( char *Line )

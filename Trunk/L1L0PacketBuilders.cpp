@@ -227,6 +227,46 @@ void	L1BuildPckt_CCMDDE( BYTE **Data, int *DataLen, char *Line )
 	Dprintf( DLVerbose, "\t PB built CCMDDE packet. Total size : %d bytes", *DataLen );
 }
 
+void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
+{
+	*DataLen = sizeof( sFullLinkLayerPacketRegisterInquery );
+	sFullLinkLayerPacketRegisterInquery *p = (sFullLinkLayerPacketRegisterInquery *)EmbededMalloc( *DataLen );
+	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
+
+	p->SOPLSS[0] = LSS_COM;
+	p->SOPLSS[1] = LSS_SOP;
+
+	p->Header.DestinationID = 0;
+	p->Header.PacketType = LLPT_CCMD;
+	p->Header.NativePacket = 1;	
+	p->Header.TransactionID = 0;
+	p->Header.Reserved = 0;
+	p->Header.SourceID = 0;
+
+	p->HeaderCCMD.IOADDR0 = 0;
+	p->HeaderCCMD.PLEN = 2;			//8bytes
+	p->HeaderCCMD.Reserved = 0;
+	p->HeaderCCMD.ReadWrite = GetLineParamXInteger( Line, 0 );	//needs to be 0
+	p->HeaderCCMD.IOADDR1 = GetLineParamXInteger( Line, 1 );
+
+	if( p->HeaderCCMD.ReadWrite == 1 )
+	{
+		int PayloadLength = GetLineParamXHexSTR( Line, 2, p->data, 8 );
+		assert( PayloadLength == 8 );
+	}
+
+	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( p->data ) ) );
+
+	p->EOPLSS[0] = LSS_COM;
+	p->EOPLSS[1] = LSS_EOP;
+
+	ScramblePacket( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( p->data ) + sizeof( p->CRC ) );
+
+	*Data = DuplicatePacket( Data, DataLen, Line );
+	Dprintf( DLVerbose, "\t PB built GETREG packet. Total size : %d bytes", *DataLen );
+}
+
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line )
 {
 

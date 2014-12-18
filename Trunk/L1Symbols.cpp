@@ -57,10 +57,11 @@ void InitL1SymbolList()
 	AddSymbol( "LIDL",	LSS_COM,	LSS_LIDL0,	LSS_LIDL1,	L1BuildPckt_LIDL,	L0ParsePckt_LIDL,	"Logical idle" );
 	AddSymbol( "DIDL",	LSS_COM,	LSS_DIDL0,	LSS_DIDL1,	L1BuildPckt_DIDL,	L0ParsePckt_DIDL,	"Data idle" );
 	AddSymbol( "DCMD",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DCMD,	L0ParsePckt_DCMD,	"Request read/write data start" );
-	AddSymbol( "RES",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_RES,	L0ParsePckt_RES,	"command response packet" );
-	AddSymbol( "DATA",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DATA,	L0ParsePckt_DATA,	"data packet" );
-	AddSymbol( "CCMDDI",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDI,	L0ParsePckt_CCDMDI_H,	"control command device init" );
-	AddSymbol( "CCMDDE",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDE,	L0ParsePckt_CCDMDE_H,	"control command device enumerate" );
+	AddSymbol( "RES",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_RES,	L0ParsePckt_RES,	"Command response packet" );
+	AddSymbol( "DATA",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DATA,	L0ParsePckt_DATA,	"Data packet" );
+	AddSymbol( "CCMDDI",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDI,	L0ParsePckt_CCDMDI_H,	"Control command device init" );
+	AddSymbol( "CCMDDE",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDE,	L0ParsePckt_CCDMDE_H,	"Control command device enumerate" );
+	AddSymbol( "REGISTER",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_GETSETREG,	L0ParsePckt_GETSETREG,	"Get/Set Device register value" );
 //	AddSymbol( "CCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDR,	L0ParsePckt_CCMD,	"control command read" );
 //	AddSymbol( "CCMDW",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDW,	L0ParsePckt_CCMD,	"control command write" );
 //	AddSymbol( "FCRDY",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCRDY,	L0ParsePckt_FCRDY,	"signal ready read data" );
