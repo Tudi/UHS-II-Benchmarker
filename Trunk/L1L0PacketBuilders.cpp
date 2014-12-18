@@ -2,19 +2,21 @@
 
 void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)EmbededMalloc( 1 );
-	(*Data)[0] = 0;
 	*DataLen = 1;
+	*Data = (BYTE *)EmbededMalloc( 1 );
+	memset( *Data, 0, *DataLen );
+	(*Data)[0] = 0;
 	*Data = DuplicatePacket( Data, DataLen, Line );
 	Dprintf( DLVerbose, "\t PB built STBL packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 {
+	*DataLen = 2;
 	*Data = (BYTE *)EmbededMalloc( 2 );
+	memset( *Data, 0, *DataLen );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_SYN0 );
-	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line, 1 );
 	Dprintf( DLVerbose, "\t PB built SYN packet. Total size : %d bytes", *DataLen );
 }
@@ -24,6 +26,7 @@ void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line )
 	*DataLen = sizeof( sFullLinkLayerPacketDCMD );
 	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)EmbededMalloc( *DataLen );
 	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
 	p->SOPLSS[1] = LSS_SOP;
@@ -58,10 +61,11 @@ void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line )
 
 void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)EmbededMalloc( 2 );
+	*DataLen = 2;
+	*Data = (BYTE *)EmbededMalloc( *DataLen );
+	memset( *Data, 0, *DataLen );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_LIDL0 );
-	*DataLen = 2;
 	*Data = DuplicatePacket( Data, DataLen, Line, 1 );
 	Dprintf( DLVerbose, "\t PB built LIDL packet. Total size : %d bytes", *DataLen );
 }
@@ -81,6 +85,7 @@ void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line )
 	*DataLen = sizeof( sFullLinkLayerPacketRES );
 	sFullLinkLayerPacketRES *p = (sFullLinkLayerPacketRES *)EmbededMalloc( *DataLen );
 	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
 	p->SOPLSS[1] = LSS_SOP;
@@ -116,6 +121,7 @@ void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line )
 	*DataLen = sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength + sizeof( sFullLinkLayerPacketDATA1 );
 	sFullLinkLayerPacketDATA0 *p0 = (sFullLinkLayerPacketDATA0 *)EmbededMalloc( *DataLen );
 	*Data = (BYTE*)p0;
+	memset( *Data, 0, *DataLen );
 	sFullLinkLayerPacketDATA1 *p1 = (sFullLinkLayerPacketDATA1 *)( *Data + sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength );
 
 	p0->SOPLSS[0] = LSS_COM;
@@ -146,6 +152,7 @@ void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line )
 	*DataLen = sizeof( sFullLinkLayerPacketCCMDDI );
 	sFullLinkLayerPacketCCMDDI *p = (sFullLinkLayerPacketCCMDDI *)EmbededMalloc( *DataLen );
 	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
 	p->SOPLSS[1] = LSS_SOP;
@@ -167,6 +174,7 @@ void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line )
 	p->PacketDeviceInit.GAP = 3; //group allocated power : 1080mW -> see power levels on page 153
 	p->PacketDeviceInit.DAP = 3; //device allocated power : 1080mW -> see power levels on page 153
 	p->PacketDeviceInit.CF = 1; //completion flag, mark the device as initialized
+	p->PacketDeviceInit.Reserved1 = 0;
 
 	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDI ) ) );
 
@@ -177,6 +185,46 @@ void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line )
 
 	*Data = DuplicatePacket( Data, DataLen, Line );
 	Dprintf( DLVerbose, "\t PB built CCMDDI packet. Total size : %d bytes", *DataLen );
+}
+
+void	L1BuildPckt_CCMDDE( BYTE **Data, int *DataLen, char *Line )
+{
+	*DataLen = sizeof( sFullLinkLayerPacketCCMDDE );
+	sFullLinkLayerPacketCCMDDE *p = (sFullLinkLayerPacketCCMDDE *)EmbededMalloc( *DataLen );
+	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
+
+	p->SOPLSS[0] = LSS_COM;
+	p->SOPLSS[1] = LSS_SOP;
+
+	p->Header.DestinationID = 0;
+	p->Header.PacketType = LLPT_CCMD;
+	p->Header.NativePacket = 1;	
+	p->Header.TransactionID = 0;
+	p->Header.Reserved = 0;
+	p->Header.SourceID = 0;
+
+	p->Packet.IOADDR0 = 0;
+	p->Packet.PLEN = 1;
+	p->Packet.Reserved = 0;
+	p->Packet.ReadWrite = 1;
+	p->Packet.IOADDR1 = 0;
+
+	p->PacketDeviceEnum.FirstNodeID = 0;
+	p->PacketDeviceEnum.LastNodeID = 0;	//device will have ID 1
+	p->PacketDeviceEnum.Reserved0 = 0;
+	p->PacketDeviceEnum.Reserved1 = 0;
+	p->PacketDeviceEnum.Reserved2 = 0;
+
+	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDI ) ) );
+
+	p->EOPLSS[0] = LSS_COM;
+	p->EOPLSS[1] = LSS_EOP;
+
+	ScramblePacket( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDI ) + sizeof( p->CRC ) );
+
+	*Data = DuplicatePacket( Data, DataLen, Line );
+	Dprintf( DLVerbose, "\t PB built CCMDDE packet. Total size : %d bytes", *DataLen );
 }
 
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line )

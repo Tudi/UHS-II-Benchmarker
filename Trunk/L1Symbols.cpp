@@ -59,7 +59,8 @@ void InitL1SymbolList()
 	AddSymbol( "DCMD",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DCMD,	L0ParsePckt_DCMD,	"Request read/write data start" );
 	AddSymbol( "RES",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_RES,	L0ParsePckt_RES,	"command response packet" );
 	AddSymbol( "DATA",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_DATA,	L0ParsePckt_DATA,	"data packet" );
-	AddSymbol( "CCMDDI",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDI,	L0ParsePckt_CCDMDI,	"control command device init" );
+	AddSymbol( "CCMDDI",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDI,	L0ParsePckt_CCDMDI_H,	"control command device init" );
+	AddSymbol( "CCMDDE",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDE,	L0ParsePckt_CCDMDE_H,	"control command device enumerate" );
 //	AddSymbol( "CCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDR,	L0ParsePckt_CCMD,	"control command read" );
 //	AddSymbol( "CCMDW",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDW,	L0ParsePckt_CCMD,	"control command write" );
 //	AddSymbol( "FCRDY",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCRDY,	L0ParsePckt_FCRDY,	"signal ready read data" );

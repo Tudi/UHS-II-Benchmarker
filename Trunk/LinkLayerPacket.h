@@ -133,6 +133,24 @@ struct sFullLinkLayerPacketCCMDDI
 	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
 	BYTE					EOPLSS[2];
 };
+struct sLinkLayerPacketCCMDDE
+{
+	BYTE	LastNodeID:4,
+			FirstNodeID:4;
+	BYTE	Reserved0;
+	BYTE	Reserved1;
+	BYTE	Reserved2;
+};
+struct sFullLinkLayerPacketCCMDDE
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketCCMD	Packet;
+	sLinkLayerPacketCCMDDE	PacketDeviceEnum;
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
 #pragma pack(pop)
 
 #endif

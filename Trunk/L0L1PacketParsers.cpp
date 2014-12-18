@@ -235,7 +235,11 @@ char *L0ParsePckt_DATA( BYTE **ReadStream, int *AvailableBytes )
 	return Ret;
 }
 
-char *L0ParsePckt_CCDMDI( BYTE **ReadStream, int *AvailableBytes )
+//this is a big hack to simulate device initialization multiple states parsing the same packet differently
+static int DeviceIsInitialized = 0;
+static int DeviceIsEnumerated = 0;
+
+char *L0ParsePckt_CCDMDI_H( BYTE **ReadStream, int *AvailableBytes )
 {
 	BYTE *RS = *ReadStream;
 	int PacketSize = sizeof( sFullLinkLayerPacketCCMDDI );
@@ -258,6 +262,9 @@ char *L0ParsePckt_CCDMDI( BYTE **ReadStream, int *AvailableBytes )
 	if( TempPacket.Header.PacketType != LLPT_CCMD )
 		return NULL;
 
+	if( DeviceIsEnumerated == 0 || DeviceIsInitialized > 1 )
+		return NULL;
+
 	int	CanSkipLocations[] = { -1 };
 	int	CanSkipLocationValue[] = { -1 };
 	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
@@ -276,6 +283,60 @@ char *L0ParsePckt_CCDMDI( BYTE **ReadStream, int *AvailableBytes )
 	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Completion flag( %d )", Ret, TempPacket.PacketDeviceInit.CF );
 
 	Dprintf( DLVerbose, "\t PP read CCMDDI packet. Total size : %d bytes", ProcessedByteCount );
+
+	if( TempPacket.PacketDeviceInit.CF == 1 )
+		DeviceIsInitialized = DeviceIsInitialized + 1;
+
+	return Ret;
+}
+
+char *L0ParsePckt_CCDMDE_H( BYTE **ReadStream, int *AvailableBytes )
+{
+	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketCCMDDE );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketCCMDDE *PDCMD = (sFullLinkLayerPacketCCMDDE *)*ReadStream;
+
+	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	sFullLinkLayerPacketCCMDDE TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDE ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_CCMD )
+		return NULL;
+
+	if( DeviceIsEnumerated > 1 )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDE ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "CCDMDE" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s FirstNode( %d )", Ret, TempPacket.PacketDeviceEnum.FirstNodeID );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s LastNode( %d )", Ret, TempPacket.PacketDeviceEnum.LastNodeID );
+
+	Dprintf( DLVerbose, "\t PP read CCMDDE packet. Total size : %d bytes", ProcessedByteCount );
+
+	DeviceIsEnumerated = DeviceIsEnumerated + 1;
+
 	return Ret;
 }
 

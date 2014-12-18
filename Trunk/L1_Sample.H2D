@@ -22,7 +22,10 @@ Repeate SYN until Wakeup state is exited and Device enters Config State. If you 
 Repeate SYN until Config state is exited and Device enters Active State
 0 LIDL 	1
 
-Mark config state as initialized. Right now this will allow device to use up to 1080mW
+Device enum will set host ID to 0 and device id to 1
+0 CCMDDE 2
+
+Mark config state as initialized. Right now this will allow device to use up to 1080mW. Max 30 CCMDDI can be sent or else device will consider them error
 0 CCMDDI 2
 
 Initialize the Lane :  Config -> Active

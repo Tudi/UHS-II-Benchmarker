@@ -54,6 +54,8 @@ void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line );
 //read PDF 153
 void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line );
+//read PDF 159
+void	L1BuildPckt_CCMDDE( BYTE **Data, int *DataLen, char *Line );
 //read PDF page 136
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line );
 void	L1BuildPckt_CCMDW( BYTE **Data, int *DataLen, char *Line );
