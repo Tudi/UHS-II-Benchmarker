@@ -227,7 +227,55 @@ char *L0ParsePckt_DATA( BYTE **ReadStream, int *AvailableBytes )
 	if( PacketCRCFromUs != PacketCRCFromPacket )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
 
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Unscrambled data :", Ret );
+	for( int i=0;i<PayloadLength;i++)
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s %02X", Ret, TempPacket[ + sizeof( sFullLinkLayerPacketDATA0 ) + i ] );
+
 	Dprintf( DLVerbose, "\t PP read DATA packet. Total size : %d bytes", ProcessedByteCount );
+	return Ret;
+}
+
+char *L0ParsePckt_CCDMDI( BYTE **ReadStream, int *AvailableBytes )
+{
+	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketCCMDDI );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketCCMDDI *PDCMD = (sFullLinkLayerPacketCCMDDI *)*ReadStream;
+
+	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	sFullLinkLayerPacketCCMDDI TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDI ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_CCMD )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( sLinkLayerPacketCCMDDI ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "CCDMDI" );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Device power( %d )", Ret, TempPacket.PacketDeviceInit.DAP );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Completion flag( %d )", Ret, TempPacket.PacketDeviceInit.CF );
+
+	Dprintf( DLVerbose, "\t PP read CCMDDI packet. Total size : %d bytes", ProcessedByteCount );
 	return Ret;
 }
 

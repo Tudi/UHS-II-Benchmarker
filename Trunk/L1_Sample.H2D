@@ -22,6 +22,9 @@ Repeate SYN until Wakeup state is exited and Device enters Config State. If you 
 Repeate SYN until Config state is exited and Device enters Active State
 0 LIDL 	1
 
+Mark config state as initialized. Right now this will allow device to use up to 1080mW
+0 CCMDDI 2
+
 Initialize the Lane :  Config -> Active
 0 CCMDW 1 1 1 4 -> Set read /write block length to 4 bytes for reading or writing. Device will reply with RES
 
