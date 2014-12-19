@@ -31,12 +31,12 @@ void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line )
 	p->SOPLSS[0] = LSS_COM;
 	p->SOPLSS[1] = LSS_SOP;
 
-	p->Header.DestinationID = 0;
+	p->Header.DestinationID = DEVICE_DEVICE_ID;
 	p->Header.PacketType = LLPT_DCMD;
 	p->Header.NativePacket = 1;	
 	p->Header.TransactionID = 0;
 	p->Header.Reserved = 0;
-	p->Header.SourceID = 0;
+	p->Header.SourceID = HOST_DEVICE_ID;
 
 	p->Packet.Reserved0 = 0;
 	p->Packet.TModeDuplexMode = GetLineParamXInteger( Line, 1 );
@@ -90,12 +90,12 @@ void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line )
 	p->SOPLSS[0] = LSS_COM;
 	p->SOPLSS[1] = LSS_SOP;
 
-	p->Header.DestinationID = 0;
+	p->Header.DestinationID = DEVICE_DEVICE_ID;
 	p->Header.PacketType = LLPT_RES;
 	p->Header.NativePacket = 1;	
 	p->Header.TransactionID = 0;
 	p->Header.Reserved = 0;
-	p->Header.SourceID = 0;
+	p->Header.SourceID = HOST_DEVICE_ID;
 
 	int CommandToAccept = GetLineParamXInteger( Line, 0 );
 	p->Packet.NAck = 0;		//0 means we accept the command sent to us
@@ -127,12 +127,12 @@ void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line )
 	p0->SOPLSS[0] = LSS_COM;
 	p0->SOPLSS[1] = LSS_SOP;
 
-	p0->Header.DestinationID = 0;
+	p0->Header.DestinationID = DEVICE_DEVICE_ID;
 	p0->Header.PacketType = LLPT_DATA;
 	p0->Header.NativePacket = 1;	
 	p0->Header.TransactionID = 0;
 	p0->Header.Reserved = 0;
-	p0->Header.SourceID = 0;
+	p0->Header.SourceID = HOST_DEVICE_ID;
 
 	memcpy( *Data + sizeof( sFullLinkLayerPacketDATA0 ), Payload, PayloadLength );
 
@@ -249,6 +249,17 @@ void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 	p->HeaderCCMD.Reserved = 0;
 	p->HeaderCCMD.ReadWrite = GetLineParamXInteger( Line, 0 );	//needs to be 0
 	p->HeaderCCMD.IOADDR1 = GetLineParamXInteger( Line, 1 );
+
+	if( p->HeaderCCMD.ReadWrite == 1 )	//host is writing to device
+	{
+		p->Header.DestinationID = DEVICE_DEVICE_ID;
+		p->Header.SourceID = HOST_DEVICE_ID;
+	}
+	else	//host is reading from device
+	{
+		p->Header.DestinationID = HOST_DEVICE_ID;
+		p->Header.SourceID = DEVICE_DEVICE_ID;
+	}
 
 	if( p->HeaderCCMD.ReadWrite == 1 )
 	{

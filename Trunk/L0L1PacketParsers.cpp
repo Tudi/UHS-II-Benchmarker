@@ -161,6 +161,7 @@ RESTART_PARSING_WITH_DIFFERENT_PAYLOAD_SIZE:
 
 	//let's make some guesses what kind of RES packet is this
 	sLinkLayerPacketCCMD *TempCCMDRES = (sLinkLayerPacketCCMD *)&TempPacket->Packet;
+	sLinkLayerPacketDCMD *TempDCMDRES = (sLinkLayerPacketDCMD *)&TempPacket->Packet;
 	if( TempCCMDRES->PLEN > 0 && PayloadSize == 0 )
 	{
 		PayloadSize = TempCCMDRES->PLEN * 4;
@@ -184,6 +185,11 @@ RESTART_PARSING_WITH_DIFFERENT_PAYLOAD_SIZE:
 	if( PacketCRCFromUs != PacketCRCFromPacket )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
 
+	if( TempPacket->Header.DestinationID == DEVICE_DEVICE_ID )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Device->Host", Ret );
+	else
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Host->Device", Ret );
+
 	if( TempPacket->Packet.NAck == 0 )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Accepted", Ret );
 	else
@@ -194,8 +200,8 @@ RESTART_PARSING_WITH_DIFFERENT_PAYLOAD_SIZE:
 
 	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Command( %d )", Ret, FullCommand );
 
-	if( TempCCMDRES->PLEN > 0 || TempCCMDRES->IOADDR1 > 0 )
-		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Possible CCMD RES with len(%d) addr( %d )", Ret, TempCCMDRES->PLEN, TempCCMDRES->IOADDR1 );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Possible CCMD RES with len(%d) addr( %d )", Ret, TempCCMDRES->PLEN, TempCCMDRES->IOADDR1 );
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Possible DCMD RES with DM(%d) LM(%d) UM(%d)", Ret, TempDCMDRES->TModeDuplexMode, TempDCMDRES->TModeLengthMode, TempDCMDRES->TModeTLUnitMode );
 
 	Dprintf( DLVerbose, "\t PP read RES packet. Total size : %d bytes", ProcessedByteCount );
 	return Ret;

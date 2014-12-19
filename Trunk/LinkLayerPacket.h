@@ -1,6 +1,9 @@
 #ifndef _LINK_LAYER_PACKET_H_
 #define _LINK_LAYER_PACKET_H_
 
+#define HOST_DEVICE_ID		0
+#define DEVICE_DEVICE_ID	1
+
 enum eLLPTypes
 {
 	LLPT_CCMD	=	0,
