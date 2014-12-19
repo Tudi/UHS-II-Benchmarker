@@ -62,10 +62,9 @@ void InitL1SymbolList()
 	AddSymbol( "CCMDDI",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDI,	L0ParsePckt_CCDMDI_H,	"Control command device init" );
 	AddSymbol( "CCMDDE",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDDE,	L0ParsePckt_CCDMDE_H,	"Control command device enumerate" );
 	AddSymbol( "REGISTER",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_GETSETREG,	L0ParsePckt_GETSETREG,	"Get/Set Device register value" );
-//	AddSymbol( "CCMDR",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDR,	L0ParsePckt_CCMD,	"control command read" );
-//	AddSymbol( "CCMDW",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_CCMDW,	L0ParsePckt_CCMD,	"control command write" );
-//	AddSymbol( "FCRDY",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCRDY,	L0ParsePckt_FCRDY,	"signal ready read data" );
-//	AddSymbol( "FCREQ",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCREQ,	L0ParsePckt_FCREQ,	"signal ready write data" );
+	AddSymbol( "FCRDY",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCRDY,	L0ParsePckt_MSG,	"signal ready read data" );
+	AddSymbol( "FCREQ",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_FCREQ,	L0ParsePckt_MSG,	"signal ready write data" );
+	AddSymbol( "STAT",	LSS_COM,	LSS_SOP,	LSS_SOP,	L1BuildPckt_STAT,	L0ParsePckt_MSG,	"signal read/write data OK" );
 //	AddSymbol( "STB.H", "STB.H", "STB.H",	( 2 << 0 ) | ( 2 << 8 ), L1BuildPckt_STBH, "Shutdown signal" );
 //	AddSymbol( "BSYN",	"BSYN", "COMBSYN0", ( K285 << 0 ) | ( D45 << 8 ), L1BuildPckt_BSYN, "Sync for exiting STB and boot code loading");
 //	AddSymbol( "DIR",	"DIR",	"COMDIR",	( K285 << 0 ) | ( D312 << 8 ), L1BuildPckt_DIR, "Direction switch" );

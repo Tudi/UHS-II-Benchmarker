@@ -418,14 +418,55 @@ char *L0ParsePckt_GETSETREG( BYTE **ReadStream, int *AvailableBytes )
 
 	return Ret;
 }
-/*
-char *L0ParsePckt_FCRDY( BYTE **ReadStream, int *AvailableBytes )
-{
-	return NULL;
-}
 
-char *L0ParsePckt_CCMD( BYTE **ReadStream, int *AvailableBytes )
+char *L0ParsePckt_MSG( BYTE **ReadStream, int *AvailableBytes )
 {
-	return NULL;
+	BYTE *RS = *ReadStream;
+	int PacketSize = sizeof( sFullLinkLayerPacketMSG );
+	if( *AvailableBytes < PacketSize )
+		return NULL;
+
+	sFullLinkLayerPacketMSG *PDCMD = (sFullLinkLayerPacketMSG *)*ReadStream;
+
+	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
+		return NULL;
+
+	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+		return NULL;
+
+	sFullLinkLayerPacketMSG TempPacket;
+
+	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
+	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketMSG ) + sizeof( TempPacket.CRC ) );
+
+	if( TempPacket.Header.PacketType != LLPT_MSG )
+		return NULL;
+
+	int	CanSkipLocations[] = { -1 };
+	int	CanSkipLocationValue[] = { -1 };
+	int PacketCount = CountPacketDuplicat( ReadStream, AvailableBytes, PacketSize, CanSkipLocations, CanSkipLocationValue );
+	int	ProcessedByteCount = PacketCount * PacketSize;
+
+	//check the CRC of the packet
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketMSG ) ) );
+	int PacketCRCFromPacket = TempPacket.CRC;
+
+	char PktType[20] = "MSG";
+	if( TempPacket.Packet.CTG == MSG_CTG_LMSG )
+	{
+		if( TempPacket.Packet.IDX == MSG_IDX_READY )
+			strcpy_s( PktType, 20, "FCRDY" );
+		else if( TempPacket.Packet.IDX == MSG_IDX_REQ )
+			strcpy_s( PktType, 20, "FCREQ" );
+		else if( TempPacket.Packet.IDX == MSG_IDX_STAT )
+			strcpy_s( PktType, 20, "STAT" );
+	}
+
+	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, PktType );
+
+	if( PacketCRCFromUs != PacketCRCFromPacket )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
+
+	Dprintf( DLVerbose, "\t PP read MSG packet. Total size : %d bytes", ProcessedByteCount );
+	return Ret;
 }
-*/

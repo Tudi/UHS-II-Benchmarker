@@ -277,19 +277,53 @@ void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 	*Data = DuplicatePacket( Data, DataLen, Line );
 	Dprintf( DLVerbose, "\t PB built GETREG packet. Total size : %d bytes", *DataLen );
 }
-/*
-void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line )
+
+void	L1BuildPckt_MSG( BYTE **Data, int *DataLen, char *Line, int CTG, int IDX )
 {
+	*DataLen = sizeof( sFullLinkLayerPacketMSG );
+	sFullLinkLayerPacketMSG *p = (sFullLinkLayerPacketMSG *)EmbededMalloc( *DataLen );
+	*Data = (BYTE*)p;
+	memset( *Data, 0, *DataLen );
 
-}
+	p->SOPLSS[0] = LSS_COM;
+	p->SOPLSS[1] = LSS_SOP;
 
-void	L1BuildPckt_CCMDW( BYTE **Data, int *DataLen, char *Line )
-{
+	p->Header.DestinationID = DEVICE_DEVICE_ID;
+	p->Header.PacketType = LLPT_MSG;
+	p->Header.NativePacket = 1;	
+	p->Header.TransactionID = 0;
+	p->Header.Reserved = 0;
+	p->Header.SourceID = HOST_DEVICE_ID;
 
+	p->Packet.CTG = CTG;
+	p->Packet.IDX = IDX;
+	p->Packet.Code = MSG_CODE_NO_ERROR;
+
+	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketMSG ) ) );
+
+	p->EOPLSS[0] = LSS_COM;
+	p->EOPLSS[1] = LSS_EOP;
+
+	ScramblePacket( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketMSG ) + sizeof( p->CRC ) );
+
+	*Data = DuplicatePacket( Data, DataLen, Line );
 }
 
 void	L1BuildPckt_FCRDY( BYTE **Data, int *DataLen, char *Line )
 {
-
+	L1BuildPckt_MSG( Data, DataLen, Line, MSG_CTG_LMSG, MSG_IDX_READY );
+	Dprintf( DLVerbose, "\t PB built FCRDY packet. Total size : %d bytes", *DataLen );
 }
-*/
+
+void	L1BuildPckt_FCREQ( BYTE **Data, int *DataLen, char *Line )
+{
+	L1BuildPckt_MSG( Data, DataLen, Line, MSG_CTG_LMSG, MSG_IDX_REQ );
+	Dprintf( DLVerbose, "\t PB built FCREQ packet. Total size : %d bytes", *DataLen );
+}
+
+void	L1BuildPckt_STAT( BYTE **Data, int *DataLen, char *Line )
+{
+	L1BuildPckt_MSG( Data, DataLen, Line, MSG_CTG_LMSG, MSG_IDX_STAT );
+	Dprintf( DLVerbose, "\t PB built FCREQ packet. Total size : %d bytes", *DataLen );
+}
+

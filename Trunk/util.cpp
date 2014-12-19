@@ -208,7 +208,7 @@ int GetLineParamXHexSTR( char *Line, int ParamIndex, BYTE *Out, int MaxCount )
 		int Hex = HexToInt8Bit( Line[j], Line[j + 1] );
 		if( Hex < 0 || Hex > 255 )
 			return j/2;
-		Out[j/2] = Hex;
+		Out[j/2] = (BYTE)Hex;
 	}
 	return j/2;
 }

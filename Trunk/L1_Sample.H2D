@@ -37,8 +37,8 @@ set capabilities register( reg 12 ) for read / write transfer block to size 1 ( 
 0 REGISTER 2 1 12 01020304
 0 REGISTER 2 1 12 10203040
 
-Initialize the Lane :  Config -> Active
-0 CCMDW 1 1 1 4 -> Set read /write block length to 4 bytes for reading or writing. Device will reply with RES
+		Initialize the Lane :  Config -> Active
+		0 CCMDW 1 1 1 4 -> Set read /write block length to 4 bytes for reading or writing. Device will reply with RES
 
 do some stuff here
 

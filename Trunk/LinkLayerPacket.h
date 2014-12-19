@@ -15,11 +15,25 @@ enum eLLPTypes
 };
 
 //see page 81 table 5-4 to clarify these
-enum eCTG_IDX_Types
+enum eMSG_IDX_Types
 {
-	CTGIDXT_FLOW_CONTROL_REQ	=	0,
-	CTGIDXT_FLOW_CONTROL_READY	=	1,
-	CTGIDXT_FLOW_CONTROL_STAT	=	2,
+	MSG_IDX_REQ		=	0,
+	MSG_IDX_READY	=	1,
+	MSG_IDX_STAT	=	2,
+};
+
+enum eMSG_CTG_Types
+{
+	MSG_CTG_LMSG		=	0,
+	MSG_CTG_INTERRUPT	=	3,
+	MSG_CTG_AMSG		=	4,
+};
+
+enum eMSG_CODE_Types
+{
+	MSG_CODE_NO_ERROR				=	0,
+	MSG_CODE_RECOVERABLE_ERROR		=	1,
+	MSG_CODE_UNRECOVERABLE_ERROR	=	128,
 };
 
 #pragma pack(push,1)
@@ -162,6 +176,15 @@ struct sFullLinkLayerPacketRegisterInquery
 	sLinkLayerPacketHeader	Header;
 	sLinkLayerPacketCCMD	HeaderCCMD;
 	BYTE					data[READ_WRITE_REG_SIZE];		//no idea about size. Maybe 8 bytes ? Depends on register location ?
+	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
+	BYTE					EOPLSS[2];
+};
+struct sFullLinkLayerPacketMSG
+{
+	//start of the packet is sent first
+	BYTE					SOPLSS[2];
+	sLinkLayerPacketHeader	Header;
+	sLinkLayerPacketMSG		Packet;
 	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
 	BYTE					EOPLSS[2];
 };
