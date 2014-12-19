@@ -148,15 +148,26 @@ char *L0ParsePckt_RES( BYTE **ReadStream, int *AvailableBytes )
 	if( PDCMD->SOPLSS[0] != LSS_COM || PDCMD->SOPLSS[1] != LSS_SOP )
 		return NULL;
 
-	if( PDCMD->EOPLSS[0] != LSS_COM || PDCMD->EOPLSS[1] != LSS_EOP )
+	int			PayloadSize = 0;
+	BYTE		TempPacketBuffer[ MAX_PACKET_SIZE ];
+	sFullLinkLayerPacketRES *TempPacket = (sFullLinkLayerPacketRES *)TempPacketBuffer;
+RESTART_PARSING_WITH_DIFFERENT_PAYLOAD_SIZE:
+	PacketSize = sizeof( sFullLinkLayerPacketRES ) + PayloadSize;
+	memcpy( TempPacket, RS, PacketSize );
+	ScramblePacket( (BYTE*)&TempPacket->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) + PayloadSize + sizeof( TempPacket->CRC ) );
+
+	if( TempPacket->Header.PacketType != LLPT_RES )
 		return NULL;
 
-	sFullLinkLayerPacketRES TempPacket;
+	//let's make some guesses what kind of RES packet is this
+	sLinkLayerPacketCCMD *TempCCMDRES = (sLinkLayerPacketCCMD *)&TempPacket->Packet;
+	if( TempCCMDRES->PLEN > 0 && PayloadSize == 0 )
+	{
+		PayloadSize = TempCCMDRES->PLEN * 4;
+		goto RESTART_PARSING_WITH_DIFFERENT_PAYLOAD_SIZE;
+	}
 
-	memcpy( &TempPacket, RS, sizeof( TempPacket ) );
-	ScramblePacket( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) + sizeof( TempPacket.CRC ) );
-
-	if( TempPacket.Header.PacketType != LLPT_RES )
+	if( RS[ PacketSize - 2 ] != LSS_COM || RS[ PacketSize - 1 ] != LSS_EOP )
 		return NULL;
 
 	int	CanSkipLocations[] = { -1 };
@@ -165,22 +176,26 @@ char *L0ParsePckt_RES( BYTE **ReadStream, int *AvailableBytes )
 	int	ProcessedByteCount = PacketCount * PacketSize;
 
 	//check the CRC of the packet
-	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket.Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) ) );
-	int PacketCRCFromPacket = TempPacket.CRC;
+	int PacketCRCFromUs = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&TempPacket->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) + PayloadSize ) );
+	int PacketCRCFromPacket = TempPacket->CRC;
 
 	char *Ret = GenericFormatPacketAsHex( RS, ProcessedByteCount, PacketSize, "RES" );
 
 	if( PacketCRCFromUs != PacketCRCFromPacket )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s CRC_FAILED_(us)%d-(packet)%d", Ret, PacketCRCFromUs, PacketCRCFromPacket );
 
-	if( PDCMD->Packet.NAck == 0 )
+	if( TempPacket->Packet.NAck == 0 )
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Accepted", Ret );
 	else
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Rejected", Ret );
 
-	int FullCommand = PDCMD->Packet.CMD_ECHO_BACK0 | ( PDCMD->Packet.CMD_ECHO_BACK0 << 7 );
+	//for a register read this will contain PLEN / IOADDR and probably 4 bytes of payload
+	int FullCommand = TempPacket->Packet.CMD_ECHO_BACK1 | ( ( TempPacket->Packet.CMD_ECHO_BACK0 & 0x7F ) << 8 );
 
 	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Command( %d )", Ret, FullCommand );
+
+	if( TempCCMDRES->PLEN > 0 || TempCCMDRES->IOADDR1 > 0 )
+		sprintf_s( Ret, MAX_PACKET_SIZE, "%s Possible CCMD RES with len(%d) addr( %d )", Ret, TempCCMDRES->PLEN, TempCCMDRES->IOADDR1 );
 
 	Dprintf( DLVerbose, "\t PP read RES packet. Total size : %d bytes", ProcessedByteCount );
 	return Ret;

@@ -99,8 +99,8 @@ void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line )
 
 	int CommandToAccept = GetLineParamXInteger( Line, 0 );
 	p->Packet.NAck = 0;		//0 means we accept the command sent to us
-	p->Packet.CMD_ECHO_BACK0 = CommandToAccept & 0x7F;		//lower 7 bits
-	p->Packet.CMD_ECHO_BACK1 = CommandToAccept >> 7;		//higher 8 bits
+	p->Packet.CMD_ECHO_BACK0 = ( CommandToAccept >> 8 ) & 0x7F;		//higher 7 bits
+	p->Packet.CMD_ECHO_BACK1 = CommandToAccept & 0xFF;				//lower 8 bits
 
 	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketRES ) ) );
 
