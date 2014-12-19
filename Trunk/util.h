@@ -47,5 +47,15 @@ int CountPacketDuplicat( BYTE **PacketList, int *AvailableBytes, int PacketSize,
 Convert binary data to hex string
 */
 char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int PacketSize, char *PacketName );
+/*
+Playing with BITs
+*/
+#define CLEAR_BIT32( N, BitN ) ( N & ( ~( 1 << BitN ) ) )
+#define SET_BIT32( N, BitN, Val ) ( CLEAR_BIT32( N, BitN ) | ( Val << BitN ) )
+#define GET_BIT32( N, BitN ) ( ( N >> BitN ) & 0x01 )
+#define GET_BITS32( N, BitStart, BitEnd ) ( ( (unsigned int )N << ( 32 - BitEnd ) ) >> ( 32 - ( BitEnd - BitStart ) ) )
+#define GET_BITS64( N, BitStart, BitEnd ) ( ( ( __int64 )N << ( 64 - BitEnd ) ) >> ( 64 - ( BitEnd - BitStart ) ) )
+#define CLEAR_BITS32( N, BitStart, BitEnd ) ( ( ~( GET_BITS32( ~0, BitStart, BitEnd ) << BitStart ) & N ) )
+#define SET_BITS32( N, BitStart, BitEnd, Val ) ( CLEAR_BITS32( N, BitStart, BitEnd ) | ( Val << BitStart ) )
 
 #endif

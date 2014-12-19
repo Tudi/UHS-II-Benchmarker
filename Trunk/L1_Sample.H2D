@@ -31,10 +31,11 @@ Mark config state as initialized. Right now this will allow device to use up to 
 
 read(0) device lynk/tran capabilities register( reg 4 ) to check how large blocks can the device handle. Bits 20->31
 0 REGISTER 2 0 4
+0 REGISTER 2 0 5
 
 set capabilities register( reg 12 ) for read / write transfer block to size 1 ( 4 bytes ). Bits 20->31. HexString from left to right, 8 bytes
-0 REGISTER 2 1 12 0000010203040506
-0 REGISTER 2 1 12 0000010000000000
+0 REGISTER 2 1 12 01020304
+0 REGISTER 2 1 12 10203040
 
 Initialize the Lane :  Config -> Active
 0 CCMDW 1 1 1 4 -> Set read /write block length to 4 bytes for reading or writing. Device will reply with RES

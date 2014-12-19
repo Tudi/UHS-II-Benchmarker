@@ -385,15 +385,19 @@ char *L0ParsePckt_GETSETREG( BYTE **ReadStream, int *AvailableBytes )
 	else
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s OP(R)", Ret );
 
+	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Addr(%d), Size(%d)", Ret, TempPacket.HeaderCCMD.IOADDR1, TempPacket.HeaderCCMD.PLEN );
+
 	sprintf_s( Ret, MAX_PACKET_SIZE, "%s Unscrambled data :", Ret );
-	for( int i=0;i<sizeof( TempPacket.data );i++)
+	for( int i=0;i<TempPacket.HeaderCCMD.PLEN * 4;i++)
 		sprintf_s( Ret, MAX_PACKET_SIZE, "%s %02X", Ret, TempPacket.data[ i ] );
+
+	PrintRegisterContent( TempPacket.HeaderCCMD.IOADDR1, TempPacket.HeaderCCMD.PLEN, TempPacket.data );
 
 	Dprintf( DLVerbose, "\t PP read REGISTER packet. Total size : %d bytes", ProcessedByteCount );
 
 	return Ret;
 }
-
+/*
 char *L0ParsePckt_FCRDY( BYTE **ReadStream, int *AvailableBytes )
 {
 	return NULL;
@@ -403,3 +407,4 @@ char *L0ParsePckt_CCMD( BYTE **ReadStream, int *AvailableBytes )
 {
 	return NULL;
 }
+*/

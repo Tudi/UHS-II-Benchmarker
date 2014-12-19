@@ -21,6 +21,7 @@ typedef unsigned char BYTE;
 #include "PacketCRC.h"
 #include "PacketScramble.h"
 #include "PacketPseudoRandomizer.h"
+#include "RegisterDataFormat.h"
 #include "L0PacketReader.h"
 #include "L0PacketWriter.h"
 #include "L1PacketReader.h"

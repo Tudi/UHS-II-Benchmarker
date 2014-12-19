@@ -245,15 +245,15 @@ void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 	p->Header.SourceID = 0;
 
 	p->HeaderCCMD.IOADDR0 = 0;
-	p->HeaderCCMD.PLEN = 2;			//8bytes
+	p->HeaderCCMD.PLEN = READ_WRITE_REG_SIZE / 4;			//4bytes
 	p->HeaderCCMD.Reserved = 0;
 	p->HeaderCCMD.ReadWrite = GetLineParamXInteger( Line, 0 );	//needs to be 0
 	p->HeaderCCMD.IOADDR1 = GetLineParamXInteger( Line, 1 );
 
 	if( p->HeaderCCMD.ReadWrite == 1 )
 	{
-		int PayloadLength = GetLineParamXHexSTR( Line, 2, p->data, 8 );
-		assert( PayloadLength == 8 );
+		int PayloadLength = GetLineParamXHexSTR( Line, 2, p->data, READ_WRITE_REG_SIZE );
+		assert( PayloadLength == READ_WRITE_REG_SIZE );
 	}
 
 	p->CRC = CRC_LSB_SWAP( crc16_ccitt( (BYTE*)&p->Header, sizeof( sLinkLayerPacketHeader ) + sizeof( sLinkLayerPacketCCMD ) + sizeof( p->data ) ) );
@@ -266,7 +266,7 @@ void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 	*Data = DuplicatePacket( Data, DataLen, Line );
 	Dprintf( DLVerbose, "\t PB built GETREG packet. Total size : %d bytes", *DataLen );
 }
-
+/*
 void	L1BuildPckt_CCMDR( BYTE **Data, int *DataLen, char *Line )
 {
 
@@ -281,3 +281,4 @@ void	L1BuildPckt_FCRDY( BYTE **Data, int *DataLen, char *Line )
 {
 
 }
+*/
