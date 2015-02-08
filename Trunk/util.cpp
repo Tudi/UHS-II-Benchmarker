@@ -276,3 +276,14 @@ char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int Pa
 	}
 	return Ret;
 }
+
+unsigned int FlipBits( unsigned int In, unsigned int BlockLenght )
+{
+	unsigned int ret = 0;
+	for( int i=0;i<BlockLenght;i++)
+	{
+		ret = ret * 2 + (In & 1);
+		In = In / 2;
+	}
+	return ret;
+}

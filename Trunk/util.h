@@ -57,5 +57,9 @@ Playing with BITs
 #define GET_BITS64( N, BitStart, BitEnd ) ( ( ( __int64 )N << ( 64 - BitEnd ) ) >> ( 64 - ( BitEnd - BitStart ) ) )
 #define CLEAR_BITS32( N, BitStart, BitEnd ) ( ( ~( GET_BITS32( ~0, BitStart, BitEnd ) << BitStart ) & N ) )
 #define SET_BITS32( N, BitStart, BitEnd, Val ) ( CLEAR_BITS32( N, BitStart, BitEnd ) | ( Val << BitStart ) )
+/*
+Flip Bits. Can specify the length of data block
+*/
+unsigned int FlipBits( unsigned int In, unsigned int BlockLenght = 8);
 
 #endif
