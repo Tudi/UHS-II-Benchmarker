@@ -192,18 +192,26 @@ int main()
 
 	#include "SetData.h"
 
-	xil_printf("Data 1 is %x\n", data[1]  );
+//	xil_printf("Data 1 is %x\n", data[1]  );
 	//start writing
-//	module[0] = 0x1F;	// disable handlers and transfers
+//	module[0] = 0x1F;	// enable handlers and transfers
 	EnableModuleHandlersAndTranfers()
+//	module[0] = 0xFFFFFFFF;
 
 	//wait until write is finished
-	int AntiDeadlockCounter = 100000000;
+	int AntiDeadlockCounter = 10000000;
 	while (module[0] != 0x0000001E && AntiDeadlockCounter > 0 )
 		AntiDeadlockCounter--;
 
 	if( AntiDeadlockCounter > 0 )
 		xil_printf("there is hope");
+
+	xil_printf("count_read = %x\n", count_read[0]);
+	xil_printf("st_read = %x\n", st_read[0]);
+	xil_printf("data_read = %x\n", data_read[0]);
+
+	xil_printf("data = %x\n", data[0]);
+	xil_printf("count = %x\n", count[0]);
 	/*
 	for(i=0;i<256;i++)
 	{
