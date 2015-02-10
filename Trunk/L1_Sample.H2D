@@ -9,7 +9,7 @@ column 3 : is used to count the number of times the packet should be sent repeat
 
 CCMD comand usage : 
 	CCMDR [IOADDR]
-	CCMDW [PAYLOAD SIZE(real payload is size * 4 bytes)] [IOADDR] [PAYLOAD as HEXSTRING]
+	CCMDW [PAYLOAD SIZE(real payload is size * 4 bytes)] [IOADDR] [PAYLOAD as HEXSTRING from left to right]
 
 DCMD command usage ( see table 6-3 in PDF for available mode combinations ):
 	DCMDR	[Read/Write] [duplex mode] [length mode] [unit mode] [access mode] [ADDR]	[LEN]

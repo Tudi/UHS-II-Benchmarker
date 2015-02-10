@@ -45,17 +45,23 @@ int main( int argc, char *argv[] )
 	fprintf( Out, "for( i = 0; i < 1024; i++ )\n" );
 	fprintf( Out, "\tcfg[i] = 0x04585634;\n" );
 
-	unsigned int ReadBuffPrev, ReadBuff, ReadCount;
+	unsigned int ReadBuffNext, ReadBuff, ReadCount;
 	unsigned int WriteAtIndex = 0;
-	unsigned int WriteCount = 0;
-//	ReadCount = fread( &ReadBuffPrev, 1, sizeof( int ), In );
+	unsigned int WriteCount = 1;
 	ReadCount = fread( &ReadBuff, 1, sizeof( int ), In );
 	while( ReadCount > 0 )
 	{
-		fprintf( Out, "data[%d]=0x%08X;\n", WriteAtIndex, ReadBuff );
-		fprintf( Out, "count[%d]=1;\n", WriteAtIndex );
-		ReadCount = fread( &ReadBuff, 1, sizeof( int ), In );
-		WriteAtIndex++;
+		ReadCount = fread( &ReadBuffNext, 1, sizeof( int ), In );
+		if( ReadCount > 0 && ReadBuff == ReadBuffNext )
+			WriteCount++;
+		else
+		{
+			fprintf( Out, "data[%d]=0x%08X;\n", WriteAtIndex, ReadBuff );
+			fprintf( Out, "count[%d]=%d;\n", WriteAtIndex, WriteCount );
+			WriteAtIndex++;
+			WriteCount = 1;
+		}
+		ReadBuff = ReadBuffNext;
 	}
 	fclose( In );
 	fclose( Out );
