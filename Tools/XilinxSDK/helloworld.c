@@ -50,203 +50,59 @@ int main()
 {
 	volatile int i;
     StatusRegOnRead SR;
+    STField		ST;
+    STField2	ST2;
+    phy_cmd_type0 pct;
+    phy_cmd_type t;
+
     init_platform();
 
- /*   {
-		module[2] = 0x16213; 			// Registrul de configurare statica
-		module[1] = 0;					// Registrul de delay
-		ResetMemoryToZero();
-		data[i] = 0x6541465;			// Scriere date la adresa i
-		cfg[i] = 0x04585634;			// Scriere configurare
-		module[0] = 0x1F;				// registrul principal este scris si incepe transferul de date catre card
-		int AntiDeadlockCounter = 100000000;
-		while (module[0] != 0x0000001E && AntiDeadlockCounter > 0 )// Bucla pana cand se termina transferul
-			AntiDeadlockCounter--;
-		if( AntiDeadlockCounter > 0 )
-			xil_printf("there is hope");
-		return 0;
-    }/**/
-
-	//xil_printf("Status reg( 2 ) : %d\n",module[2]);
-
-//    module[0] = 0x0;	// disable handlers and transfers
     DisableModuleHandlersAndTranfers();
-
-    phy_cmd_type t;
-/*    t.uint32_Data = 0;
-    t.fields.TDM = 3;
-    t.fields.TDRM = 3;
-    t.fields.MODE = 1;
-//    t.fields.CT_PHY_CMD = 0;
-//    t.fields.CT_Rx = 0;
-//    t.fields.CT_Tx = 1;
-    t.fields.CT = 4;
-    t.fields.HOST_MODE = 1;
-    t.fields.BUSIF16 = 1;
-    t.fields.DET_EN = 1;
-    t.fields.RCLKOE = 1;
-    t.fields.RCLKTRMEN = 1;
-    t.fields.CNFG_ALIGN_EN = 1;
-    t.fields.CNFG_LOCK_PERIOD = 0;
-    t.fields.CNFG_LOCK_MARGIN = 3;
-//    xil_printf("struct : %08X\n", t.uint32_Data);
-    */
-    t.uint32_Data = 0x0067E09F;
-
-    module[2]= t.uint32_Data;	//setup CFG register to set physical layers in EIDL state
-
 
     // Setare asteptare -- 0 adica exista un singur tact de delay intre cand incepe sa scrie si cand incepe sa inregistreze intrarile
     module[1] = 0;
 
     ResetMemoryToZero();
+//    xil_printf("struct : %08X\n", t.uint32_Data);
 
-    //read the status of the lanes
-    SR.uint32_Data = module[2];
-	xil_printf("1) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
-	//Sleep( 400 );
-
-	module[0]=0x7ffffffe;
-
-#if 0
-/*	t.uint32_Data = 0;
-	t.fields.TDM = 3;
-	t.fields.TDRM = 3;
-	t.fields.MODE = 1;
-	t.fields.CT = 4;
-	t.fields.HOST_MODE = 1;
-	t.fields.BUSIF16 = 1;
-	t.fields.DET_EN = 1;
-	t.fields.RCLKOE = 1;
-	t.fields.RCLKTRMEN = 1;
-	t.fields.CNFG_ALIGN_EN = 1;
-	t.fields.CNFG_LOCK_PERIOD = 3;
-	t.fields.CNFG_LOCK_MARGIN = 3;
-//	xil_printf("struct : %08X\n", t.uint32_Data);
-	*/
-	t.uint32_Data = 0x007FE09F;	//setup CFG register to increase lock period
-	module[2] = t.uint32_Data;
-	Sleep( 100 );
-
-	//read the new status of the lanes
-	SR.uint32_Data = module[2];
-	xil_printf("2) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
-#endif
-
-	i = module[1];
-	xil_printf("Status reg( 1 ) : %04x\n", i );
-	Sleep( 100 );
-
-
-	//t.uint32_Data = 0x007FE19F;	//setup CFG register to set physical layers in STB.L state
-	//module[2] = t.uint32_Data;
-	Sleep( 100 );
-	t.uint32_Data = 0;
-	for(t.fields.CT=0;t.fields.CT<255;t.fields.CT++)
-	{
-	/*Send out Sync symbol - wait till UHSII device responds with sync byte*/
-
-		t.fields.TDM = 3;
-		t.fields.TDRM = 3;
-		t.fields.MODE = 1;
-		t.fields.HOST_MODE = 1;
-		//t.fields.CT=5;
-		t.fields.BUSIF16 = 1;
-		t.fields.DET_EN = 1;
-		t.fields.RCLKOE = 1;
-		t.fields.RCLKTRMEN = 1;
-		t.fields.CNFG_ALIGN_EN = 1;
-		t.fields.CNFG_LOCK_PERIOD = 3;
-		t.fields.CNFG_LOCK_MARGIN = 3;
-	//	xil_printf("struct : %08X\n", t.uint32_Data);
-	module[2]=t.uint32_Data;
-	Sleep(100);
-
-	//read the new status of the lanes
-	SR.uint32_Data = module[2];
-	xil_printf("3) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
-	if(SR.fields.ST != 0x42)
-	{
-		xil_printf("yuppeeee %x\n", t.fields.CT);
-		Sleep(100);
-	}
-	}
-
-
-
-	module[3]=0xBCBFBCBF;
-	Sleep(100);
-	//read the new status of the lanes
-	SR.uint32_Data = module[2];
-	xil_printf("4) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
-	xil_printf("5) data in: %x\n", module[3] );
-
-	SynPacket Synp;
-#if 0
-	Synp.fields.com = LSS_COM;
-	Synp.fields.syn = LSS_SYN0;
-	data[0] = FlipBits(  Synp.uint16_Data | ( Synp.uint16_Data << 16 ), 32 );
-//	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
-	count[0] = 20;
-	cfg[0] = t.uint32_Data;
-#endif
-#if 0
-	Synp.fields.com = LSS_COM;
-	Synp.fields.syn = LSS_SYN0;
-	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
-	count[0] = 20;
-	cfg[0] = t.uint32_Data;
-#endif
-#if 0
-	Synp.fields.com = FlipBits( LSS_COM, 8 );
-	Synp.fields.syn = FlipBits( LSS_SYN0, 8 );
-	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
-	count[0] = 20;
-	cfg[0] = t.uint32_Data;
-#endif
-#if 0
-	Synp.fields.com = FlipBits( LSS_COM, 8 );
-	Synp.fields.syn = FlipBits( LSS_SYN0, 8 );
-	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
-	count[0] = 20;
-	cfg[0] = 0x04585634;
-#endif
-
-//	#include "SetData.h"
-
-//	xil_printf("Data 1 is %x\n", data[1]  );
-	//start writing
-//	module[0] = 0x1F;	// enable handlers and transfers
-	EnableModuleHandlersAndTranfers();
-//	module[0] = 0xFFFFFFFF;
-
-	//wait until write is finished
-	int AntiDeadlockCounter = 10000000;
-	while (module[0] != 0x0000001E && AntiDeadlockCounter > 0 )
-		AntiDeadlockCounter--;
-
-	if( AntiDeadlockCounter > 0 )
-		xil_printf("there is hope");
-
-	xil_printf("count_read = %x\n", count_read[0]);
-	xil_printf("st_read = %x\n", st_read[0]);
-	xil_printf("data_read = %x\n", data_read[0]);
-
-	xil_printf("data = %x %x %x\n", data[0], data[1], data[2]);
-	xil_printf("count = %x %x %x\n", count[0], count[1], count[2]);
-
-	//read the new status of the lanes
-	SR.uint32_Data = module[2];
-	xil_printf("3) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
-
-	/*
-	for(i=0;i<256;i++)
-	{
+    ////////////////////////////////////////////////////////////////
+    //setup CFG register to set physical layers in EIDL state - 0x0067E09F
+    // !! this will be visible only once for each time you reset VTE !!!
+    {
 		t.uint32_Data = 0;
 		t.fields.TDM = 3;
 		t.fields.TDRM = 3;
 		t.fields.MODE = 1;
-		t.fields.CT = i;
+		t.fields.CT_PHY_CMD = 0;
+		t.fields.CT_Tx = 0;	//EIDL
+		t.fields.HOST_MODE = 1;
+		t.fields.BUSIF16 = 1;
+		t.fields.DET_EN = 1;
+		t.fields.RCLKOE = 1;
+		t.fields.RCLKTRMEN = 1;
+		t.fields.CNFG_ALIGN_EN = 1;
+		t.fields.CNFG_LOCK_PERIOD = 0;
+		t.fields.CNFG_LOCK_MARGIN = 3;
+		module[2]= t.uint32_Data;	//setup CFG register to set physical layers in EIDL state - 0x0067E09F
+
+		Sleep( 100 );
+		 //read the status of the lanes
+		 SR.uint32_Data = module[2];
+		 ST.uint8_Data = SR.fields.ST;
+	//     xil_printf("1) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+		 xil_printf("1) Status reg( 2 ) : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+    }
+    ////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////
+    //setup CFG register to set physical layers in EIDL state - 0x0067E09F
+    {
+		t.uint32_Data = 0;
+		t.fields.TDM = 3;
+		t.fields.TDRM = 3;
+		t.fields.MODE = 1;
+		t.fields.CT_PHY_CMD = 7;
+		t.fields.CT_Tx = 2; //STB.L
 		t.fields.HOST_MODE = 1;
 		t.fields.BUSIF16 = 1;
 		t.fields.DET_EN = 1;
@@ -255,21 +111,132 @@ int main()
 		t.fields.CNFG_ALIGN_EN = 1;
 		t.fields.CNFG_LOCK_PERIOD = 3;
 		t.fields.CNFG_LOCK_MARGIN = 3;
-
-		module[2] = t.uint32_Data;
+		module[2]= t.uint32_Data;	//setup CFG register to set physical layers in STB.L state - 0x0067E09F
 
 		Sleep( 100 );
 
+		 //read the status of the lanes
+		 SR.uint32_Data = module[2];
+		 ST.uint8_Data = SR.fields.ST;
+		 xil_printf("1) Status reg( 2 ) : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+    }
+    ////////////////////////////////////////////////////////////////
+ 	//Sleep( 400 );
+
+ 	module[0]=0x7ffffffe;
+
+ 	i = module[1];
+ 	xil_printf("Status reg( 1 ) : %04x\n", i );
+ 	Sleep( 100 );
+
+ 	Sleep( 100 );
+ 	pct.uint32_Data = 0;
+ 	for(pct.fields.CT=0;pct.fields.CT<255;pct.fields.CT++)
+ 	{
+ 		//Send out Sync symbol - wait till UHSII device responds with sync byte
+
+ 		pct.fields.TDM = 3;
+ 		pct.fields.TDRM = 3;
+ 		pct.fields.MODE = 1;
+ 		pct.fields.HOST_MODE = 1;
+ 		pct.fields.BUSIF16 = 1;
+ 		pct.fields.DET_EN = 1;
+ 		pct.fields.RCLKOE = 1;
+ 		pct.fields.RCLKTRMEN = 1;
+ 		pct.fields.CNFG_ALIGN_EN = 1;
+ 		pct.fields.CNFG_LOCK_PERIOD = 3;
+ 		pct.fields.CNFG_LOCK_MARGIN = 3;
+		module[2]=pct.uint32_Data;
+		Sleep(100);
+
+		//read the new status of the lanes
 		SR.uint32_Data = module[2];
+//		if(SR.fields.ST != 0x42)
+		{
+			t.uint32_Data = pct.uint32_Data;
+			xil_printf("\n");
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, t.fields.CT_PHY_CMD, t.fields.CT_Tx, t.fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, FlipBits( t.fields.CT_PHY_CMD, 4 ),  FlipBits( t.fields.CT_Tx, 2 ),  FlipBits( t.fields.CT_Rx, 2 ) );
+			t.uint32_Data = FlipBits( pct.uint32_Data, 32 );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, t.fields.CT_PHY_CMD, t.fields.CT_Tx, t.fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, FlipBits( t.fields.CT_PHY_CMD, 4 ),  FlipBits( t.fields.CT_Tx, 2 ),  FlipBits( t.fields.CT_Rx, 2 ) );
+			xil_printf("ST: %x %x %x %x\n", SR.fields.RDM, SR.fields.RDTM, SR.fields.ST ,SR.fields.b0  );
+			ST.uint8_Data = SR.fields.ST;
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			ST.uint8_Data = FlipBits( SR.fields.ST, 8 );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			SR.uint32_Data = FlipBits( SR.uint32_Data, 32 );
+			ST.uint8_Data = SR.fields.ST;
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			ST.uint8_Data = FlipBits( SR.fields.ST, 8 );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+		}
+ 	}
 
-		if( SR.uint32_Data != 1024 )
-			xil_printf("!!!!!!! %d \n", i);
-//		xil_printf("Status reg( 2 ) RDM: %d %x %x %x %x\n", i, SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+ 	module[3]=0xBCBFBCBF;
+ 	Sleep(100);
+ 	//read the new status of the lanes
+ 	SR.uint32_Data = module[2];
+ 	xil_printf("4) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+ 	xil_printf("5) data in: %x\n", module[3] );
+ 	SynPacket Synp;
+ #if 0
+ 	Synp.fields.com = LSS_COM;
+ 	Synp.fields.syn = LSS_SYN0;
+ 	data[0] = FlipBits(  Synp.uint16_Data | ( Synp.uint16_Data << 16 ), 32 );
+ //	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
+ 	count[0] = 20;
+ 	cfg[0] = t.uint32_Data;
+ #endif
+ #if 0
+ 	Synp.fields.com = LSS_COM;
+ 	Synp.fields.syn = LSS_SYN0;
+ 	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
+ 	count[0] = 20;
+ 	cfg[0] = t.uint32_Data;
+ #endif
+ #if 0
+ 	Synp.fields.com = FlipBits( LSS_COM, 8 );
+ 	Synp.fields.syn = FlipBits( LSS_SYN0, 8 );
+ 	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
+ 	count[0] = 20;
+ 	cfg[0] = t.uint32_Data;
+ #endif
+ #if 0
+ 	Synp.fields.com = FlipBits( LSS_COM, 8 );
+ 	Synp.fields.syn = FlipBits( LSS_SYN0, 8 );
+ 	data[0] = Synp.uint16_Data | ( Synp.uint16_Data << 16 );
+ 	count[0] = 20;
+ 	cfg[0] = 0x04585634;
+ #endif
 
-//		Sleep( 500 );
-	}
-	*/
+ //	#include "SetData.h"
+/*
+ //	xil_printf("Data 1 is %x\n", data[1]  );
+ 	//start writing
+ //	module[0] = 0x1F;	// enable handlers and transfers
+ 	EnableModuleHandlersAndTranfers();
+ //	module[0] = 0xFFFFFFFF;
 
+ 	//wait until write is finished
+ 	int AntiDeadlockCounter = 10000000;
+ 	while (module[0] != 0x0000001E && AntiDeadlockCounter > 0 )
+ 		AntiDeadlockCounter--;
+
+ 	if( AntiDeadlockCounter > 0 )
+ 		xil_printf("there is hope");
+
+ 	xil_printf("count_read = %x\n", count_read[0]);
+ 	xil_printf("st_read = %x\n", st_read[0]);
+ 	xil_printf("data_read = %x\n", data_read[0]);
+
+ 	xil_printf("data = %x %x %x\n", data[0], data[1], data[2]);
+ 	xil_printf("count = %x %x %x\n", count[0], count[1], count[2]);
+
+ 	//read the new status of the lanes
+ 	SR.uint32_Data = module[2];
+ 	xil_printf("3) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+*/
     Sleep( 1000 );
     return 0;
 }

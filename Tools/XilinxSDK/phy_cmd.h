@@ -17,16 +17,67 @@ typedef union
 		unsigned int DET_EN:1;
 		unsigned int BUSIF16:1;
 		unsigned int HOST_MODE:1;
-/*		unsigned int CT_PHY_CMD:4;
-		unsigned int CT_Tx:2;
-		unsigned int CT_Rx:2; */
 		unsigned int CT:8;
 		unsigned int MODE:1;
 		unsigned int TDRM:2;
 		unsigned int TDM:2;
 	}fields;
 	unsigned int uint32_Data;
+}phy_cmd_type0;
+
+typedef union
+{
+	/*
+	9 --- CNFG_LOCK_MARGIN, CNFG_LOCK_PERIOD, CNFG_ALIGN_EN, RCLKTRMEN, RCLKOE, DET_EN, BUSIF16, HOST_MODE, CT, MODE, TDRM, TDM --- 31
+	*/
+	struct
+	{
+		unsigned int Reserved:9;
+		unsigned int CNFG_LOCK_MARGIN:2;
+		unsigned int CNFG_LOCK_PERIOD:2;
+		unsigned int CNFG_ALIGN_EN:1;
+		unsigned int RCLKTRMEN:1;
+		unsigned int RCLKOE:1;
+		unsigned int DET_EN:1;
+		unsigned int BUSIF16:1;
+		unsigned int HOST_MODE:1;
+		unsigned int CT_PHY_CMD:4;
+		unsigned int CT_Tx:2;
+		unsigned int CT_Rx:2;
+		unsigned int MODE:1;
+		unsigned int TDRM:2;
+		unsigned int TDM:2;
+	}fields;
+	unsigned int uint32_Data;
 }phy_cmd_type;
+
+typedef union
+{
+	struct
+	{
+		unsigned int Amplitude:1;
+		unsigned int Lock:1;
+		unsigned int Pack:1;
+		unsigned int Err:1;
+		unsigned int RDS:2;
+		unsigned int RDTS:2;
+	}fields;
+	unsigned char uint8_Data;
+}STField;
+
+typedef union
+{
+	struct
+	{
+		unsigned int RDTS:2;
+		unsigned int RDS:2;
+		unsigned int Err:1;
+		unsigned int Pack:1;
+		unsigned int Lock:1;
+		unsigned int Amplitude:1;
+	}fields;
+	unsigned char uint8_Data;
+}STField2;
 
 typedef union
 {
