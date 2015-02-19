@@ -43,8 +43,8 @@ volatile unsigned *count_read = (unsigned *)0xC3206000;
 
 void print(char *str);
 
-#define DisableModuleHandlersAndTranfers() 	module[0] = 0x0;
-#define EnableModuleHandlersAndTranfers() 	module[0] = 0x1F;
+#define DisableModuleHandlersAndTranfers() 	module[0] = 0x0
+#define EnableModuleHandlersAndTranfers() 	module[0] = 0x1F
 
 int main()
 {
@@ -70,7 +70,7 @@ int main()
 	//xil_printf("Status reg( 2 ) : %d\n",module[2]);
 
 //    module[0] = 0x0;	// disable handlers and transfers
-    DisableModuleHandlersAndTranfers()
+    DisableModuleHandlersAndTranfers();
 
     phy_cmd_type t;
 /*    t.uint32_Data = 0;
@@ -136,28 +136,50 @@ int main()
 	i = module[1];
 	xil_printf("Status reg( 1 ) : %04x\n", i );
 	Sleep( 100 );
-/*	t.uint32_Data = 0;
-	t.fields.TDM = 3;
-	t.fields.TDRM = 3;
-	t.fields.MODE = 1;
-	t.fields.CT = 0xC;
-	t.fields.HOST_MODE = 1;
-	t.fields.BUSIF16 = 1;
-	t.fields.DET_EN = 1;
-	t.fields.RCLKOE = 1;
-	t.fields.RCLKTRMEN = 1;
-	t.fields.CNFG_ALIGN_EN = 1;
-	t.fields.CNFG_LOCK_PERIOD = 3;
-	t.fields.CNFG_LOCK_MARGIN = 3;
-//	xil_printf("struct : %08X\n", t.uint32_Data);
-*/
-	t.uint32_Data = 0x007FE19F;	//setup CFG register to set physical layers in STB.L state
-	module[2] = t.uint32_Data;
+
+
+	//t.uint32_Data = 0x007FE19F;	//setup CFG register to set physical layers in STB.L state
+	//module[2] = t.uint32_Data;
 	Sleep( 100 );
+	t.uint32_Data = 0;
+	for(t.fields.CT=0;t.fields.CT<255;t.fields.CT++)
+	{
+	/*Send out Sync symbol - wait till UHSII device responds with sync byte*/
+
+		t.fields.TDM = 3;
+		t.fields.TDRM = 3;
+		t.fields.MODE = 1;
+		t.fields.HOST_MODE = 1;
+		//t.fields.CT=5;
+		t.fields.BUSIF16 = 1;
+		t.fields.DET_EN = 1;
+		t.fields.RCLKOE = 1;
+		t.fields.RCLKTRMEN = 1;
+		t.fields.CNFG_ALIGN_EN = 1;
+		t.fields.CNFG_LOCK_PERIOD = 3;
+		t.fields.CNFG_LOCK_MARGIN = 3;
+	//	xil_printf("struct : %08X\n", t.uint32_Data);
+	module[2]=t.uint32_Data;
+	Sleep(100);
 
 	//read the new status of the lanes
 	SR.uint32_Data = module[2];
 	xil_printf("3) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+	if(SR.fields.ST != 0x42)
+	{
+		xil_printf("yuppeeee %x\n", t.fields.CT);
+		Sleep(100);
+	}
+	}
+
+
+
+	module[3]=0xBCBFBCBF;
+	Sleep(100);
+	//read the new status of the lanes
+	SR.uint32_Data = module[2];
+	xil_printf("4) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+	xil_printf("5) data in: %x\n", module[3] );
 
 	SynPacket Synp;
 #if 0
@@ -190,12 +212,12 @@ int main()
 	cfg[0] = 0x04585634;
 #endif
 
-	#include "SetData.h"
+//	#include "SetData.h"
 
 //	xil_printf("Data 1 is %x\n", data[1]  );
 	//start writing
 //	module[0] = 0x1F;	// enable handlers and transfers
-	EnableModuleHandlersAndTranfers()
+	EnableModuleHandlersAndTranfers();
 //	module[0] = 0xFFFFFFFF;
 
 	//wait until write is finished
@@ -210,8 +232,13 @@ int main()
 	xil_printf("st_read = %x\n", st_read[0]);
 	xil_printf("data_read = %x\n", data_read[0]);
 
-	xil_printf("data = %x\n", data[0]);
-	xil_printf("count = %x\n", count[0]);
+	xil_printf("data = %x %x %x\n", data[0], data[1], data[2]);
+	xil_printf("count = %x %x %x\n", count[0], count[1], count[2]);
+
+	//read the new status of the lanes
+	SR.uint32_Data = module[2];
+	xil_printf("3) Status reg( 2 ) RDM: %x %x %x %x\n", SR.fields.RDM,SR.fields.RDTM,SR.fields.ST ,SR.fields.b0  );
+
 	/*
 	for(i=0;i<256;i++)
 	{

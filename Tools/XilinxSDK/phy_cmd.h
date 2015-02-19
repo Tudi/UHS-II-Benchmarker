@@ -62,7 +62,7 @@ typedef union
 #define LSS_COM		K285
 #define LSS_SOP		K281
 #define LSS_EOP		K297
-#define LSS_SYN0	0x5F
+#define LSS_SYN0	0xBF
 #define LSS_SYN1	D262
 #define LSS_LIDL0	K283
 #define LSS_LIDL1	D167

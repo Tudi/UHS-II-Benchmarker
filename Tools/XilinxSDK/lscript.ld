@@ -10,14 +10,14 @@
 /*                                                                 */
 /*******************************************************************/
 
-_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x400;
+_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x500;
 _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x100;
 
 /* Define Memories in the system */
 
 MEMORY
 {
-   ilmb_cntlr_dlmb_cntlr : ORIGIN = 0x00000050, LENGTH = 0x00001FB0
+   ilmb_cntlr_dlmb_cntlr : ORIGIN = 0x00000050, LENGTH = 0x0003fFB0
 }
 
 /* Specify the default entry point to the program */
