@@ -55,6 +55,17 @@ typedef union
 {
 	struct
 	{
+		unsigned int CT_PHY_CMD:4;
+		unsigned int CT_Tx:2;
+		unsigned int CT_Rx:2;
+	}fields;
+	unsigned char uint8_Data;
+}CTFieldMode0;
+
+typedef union
+{
+	struct
+	{
 		unsigned int Amplitude:1;
 		unsigned int Lock:1;
 		unsigned int Pack:1;

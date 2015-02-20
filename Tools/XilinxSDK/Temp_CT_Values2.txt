@@ -1,0 +1,1542 @@
+			t.uint32_Data = pct.uint32_Data;
+			xil_printf("\n");
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, t.fields.CT_PHY_CMD, t.fields.CT_Tx, t.fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, FlipBits( t.fields.CT_PHY_CMD, 4 ),  FlipBits( t.fields.CT_Tx, 2 ),  FlipBits( t.fields.CT_Rx, 2 ) );
+			xil_printf("ST: %x %x %x %x\n", SR.fields.RDM, SR.fields.RDTM, SR.fields.ST ,SR.fields.b0  );
+			ST.uint8_Data = SR.fields.ST;
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			ST.uint8_Data = FlipBits( SR.fields.ST, 8 );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			SR.uint32_Data = FlipBits( SR.uint32_Data, 32 );
+			
+CT = 0 - 0 - CMD = 0 Tx = 0 Rx = 0
+CT = 0 - 0 - CMD = 0 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 1 - 1 - CMD = 0 Tx = 0 Rx = 1
+CT = 1 - 1 - CMD = 0 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 2 - 2 - CMD = 0 Tx = 0 Rx = 2
+CT = 2 - 2 - CMD = 0 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 3 - 3 - CMD = 0 Tx = 0 Rx = 3
+CT = 3 - 3 - CMD = 0 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 4 - 4 - CMD = 0 Tx = 1 Rx = 0
+CT = 4 - 4 - CMD = 0 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 5 - 5 - CMD = 0 Tx = 1 Rx = 1
+CT = 5 - 5 - CMD = 0 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 6 - 6 - CMD = 0 Tx = 1 Rx = 2
+CT = 6 - 6 - CMD = 0 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 7 - 7 - CMD = 0 Tx = 1 Rx = 3
+CT = 7 - 7 - CMD = 0 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 8 - 8 - CMD = 0 Tx = 2 Rx = 0
+CT = 8 - 8 - CMD = 0 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 9 - 9 - CMD = 0 Tx = 2 Rx = 1
+CT = 9 - 9 - CMD = 0 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 10 - A - CMD = 0 Tx = 2 Rx = 2
+CT = 10 - A - CMD = 0 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 11 - B - CMD = 0 Tx = 2 Rx = 3
+CT = 11 - B - CMD = 0 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 12 - C - CMD = 0 Tx = 3 Rx = 0
+CT = 12 - C - CMD = 0 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 13 - D - CMD = 0 Tx = 3 Rx = 1
+CT = 13 - D - CMD = 0 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 14 - E - CMD = 0 Tx = 3 Rx = 2
+CT = 14 - E - CMD = 0 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 15 - F - CMD = 0 Tx = 3 Rx = 3
+CT = 15 - F - CMD = 0 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 16 - 10 - CMD = 1 Tx = 0 Rx = 0
+CT = 16 - 10 - CMD = 8 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 17 - 11 - CMD = 1 Tx = 0 Rx = 1
+CT = 17 - 11 - CMD = 8 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 18 - 12 - CMD = 1 Tx = 0 Rx = 2
+CT = 18 - 12 - CMD = 8 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 19 - 13 - CMD = 1 Tx = 0 Rx = 3
+CT = 19 - 13 - CMD = 8 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 20 - 14 - CMD = 1 Tx = 1 Rx = 0
+CT = 20 - 14 - CMD = 8 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 21 - 15 - CMD = 1 Tx = 1 Rx = 1
+CT = 21 - 15 - CMD = 8 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 22 - 16 - CMD = 1 Tx = 1 Rx = 2
+CT = 22 - 16 - CMD = 8 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 23 - 17 - CMD = 1 Tx = 1 Rx = 3
+CT = 23 - 17 - CMD = 8 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 24 - 18 - CMD = 1 Tx = 2 Rx = 0
+CT = 24 - 18 - CMD = 8 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 25 - 19 - CMD = 1 Tx = 2 Rx = 1
+CT = 25 - 19 - CMD = 8 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 26 - 1A - CMD = 1 Tx = 2 Rx = 2
+CT = 26 - 1A - CMD = 8 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 27 - 1B - CMD = 1 Tx = 2 Rx = 3
+CT = 27 - 1B - CMD = 8 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 28 - 1C - CMD = 1 Tx = 3 Rx = 0
+CT = 28 - 1C - CMD = 8 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 29 - 1D - CMD = 1 Tx = 3 Rx = 1
+CT = 29 - 1D - CMD = 8 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 30 - 1E - CMD = 1 Tx = 3 Rx = 2
+CT = 30 - 1E - CMD = 8 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 31 - 1F - CMD = 1 Tx = 3 Rx = 3
+CT = 31 - 1F - CMD = 8 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 32 - 20 - CMD = 2 Tx = 0 Rx = 0
+CT = 32 - 20 - CMD = 4 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 33 - 21 - CMD = 2 Tx = 0 Rx = 1
+CT = 33 - 21 - CMD = 4 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 34 - 22 - CMD = 2 Tx = 0 Rx = 2
+CT = 34 - 22 - CMD = 4 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 35 - 23 - CMD = 2 Tx = 0 Rx = 3
+CT = 35 - 23 - CMD = 4 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 36 - 24 - CMD = 2 Tx = 1 Rx = 0
+CT = 36 - 24 - CMD = 4 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 37 - 25 - CMD = 2 Tx = 1 Rx = 1
+CT = 37 - 25 - CMD = 4 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 38 - 26 - CMD = 2 Tx = 1 Rx = 2
+CT = 38 - 26 - CMD = 4 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 39 - 27 - CMD = 2 Tx = 1 Rx = 3
+CT = 39 - 27 - CMD = 4 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 40 - 28 - CMD = 2 Tx = 2 Rx = 0
+CT = 40 - 28 - CMD = 4 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 41 - 29 - CMD = 2 Tx = 2 Rx = 1
+CT = 41 - 29 - CMD = 4 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 42 - 2A - CMD = 2 Tx = 2 Rx = 2
+CT = 42 - 2A - CMD = 4 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 43 - 2B - CMD = 2 Tx = 2 Rx = 3
+CT = 43 - 2B - CMD = 4 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 44 - 2C - CMD = 2 Tx = 3 Rx = 0
+CT = 44 - 2C - CMD = 4 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 45 - 2D - CMD = 2 Tx = 3 Rx = 1
+CT = 45 - 2D - CMD = 4 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 46 - 2E - CMD = 2 Tx = 3 Rx = 2
+CT = 46 - 2E - CMD = 4 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 47 - 2F - CMD = 2 Tx = 3 Rx = 3
+CT = 47 - 2F - CMD = 4 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 48 - 30 - CMD = 3 Tx = 0 Rx = 0
+CT = 48 - 30 - CMD = C Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 49 - 31 - CMD = 3 Tx = 0 Rx = 1
+CT = 49 - 31 - CMD = C Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 50 - 32 - CMD = 3 Tx = 0 Rx = 2
+CT = 50 - 32 - CMD = C Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 51 - 33 - CMD = 3 Tx = 0 Rx = 3
+CT = 51 - 33 - CMD = C Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 52 - 34 - CMD = 3 Tx = 1 Rx = 0
+CT = 52 - 34 - CMD = C Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 53 - 35 - CMD = 3 Tx = 1 Rx = 1
+CT = 53 - 35 - CMD = C Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 54 - 36 - CMD = 3 Tx = 1 Rx = 2
+CT = 54 - 36 - CMD = C Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 55 - 37 - CMD = 3 Tx = 1 Rx = 3
+CT = 55 - 37 - CMD = C Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 56 - 38 - CMD = 3 Tx = 2 Rx = 0
+CT = 56 - 38 - CMD = C Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 57 - 39 - CMD = 3 Tx = 2 Rx = 1
+CT = 57 - 39 - CMD = C Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 58 - 3A - CMD = 3 Tx = 2 Rx = 2
+CT = 58 - 3A - CMD = C Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 59 - 3B - CMD = 3 Tx = 2 Rx = 3
+CT = 59 - 3B - CMD = C Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 60 - 3C - CMD = 3 Tx = 3 Rx = 0
+CT = 60 - 3C - CMD = C Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 61 - 3D - CMD = 3 Tx = 3 Rx = 1
+CT = 61 - 3D - CMD = C Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 62 - 3E - CMD = 3 Tx = 3 Rx = 2
+CT = 62 - 3E - CMD = C Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 63 - 3F - CMD = 3 Tx = 3 Rx = 3
+CT = 63 - 3F - CMD = C Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 64 - 40 - CMD = 4 Tx = 0 Rx = 0
+CT = 64 - 40 - CMD = 2 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 65 - 41 - CMD = 4 Tx = 0 Rx = 1
+CT = 65 - 41 - CMD = 2 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 66 - 42 - CMD = 4 Tx = 0 Rx = 2
+CT = 66 - 42 - CMD = 2 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 67 - 43 - CMD = 4 Tx = 0 Rx = 3
+CT = 67 - 43 - CMD = 2 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 68 - 44 - CMD = 4 Tx = 1 Rx = 0
+CT = 68 - 44 - CMD = 2 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 69 - 45 - CMD = 4 Tx = 1 Rx = 1
+CT = 69 - 45 - CMD = 2 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 70 - 46 - CMD = 4 Tx = 1 Rx = 2
+CT = 70 - 46 - CMD = 2 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 71 - 47 - CMD = 4 Tx = 1 Rx = 3
+CT = 71 - 47 - CMD = 2 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 72 - 48 - CMD = 4 Tx = 2 Rx = 0
+CT = 72 - 48 - CMD = 2 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 73 - 49 - CMD = 4 Tx = 2 Rx = 1
+CT = 73 - 49 - CMD = 2 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 74 - 4A - CMD = 4 Tx = 2 Rx = 2
+CT = 74 - 4A - CMD = 2 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 75 - 4B - CMD = 4 Tx = 2 Rx = 3
+CT = 75 - 4B - CMD = 2 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 76 - 4C - CMD = 4 Tx = 3 Rx = 0
+CT = 76 - 4C - CMD = 2 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 77 - 4D - CMD = 4 Tx = 3 Rx = 1
+CT = 77 - 4D - CMD = 2 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 78 - 4E - CMD = 4 Tx = 3 Rx = 2
+CT = 78 - 4E - CMD = 2 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 79 - 4F - CMD = 4 Tx = 3 Rx = 3
+CT = 79 - 4F - CMD = 2 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 80 - 50 - CMD = 5 Tx = 0 Rx = 0
+CT = 80 - 50 - CMD = A Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 81 - 51 - CMD = 5 Tx = 0 Rx = 1
+CT = 81 - 51 - CMD = A Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 82 - 52 - CMD = 5 Tx = 0 Rx = 2
+CT = 82 - 52 - CMD = A Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 83 - 53 - CMD = 5 Tx = 0 Rx = 3
+CT = 83 - 53 - CMD = A Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 84 - 54 - CMD = 5 Tx = 1 Rx = 0
+CT = 84 - 54 - CMD = A Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 85 - 55 - CMD = 5 Tx = 1 Rx = 1
+CT = 85 - 55 - CMD = A Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 86 - 56 - CMD = 5 Tx = 1 Rx = 2
+CT = 86 - 56 - CMD = A Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 87 - 57 - CMD = 5 Tx = 1 Rx = 3
+CT = 87 - 57 - CMD = A Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 88 - 58 - CMD = 5 Tx = 2 Rx = 0
+CT = 88 - 58 - CMD = A Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 89 - 59 - CMD = 5 Tx = 2 Rx = 1
+CT = 89 - 59 - CMD = A Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 90 - 5A - CMD = 5 Tx = 2 Rx = 2
+CT = 90 - 5A - CMD = A Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 91 - 5B - CMD = 5 Tx = 2 Rx = 3
+CT = 91 - 5B - CMD = A Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 92 - 5C - CMD = 5 Tx = 3 Rx = 0
+CT = 92 - 5C - CMD = A Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 93 - 5D - CMD = 5 Tx = 3 Rx = 1
+CT = 93 - 5D - CMD = A Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 94 - 5E - CMD = 5 Tx = 3 Rx = 2
+CT = 94 - 5E - CMD = A Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 95 - 5F - CMD = 5 Tx = 3 Rx = 3
+CT = 95 - 5F - CMD = A Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 96 - 60 - CMD = 6 Tx = 0 Rx = 0
+CT = 96 - 60 - CMD = 6 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 97 - 61 - CMD = 6 Tx = 0 Rx = 1
+CT = 97 - 61 - CMD = 6 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 98 - 62 - CMD = 6 Tx = 0 Rx = 2
+CT = 98 - 62 - CMD = 6 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 99 - 63 - CMD = 6 Tx = 0 Rx = 3
+CT = 99 - 63 - CMD = 6 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 100 - 64 - CMD = 6 Tx = 1 Rx = 0
+CT = 100 - 64 - CMD = 6 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 101 - 65 - CMD = 6 Tx = 1 Rx = 1
+CT = 101 - 65 - CMD = 6 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 102 - 66 - CMD = 6 Tx = 1 Rx = 2
+CT = 102 - 66 - CMD = 6 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 103 - 67 - CMD = 6 Tx = 1 Rx = 3
+CT = 103 - 67 - CMD = 6 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 104 - 68 - CMD = 6 Tx = 2 Rx = 0
+CT = 104 - 68 - CMD = 6 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 105 - 69 - CMD = 6 Tx = 2 Rx = 1
+CT = 105 - 69 - CMD = 6 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 106 - 6A - CMD = 6 Tx = 2 Rx = 2
+CT = 106 - 6A - CMD = 6 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 107 - 6B - CMD = 6 Tx = 2 Rx = 3
+CT = 107 - 6B - CMD = 6 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 108 - 6C - CMD = 6 Tx = 3 Rx = 0
+CT = 108 - 6C - CMD = 6 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 109 - 6D - CMD = 6 Tx = 3 Rx = 1
+CT = 109 - 6D - CMD = 6 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 110 - 6E - CMD = 6 Tx = 3 Rx = 2
+CT = 110 - 6E - CMD = 6 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 111 - 6F - CMD = 6 Tx = 3 Rx = 3
+CT = 111 - 6F - CMD = 6 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 112 - 70 - CMD = 7 Tx = 0 Rx = 0
+CT = 112 - 70 - CMD = E Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 113 - 71 - CMD = 7 Tx = 0 Rx = 1
+CT = 113 - 71 - CMD = E Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 114 - 72 - CMD = 7 Tx = 0 Rx = 2
+CT = 114 - 72 - CMD = E Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 115 - 73 - CMD = 7 Tx = 0 Rx = 3
+CT = 115 - 73 - CMD = E Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 116 - 74 - CMD = 7 Tx = 1 Rx = 0
+CT = 116 - 74 - CMD = E Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 117 - 75 - CMD = 7 Tx = 1 Rx = 1
+CT = 117 - 75 - CMD = E Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 118 - 76 - CMD = 7 Tx = 1 Rx = 2
+CT = 118 - 76 - CMD = E Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 119 - 77 - CMD = 7 Tx = 1 Rx = 3
+CT = 119 - 77 - CMD = E Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 120 - 78 - CMD = 7 Tx = 2 Rx = 0
+CT = 120 - 78 - CMD = E Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 121 - 79 - CMD = 7 Tx = 2 Rx = 1
+CT = 121 - 79 - CMD = E Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 122 - 7A - CMD = 7 Tx = 2 Rx = 2
+CT = 122 - 7A - CMD = E Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 123 - 7B - CMD = 7 Tx = 2 Rx = 3
+CT = 123 - 7B - CMD = E Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 124 - 7C - CMD = 7 Tx = 3 Rx = 0
+CT = 124 - 7C - CMD = E Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 125 - 7D - CMD = 7 Tx = 3 Rx = 1
+CT = 125 - 7D - CMD = E Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 126 - 7E - CMD = 7 Tx = 3 Rx = 2
+CT = 126 - 7E - CMD = E Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 127 - 7F - CMD = 7 Tx = 3 Rx = 3
+CT = 127 - 7F - CMD = E Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 128 - 80 - CMD = 8 Tx = 0 Rx = 0
+CT = 128 - 80 - CMD = 1 Tx = 0 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 129 - 81 - CMD = 8 Tx = 0 Rx = 1
+CT = 129 - 81 - CMD = 1 Tx = 0 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 130 - 82 - CMD = 8 Tx = 0 Rx = 2
+CT = 130 - 82 - CMD = 1 Tx = 0 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 131 - 83 - CMD = 8 Tx = 0 Rx = 3
+CT = 131 - 83 - CMD = 1 Tx = 0 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 132 - 84 - CMD = 8 Tx = 1 Rx = 0
+CT = 132 - 84 - CMD = 1 Tx = 2 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 133 - 85 - CMD = 8 Tx = 1 Rx = 1
+CT = 133 - 85 - CMD = 1 Tx = 2 Rx = 2
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 134 - 86 - CMD = 8 Tx = 1 Rx = 2
+CT = 134 - 86 - CMD = 1 Tx = 2 Rx = 1
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 135 - 87 - CMD = 8 Tx = 1 Rx = 3
+CT = 135 - 87 - CMD = 1 Tx = 2 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 136 - 88 - CMD = 8 Tx = 2 Rx = 0
+CT = 136 - 88 - CMD = 1 Tx = 1 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 137 - 89 - CMD = 8 Tx = 2 Rx = 1
+CT = 137 - 89 - CMD = 1 Tx = 1 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 138 - 8A - CMD = 8 Tx = 2 Rx = 2
+CT = 138 - 8A - CMD = 1 Tx = 1 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 139 - 8B - CMD = 8 Tx = 2 Rx = 3
+CT = 139 - 8B - CMD = 1 Tx = 1 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 140 - 8C - CMD = 8 Tx = 3 Rx = 0
+CT = 140 - 8C - CMD = 1 Tx = 3 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 141 - 8D - CMD = 8 Tx = 3 Rx = 1
+CT = 141 - 8D - CMD = 1 Tx = 3 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 142 - 8E - CMD = 8 Tx = 3 Rx = 2
+CT = 142 - 8E - CMD = 1 Tx = 3 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 143 - 8F - CMD = 8 Tx = 3 Rx = 3
+CT = 143 - 8F - CMD = 1 Tx = 3 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 144 - 90 - CMD = 9 Tx = 0 Rx = 0
+CT = 144 - 90 - CMD = 9 Tx = 0 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 145 - 91 - CMD = 9 Tx = 0 Rx = 1
+CT = 145 - 91 - CMD = 9 Tx = 0 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 146 - 92 - CMD = 9 Tx = 0 Rx = 2
+CT = 146 - 92 - CMD = 9 Tx = 0 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 147 - 93 - CMD = 9 Tx = 0 Rx = 3
+CT = 147 - 93 - CMD = 9 Tx = 0 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 148 - 94 - CMD = 9 Tx = 1 Rx = 0
+CT = 148 - 94 - CMD = 9 Tx = 2 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 149 - 95 - CMD = 9 Tx = 1 Rx = 1
+CT = 149 - 95 - CMD = 9 Tx = 2 Rx = 2
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 150 - 96 - CMD = 9 Tx = 1 Rx = 2
+CT = 150 - 96 - CMD = 9 Tx = 2 Rx = 1
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 151 - 97 - CMD = 9 Tx = 1 Rx = 3
+CT = 151 - 97 - CMD = 9 Tx = 2 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 152 - 98 - CMD = 9 Tx = 2 Rx = 0
+CT = 152 - 98 - CMD = 9 Tx = 1 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 153 - 99 - CMD = 9 Tx = 2 Rx = 1
+CT = 153 - 99 - CMD = 9 Tx = 1 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 154 - 9A - CMD = 9 Tx = 2 Rx = 2
+CT = 154 - 9A - CMD = 9 Tx = 1 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 155 - 9B - CMD = 9 Tx = 2 Rx = 3
+CT = 155 - 9B - CMD = 9 Tx = 1 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 156 - 9C - CMD = 9 Tx = 3 Rx = 0
+CT = 156 - 9C - CMD = 9 Tx = 3 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 157 - 9D - CMD = 9 Tx = 3 Rx = 1
+CT = 157 - 9D - CMD = 9 Tx = 3 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 158 - 9E - CMD = 9 Tx = 3 Rx = 2
+CT = 158 - 9E - CMD = 9 Tx = 3 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 159 - 9F - CMD = 9 Tx = 3 Rx = 3
+CT = 159 - 9F - CMD = 9 Tx = 3 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 160 - A0 - CMD = A Tx = 0 Rx = 0
+CT = 160 - A0 - CMD = 5 Tx = 0 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 161 - A1 - CMD = A Tx = 0 Rx = 1
+CT = 161 - A1 - CMD = 5 Tx = 0 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 162 - A2 - CMD = A Tx = 0 Rx = 2
+CT = 162 - A2 - CMD = 5 Tx = 0 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 163 - A3 - CMD = A Tx = 0 Rx = 3
+CT = 163 - A3 - CMD = 5 Tx = 0 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 164 - A4 - CMD = A Tx = 1 Rx = 0
+CT = 164 - A4 - CMD = 5 Tx = 2 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 165 - A5 - CMD = A Tx = 1 Rx = 1
+CT = 165 - A5 - CMD = 5 Tx = 2 Rx = 2
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 166 - A6 - CMD = A Tx = 1 Rx = 2
+CT = 166 - A6 - CMD = 5 Tx = 2 Rx = 1
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 167 - A7 - CMD = A Tx = 1 Rx = 3
+CT = 167 - A7 - CMD = 5 Tx = 2 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 168 - A8 - CMD = A Tx = 2 Rx = 0
+CT = 168 - A8 - CMD = 5 Tx = 1 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 169 - A9 - CMD = A Tx = 2 Rx = 1
+CT = 169 - A9 - CMD = 5 Tx = 1 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 170 - AA - CMD = A Tx = 2 Rx = 2
+CT = 170 - AA - CMD = 5 Tx = 1 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 171 - AB - CMD = A Tx = 2 Rx = 3
+CT = 171 - AB - CMD = 5 Tx = 1 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 172 - AC - CMD = A Tx = 3 Rx = 0
+CT = 172 - AC - CMD = 5 Tx = 3 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 173 - AD - CMD = A Tx = 3 Rx = 1
+CT = 173 - AD - CMD = 5 Tx = 3 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 174 - AE - CMD = A Tx = 3 Rx = 2
+CT = 174 - AE - CMD = 5 Tx = 3 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 175 - AF - CMD = A Tx = 3 Rx = 3
+CT = 175 - AF - CMD = 5 Tx = 3 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 176 - B0 - CMD = B Tx = 0 Rx = 0
+CT = 176 - B0 - CMD = D Tx = 0 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 177 - B1 - CMD = B Tx = 0 Rx = 1
+CT = 177 - B1 - CMD = D Tx = 0 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 178 - B2 - CMD = B Tx = 0 Rx = 2
+CT = 178 - B2 - CMD = D Tx = 0 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 179 - B3 - CMD = B Tx = 0 Rx = 3
+CT = 179 - B3 - CMD = D Tx = 0 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 180 - B4 - CMD = B Tx = 1 Rx = 0
+CT = 180 - B4 - CMD = D Tx = 2 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 181 - B5 - CMD = B Tx = 1 Rx = 1
+CT = 181 - B5 - CMD = D Tx = 2 Rx = 2
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 182 - B6 - CMD = B Tx = 1 Rx = 2
+CT = 182 - B6 - CMD = D Tx = 2 Rx = 1
+ST: 0 0 A3 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 183 - B7 - CMD = B Tx = 1 Rx = 3
+CT = 183 - B7 - CMD = D Tx = 2 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 184 - B8 - CMD = B Tx = 2 Rx = 0
+CT = 184 - B8 - CMD = D Tx = 1 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 185 - B9 - CMD = B Tx = 2 Rx = 1
+CT = 185 - B9 - CMD = D Tx = 1 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 186 - BA - CMD = B Tx = 2 Rx = 2
+CT = 186 - BA - CMD = D Tx = 1 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 187 - BB - CMD = B Tx = 2 Rx = 3
+CT = 187 - BB - CMD = D Tx = 1 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 188 - BC - CMD = B Tx = 3 Rx = 0
+CT = 188 - BC - CMD = D Tx = 3 Rx = 0
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 189 - BD - CMD = B Tx = 3 Rx = 1
+CT = 189 - BD - CMD = D Tx = 3 Rx = 2
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 190 - BE - CMD = B Tx = 3 Rx = 2
+CT = 190 - BE - CMD = D Tx = 3 Rx = 1
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 191 - BF - CMD = B Tx = 3 Rx = 3
+CT = 191 - BF - CMD = D Tx = 3 Rx = 3
+ST: 0 0 63 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(3)
+ST : Amplitude(1) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 192 - C0 - CMD = C Tx = 0 Rx = 0
+CT = 192 - C0 - CMD = 3 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 193 - C1 - CMD = C Tx = 0 Rx = 1
+CT = 193 - C1 - CMD = 3 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 194 - C2 - CMD = C Tx = 0 Rx = 2
+CT = 194 - C2 - CMD = 3 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 195 - C3 - CMD = C Tx = 0 Rx = 3
+CT = 195 - C3 - CMD = 3 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 196 - C4 - CMD = C Tx = 1 Rx = 0
+CT = 196 - C4 - CMD = 3 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 197 - C5 - CMD = C Tx = 1 Rx = 1
+CT = 197 - C5 - CMD = 3 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 198 - C6 - CMD = C Tx = 1 Rx = 2
+CT = 198 - C6 - CMD = 3 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 199 - C7 - CMD = C Tx = 1 Rx = 3
+CT = 199 - C7 - CMD = 3 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 200 - C8 - CMD = C Tx = 2 Rx = 0
+CT = 200 - C8 - CMD = 3 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 201 - C9 - CMD = C Tx = 2 Rx = 1
+CT = 201 - C9 - CMD = 3 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 202 - CA - CMD = C Tx = 2 Rx = 2
+CT = 202 - CA - CMD = 3 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 203 - CB - CMD = C Tx = 2 Rx = 3
+CT = 203 - CB - CMD = 3 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 204 - CC - CMD = C Tx = 3 Rx = 0
+CT = 204 - CC - CMD = 3 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 205 - CD - CMD = C Tx = 3 Rx = 1
+CT = 205 - CD - CMD = 3 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 206 - CE - CMD = C Tx = 3 Rx = 2
+CT = 206 - CE - CMD = 3 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 207 - CF - CMD = C Tx = 3 Rx = 3
+CT = 207 - CF - CMD = 3 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 208 - D0 - CMD = D Tx = 0 Rx = 0
+CT = 208 - D0 - CMD = B Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 209 - D1 - CMD = D Tx = 0 Rx = 1
+CT = 209 - D1 - CMD = B Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 210 - D2 - CMD = D Tx = 0 Rx = 2
+CT = 210 - D2 - CMD = B Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 211 - D3 - CMD = D Tx = 0 Rx = 3
+CT = 211 - D3 - CMD = B Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 212 - D4 - CMD = D Tx = 1 Rx = 0
+CT = 212 - D4 - CMD = B Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 213 - D5 - CMD = D Tx = 1 Rx = 1
+CT = 213 - D5 - CMD = B Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 214 - D6 - CMD = D Tx = 1 Rx = 2
+CT = 214 - D6 - CMD = B Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 215 - D7 - CMD = D Tx = 1 Rx = 3
+CT = 215 - D7 - CMD = B Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 216 - D8 - CMD = D Tx = 2 Rx = 0
+CT = 216 - D8 - CMD = B Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 217 - D9 - CMD = D Tx = 2 Rx = 1
+CT = 217 - D9 - CMD = B Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 218 - DA - CMD = D Tx = 2 Rx = 2
+CT = 218 - DA - CMD = B Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 219 - DB - CMD = D Tx = 2 Rx = 3
+CT = 219 - DB - CMD = B Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 220 - DC - CMD = D Tx = 3 Rx = 0
+CT = 220 - DC - CMD = B Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 221 - DD - CMD = D Tx = 3 Rx = 1
+CT = 221 - DD - CMD = B Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 222 - DE - CMD = D Tx = 3 Rx = 2
+CT = 222 - DE - CMD = B Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 223 - DF - CMD = D Tx = 3 Rx = 3
+CT = 223 - DF - CMD = B Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 224 - E0 - CMD = E Tx = 0 Rx = 0
+CT = 224 - E0 - CMD = 7 Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 225 - E1 - CMD = E Tx = 0 Rx = 1
+CT = 225 - E1 - CMD = 7 Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 226 - E2 - CMD = E Tx = 0 Rx = 2
+CT = 226 - E2 - CMD = 7 Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 227 - E3 - CMD = E Tx = 0 Rx = 3
+CT = 227 - E3 - CMD = 7 Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 228 - E4 - CMD = E Tx = 1 Rx = 0
+CT = 228 - E4 - CMD = 7 Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 229 - E5 - CMD = E Tx = 1 Rx = 1
+CT = 229 - E5 - CMD = 7 Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 230 - E6 - CMD = E Tx = 1 Rx = 2
+CT = 230 - E6 - CMD = 7 Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 231 - E7 - CMD = E Tx = 1 Rx = 3
+CT = 231 - E7 - CMD = 7 Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 232 - E8 - CMD = E Tx = 2 Rx = 0
+CT = 232 - E8 - CMD = 7 Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 233 - E9 - CMD = E Tx = 2 Rx = 1
+CT = 233 - E9 - CMD = 7 Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 234 - EA - CMD = E Tx = 2 Rx = 2
+CT = 234 - EA - CMD = 7 Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 235 - EB - CMD = E Tx = 2 Rx = 3
+CT = 235 - EB - CMD = 7 Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 236 - EC - CMD = E Tx = 3 Rx = 0
+CT = 236 - EC - CMD = 7 Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 237 - ED - CMD = E Tx = 3 Rx = 1
+CT = 237 - ED - CMD = 7 Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 238 - EE - CMD = E Tx = 3 Rx = 2
+CT = 238 - EE - CMD = 7 Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 239 - EF - CMD = E Tx = 3 Rx = 3
+CT = 239 - EF - CMD = 7 Tx = 3 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 240 - F0 - CMD = F Tx = 0 Rx = 0
+CT = 240 - F0 - CMD = F Tx = 0 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 241 - F1 - CMD = F Tx = 0 Rx = 1
+CT = 241 - F1 - CMD = F Tx = 0 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 242 - F2 - CMD = F Tx = 0 Rx = 2
+CT = 242 - F2 - CMD = F Tx = 0 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 243 - F3 - CMD = F Tx = 0 Rx = 3
+CT = 243 - F3 - CMD = F Tx = 0 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 244 - F4 - CMD = F Tx = 1 Rx = 0
+CT = 244 - F4 - CMD = F Tx = 2 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 245 - F5 - CMD = F Tx = 1 Rx = 1
+CT = 245 - F5 - CMD = F Tx = 2 Rx = 2
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 246 - F6 - CMD = F Tx = 1 Rx = 2
+CT = 246 - F6 - CMD = F Tx = 2 Rx = 1
+ST: 0 0 A2 0
+ST : Amplitude(1) Lock(0) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(1)
+
+CT = 247 - F7 - CMD = F Tx = 1 Rx = 3
+CT = 247 - F7 - CMD = F Tx = 2 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 248 - F8 - CMD = F Tx = 2 Rx = 0
+CT = 248 - F8 - CMD = F Tx = 1 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 249 - F9 - CMD = F Tx = 2 Rx = 1
+CT = 249 - F9 - CMD = F Tx = 1 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 250 - FA - CMD = F Tx = 2 Rx = 2
+CT = 250 - FA - CMD = F Tx = 1 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 251 - FB - CMD = F Tx = 2 Rx = 3
+CT = 251 - FB - CMD = F Tx = 1 Rx = 3
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 252 - FC - CMD = F Tx = 3 Rx = 0
+CT = 252 - FC - CMD = F Tx = 3 Rx = 0
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 253 - FD - CMD = F Tx = 3 Rx = 1
+CT = 253 - FD - CMD = F Tx = 3 Rx = 2
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+
+CT = 254 - FE - CMD = F Tx = 3 Rx = 2
+CT = 254 - FE - CMD = F Tx = 3 Rx = 1
+ST: 0 0 62 0
+ST : Amplitude(0) Lock(1) Pack(1) Err(0) RDS(0) RDTS(2)
+ST : Amplitude(0) Lock(1) Pack(0) Err(0) RDS(1) RDTS(2)
+4) Status reg( 2 ) RDM: 0 0 62 0
+5) data in: 0

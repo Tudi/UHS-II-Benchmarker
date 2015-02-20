@@ -45,13 +45,14 @@ void print(char *str);
 
 #define DisableModuleHandlersAndTranfers() 	module[0] = 0x0
 #define EnableModuleHandlersAndTranfers() 	module[0] = 0x1F
+#define SetDelayRegisterNoDelay() 			module[1] = 0
+#define DisableDataTransferEnablePINS()		module[0]=0x7ffffffe
 
 int main()
 {
 	volatile int i;
     StatusRegOnRead SR;
     STField		ST;
-    STField2	ST2;
     phy_cmd_type0 pct;
     phy_cmd_type t;
 
@@ -60,11 +61,16 @@ int main()
     DisableModuleHandlersAndTranfers();
 
     // Setare asteptare -- 0 adica exista un singur tact de delay intre cand incepe sa scrie si cand incepe sa inregistreze intrarile
-    module[1] = 0;
+    SetDelayRegisterNoDelay();
 
     ResetMemoryToZero();
 //    xil_printf("struct : %08X\n", t.uint32_Data);
 
+	// let's check if we are in dormant state : lanes are in EIDL state = RDS( 0 ) / RDTS ( 0 )
+	 SR.uint32_Data = module[2];
+	 ST.uint8_Data = SR.fields.ST;
+	 xil_printf("1) Status reg( 2 ) : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+	
     ////////////////////////////////////////////////////////////////
     //setup CFG register to set physical layers in EIDL state - 0x0067E09F
     // !! this will be visible only once for each time you reset VTE !!!
@@ -95,7 +101,7 @@ int main()
     ////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////
-    //setup CFG register to set physical layers in EIDL state - 0x0067E09F
+    //setup CFG register to set physical layers in STB.L state - 0x0067E09F
     {
 		t.uint32_Data = 0;
 		t.fields.TDM = 3;
@@ -121,55 +127,84 @@ int main()
 		 xil_printf("1) Status reg( 2 ) : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
     }
     ////////////////////////////////////////////////////////////////
+	
+	
  	//Sleep( 400 );
 
- 	module[0]=0x7ffffffe;
+ 	DisableDataTransferEnablePINS();
 
  	i = module[1];
- 	xil_printf("Status reg( 1 ) : %04x\n", i );
+ 	xil_printf("delay reg( 1 ) : %04x\n", i );
  	Sleep( 100 );
 
  	Sleep( 100 );
  	pct.uint32_Data = 0;
+	pct.fields.TDM = 3;
+	pct.fields.TDRM = 3;
+	pct.fields.MODE = 1;
+	pct.fields.HOST_MODE = 1;
+	pct.fields.BUSIF16 = 1;
+	pct.fields.DET_EN = 1;
+	pct.fields.RCLKOE = 1;
+	pct.fields.RCLKTRMEN = 1;
+	pct.fields.CNFG_ALIGN_EN = 1;
+	pct.fields.CNFG_LOCK_PERIOD = 3;
+	pct.fields.CNFG_LOCK_MARGIN = 3;
  	for(pct.fields.CT=0;pct.fields.CT<255;pct.fields.CT++)
  	{
  		//Send out Sync symbol - wait till UHSII device responds with sync byte
-
- 		pct.fields.TDM = 3;
- 		pct.fields.TDRM = 3;
- 		pct.fields.MODE = 1;
- 		pct.fields.HOST_MODE = 1;
- 		pct.fields.BUSIF16 = 1;
- 		pct.fields.DET_EN = 1;
- 		pct.fields.RCLKOE = 1;
- 		pct.fields.RCLKTRMEN = 1;
- 		pct.fields.CNFG_ALIGN_EN = 1;
- 		pct.fields.CNFG_LOCK_PERIOD = 3;
- 		pct.fields.CNFG_LOCK_MARGIN = 3;
 		module[2]=pct.uint32_Data;
 		Sleep(100);
 
 		//read the new status of the lanes
 		SR.uint32_Data = module[2];
-//		if(SR.fields.ST != 0x42)
+
 		{
-			t.uint32_Data = pct.uint32_Data;
+			CTFieldMode0 	CT[4];
+			STField			ST[4];
+			
 			xil_printf("\n");
-			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, t.fields.CT_PHY_CMD, t.fields.CT_Tx, t.fields.CT_Rx );
-			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, FlipBits( t.fields.CT_PHY_CMD, 4 ),  FlipBits( t.fields.CT_Tx, 2 ),  FlipBits( t.fields.CT_Rx, 2 ) );
-			t.uint32_Data = FlipBits( pct.uint32_Data, 32 );
-			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, t.fields.CT_PHY_CMD, t.fields.CT_Tx, t.fields.CT_Rx );
-			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, FlipBits( t.fields.CT_PHY_CMD, 4 ),  FlipBits( t.fields.CT_Tx, 2 ),  FlipBits( t.fields.CT_Rx, 2 ) );
+			CT[0].uint8_Data = pct.fields.CT;
+			CT[1].fields.CT_PHY_CMD = FlipBits( CT[0].fields.CT_PHY_CMD, 4 );
+			CT[1].fields.CT_Tx = FlipBits( CT[0].fields.CT_Tx, 2 );
+			CT[1].fields.CT_Rx = FlipBits( CT[0].fields.CT_Rx, 2 );
+			CT[2].uint8_Data = FlipBits( pct.fields.CT );
+			CT[3].fields.CT_PHY_CMD = FlipBits( CT[2].fields.CT_PHY_CMD, 4 );
+			CT[3].fields.CT_Tx = FlipBits( CT[2].fields.CT_Tx, 2 );
+			CT[3].fields.CT_Rx = FlipBits( CT[2].fields.CT_Rx, 2 );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, CT[0].fields.CT_PHY_CMD, CT[0].fields.CT_Tx, CT[0].fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, CT[1].fields.CT_PHY_CMD, CT[1].fields.CT_Tx, CT[1].fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, CT[2].fields.CT_PHY_CMD, CT[2].fields.CT_Tx, CT[2].fields.CT_Rx );
+			xil_printf("CT = %d - %x - CMD = %x Tx = %x Rx = %x\n", pct.fields.CT, pct.fields.CT, CT[3].fields.CT_PHY_CMD, CT[3].fields.CT_Tx, CT[3].fields.CT_Rx );
+			
 			xil_printf("ST: %x %x %x %x\n", SR.fields.RDM, SR.fields.RDTM, SR.fields.ST ,SR.fields.b0  );
-			ST.uint8_Data = SR.fields.ST;
-			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
-			ST.uint8_Data = FlipBits( SR.fields.ST, 8 );
-			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
-			SR.uint32_Data = FlipBits( SR.uint32_Data, 32 );
-			ST.uint8_Data = SR.fields.ST;
-			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
-			ST.uint8_Data = FlipBits( SR.fields.ST, 8 );
-			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+			
+			ST[0].uint8_Data = SR.fields.ST;
+			ST[1].uint8_Data = ST[0].uint8_Data;
+			ST[1].fields.RDS = FlipBits( ST[0].fields.RDS, 2 );
+			ST[1].fields.RDTS = FlipBits( ST[0].fields.RDTS, 2 );
+			ST[2].uint8_Data = FlipBits( ST[0].uint8_Data, 8 );
+			ST[3].uint8_Data = ST[2].uint8_Data;
+			ST[3].fields.RDS = FlipBits( ST[2].fields.RDS, 2 );
+			ST[3].fields.RDTS = FlipBits( ST[2].fields.RDTS, 2 );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[0].fields.Amplitude, ST[0].fields.Lock, ST[0].fields.Pack, ST[0].fields.Err, ST[0].fields.RDS, ST[0].fields.RDTS  );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[1].fields.Amplitude, ST[1].fields.Lock, ST[1].fields.Pack, ST[1].fields.Err, ST[1].fields.RDS, ST[1].fields.RDTS  );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[2].fields.Amplitude, ST[2].fields.Lock, ST[2].fields.Pack, ST[2].fields.Err, ST[2].fields.RDS, ST[2].fields.RDTS  );
+			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[3].fields.Amplitude, ST[3].fields.Lock, ST[3].fields.Pack, ST[3].fields.Err, ST[3].fields.RDS, ST[3].fields.RDTS  );
+			
+			if( ( CT[0].CT_Tx == ST[0].fields.RDS && CT[0].CT_Rx == ST[0].fields.RDTS )
+				|| ( CT[0].CT_Tx == ST[0].fields.RDTS && CT[0].CT_Rx == ST[0].fields.RDS )
+
+				|| ( CT[1].CT_Tx == ST[1].fields.RDTS && CT[1].CT_Rx == ST[1].fields.RDS )
+				|| ( CT[1].CT_Tx == ST[1].fields.RDTS && CT[1].CT_Rx == ST[1].fields.RDS )
+
+				|| ( CT[2].CT_Tx == ST[2].fields.RDTS && CT[2].CT_Rx == ST[2].fields.RDS )
+				|| ( CT[2].CT_Tx == ST[2].fields.RDTS && CT[2].CT_Rx == ST[2].fields.RDS )
+
+				|| ( CT[3].CT_Tx == ST[3].fields.RDTS && CT[3].CT_Rx == ST[3].fields.RDS )
+				|| ( CT[3].CT_Tx == ST[3].fields.RDTS && CT[3].CT_Rx == ST[3].fields.RDS ) )
+					xil_printf( "This is science !\n");
+				
 		}
  	}
 
