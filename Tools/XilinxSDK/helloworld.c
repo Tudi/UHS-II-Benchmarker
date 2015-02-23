@@ -107,7 +107,7 @@ int main()
 		t.fields.TDM = 3;
 		t.fields.TDRM = 3;
 		t.fields.MODE = 1;
-		t.fields.CT_PHY_CMD = 7;
+		t.fields.CT_PHY_CMD = 0;
 		t.fields.CT_Tx = 2; //STB.L
 		t.fields.HOST_MODE = 1;
 		t.fields.BUSIF16 = 1;
@@ -117,7 +117,7 @@ int main()
 		t.fields.CNFG_ALIGN_EN = 1;
 		t.fields.CNFG_LOCK_PERIOD = 3;
 		t.fields.CNFG_LOCK_MARGIN = 3;
-		module[2]= t.uint32_Data;	//setup CFG register to set physical layers in STB.L state - 0x0067E09F
+		module[2]= t.uint32_Data;	//setup CFG register to set physical layers in STB.L state
 
 		Sleep( 100 );
 
@@ -128,7 +128,34 @@ int main()
     }
     ////////////////////////////////////////////////////////////////
 	
-	
+    ////////////////////////////////////////////////////////////////
+    //setup CFG register to set physical layers in VLD state - 0x0067E09F
+    {
+		t.uint32_Data = 0;
+		t.fields.TDM = 3;
+		t.fields.TDRM = 3;
+		t.fields.MODE = 1;
+		t.fields.CT_PHY_CMD = 0;
+		t.fields.CT_Tx = 3; //STB.L
+		t.fields.HOST_MODE = 1;
+		t.fields.BUSIF16 = 1;
+		t.fields.DET_EN = 1;
+		t.fields.RCLKOE = 1;
+		t.fields.RCLKTRMEN = 1;
+		t.fields.CNFG_ALIGN_EN = 1;
+		t.fields.CNFG_LOCK_PERIOD = 3;
+		t.fields.CNFG_LOCK_MARGIN = 3;
+		module[2]= t.uint32_Data;	//setup CFG register to set physical layers in VLD state
+
+		Sleep( 100 );
+
+		 //read the status of the lanes
+		 SR.uint32_Data = module[2];
+		 ST.uint8_Data = SR.fields.ST;
+		 xil_printf("1) Status reg( 2 ) : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST.fields.Amplitude, ST.fields.Lock, ST.fields.Pack, ST.fields.Err, ST.fields.RDS, ST.fields.RDTS  );
+    }
+    ////////////////////////////////////////////////////////////////
+
  	//Sleep( 400 );
 
  	DisableDataTransferEnablePINS();
@@ -137,7 +164,7 @@ int main()
  	xil_printf("delay reg( 1 ) : %04x\n", i );
  	Sleep( 100 );
 
- 	Sleep( 100 );
+ /*	Sleep( 100 );
  	pct.uint32_Data = 0;
 	pct.fields.TDM = 3;
 	pct.fields.TDRM = 3;
@@ -150,7 +177,7 @@ int main()
 	pct.fields.CNFG_ALIGN_EN = 1;
 	pct.fields.CNFG_LOCK_PERIOD = 3;
 	pct.fields.CNFG_LOCK_MARGIN = 3;
- 	for(pct.fields.CT=0;pct.fields.CT<255;pct.fields.CT++)
+ 	for(pct.fields.CT=0;pct.fields.CT<=255;pct.fields.CT++)
  	{
  		//Send out Sync symbol - wait till UHSII device responds with sync byte
 		module[2]=pct.uint32_Data;
@@ -168,7 +195,7 @@ int main()
 			CT[1].fields.CT_PHY_CMD = FlipBits( CT[0].fields.CT_PHY_CMD, 4 );
 			CT[1].fields.CT_Tx = FlipBits( CT[0].fields.CT_Tx, 2 );
 			CT[1].fields.CT_Rx = FlipBits( CT[0].fields.CT_Rx, 2 );
-			CT[2].uint8_Data = FlipBits( pct.fields.CT );
+			CT[2].uint8_Data = FlipBits( pct.fields.CT, 8 );
 			CT[3].fields.CT_PHY_CMD = FlipBits( CT[2].fields.CT_PHY_CMD, 4 );
 			CT[3].fields.CT_Tx = FlipBits( CT[2].fields.CT_Tx, 2 );
 			CT[3].fields.CT_Rx = FlipBits( CT[2].fields.CT_Rx, 2 );
@@ -192,22 +219,23 @@ int main()
 			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[2].fields.Amplitude, ST[2].fields.Lock, ST[2].fields.Pack, ST[2].fields.Err, ST[2].fields.RDS, ST[2].fields.RDTS  );
 			xil_printf("ST : Amplitude(%x) Lock(%x) Pack(%x) Err(%x) RDS(%x) RDTS(%x)\n", ST[3].fields.Amplitude, ST[3].fields.Lock, ST[3].fields.Pack, ST[3].fields.Err, ST[3].fields.RDS, ST[3].fields.RDTS  );
 			
-			if( ( CT[0].CT_Tx == ST[0].fields.RDS && CT[0].CT_Rx == ST[0].fields.RDTS )
-				|| ( CT[0].CT_Tx == ST[0].fields.RDTS && CT[0].CT_Rx == ST[0].fields.RDS )
+			if( ( CT[0].fields.CT_Tx == ST[0].fields.RDS && CT[0].fields.CT_Rx == ST[0].fields.RDTS )
+				|| ( CT[0].fields.CT_Tx == ST[0].fields.RDTS && CT[0].fields.CT_Rx == ST[0].fields.RDS )
 
-				|| ( CT[1].CT_Tx == ST[1].fields.RDTS && CT[1].CT_Rx == ST[1].fields.RDS )
-				|| ( CT[1].CT_Tx == ST[1].fields.RDTS && CT[1].CT_Rx == ST[1].fields.RDS )
+				|| ( CT[1].fields.CT_Tx == ST[1].fields.RDTS && CT[1].fields.CT_Rx == ST[1].fields.RDS )
+				|| ( CT[1].fields.CT_Tx == ST[1].fields.RDTS && CT[1].fields.CT_Rx == ST[1].fields.RDS )
 
-				|| ( CT[2].CT_Tx == ST[2].fields.RDTS && CT[2].CT_Rx == ST[2].fields.RDS )
-				|| ( CT[2].CT_Tx == ST[2].fields.RDTS && CT[2].CT_Rx == ST[2].fields.RDS )
+				|| ( CT[2].fields.CT_Tx == ST[2].fields.RDTS && CT[2].fields.CT_Rx == ST[2].fields.RDS )
+				|| ( CT[2].fields.CT_Tx == ST[2].fields.RDTS && CT[2].fields.CT_Rx == ST[2].fields.RDS )
 
-				|| ( CT[3].CT_Tx == ST[3].fields.RDTS && CT[3].CT_Rx == ST[3].fields.RDS )
-				|| ( CT[3].CT_Tx == ST[3].fields.RDTS && CT[3].CT_Rx == ST[3].fields.RDS ) )
+				|| ( CT[3].fields.CT_Tx == ST[3].fields.RDTS && CT[3].fields.CT_Rx == ST[3].fields.RDS )
+				|| ( CT[3].fields.CT_Tx == ST[3].fields.RDTS && CT[3].fields.CT_Rx == ST[3].fields.RDS ) )
 					xil_printf( "This is science !\n");
 				
 		}
- 	}
+ 	}/**/
 
+// 	EnableModuleHandlersAndTranfers();
  	module[3]=0xBCBFBCBF;
  	Sleep(100);
  	//read the new status of the lanes

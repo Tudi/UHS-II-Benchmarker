@@ -80,20 +80,6 @@ typedef union
 {
 	struct
 	{
-		unsigned int RDTS:2;
-		unsigned int RDS:2;
-		unsigned int Err:1;
-		unsigned int Pack:1;
-		unsigned int Lock:1;
-		unsigned int Amplitude:1;
-	}fields;
-	unsigned char uint8_Data;
-}STField2;
-
-typedef union
-{
-	struct
-	{
 		unsigned int b0:20;
 		unsigned int ST:8;
 		unsigned int RDTM:2;
