@@ -18,6 +18,10 @@ struct sL1PacketReader
 };
 
 /*
+Check if a string can be interpreted by us as a valid packet command 
+*/
+int IsValidL1Symbol( char *Line );
+/*
 Create and initialize a command reader
 */
 sL1PacketReader *InitL1PacketReader( char *FName );

@@ -118,6 +118,18 @@ char *stristr (char *ch1, char *ch2)
   return chRet;
 }
 
+char *EmbededStrStr( char *SearchIn, char *SearchFor )
+{
+	for( int i = 0; i < MAX_PACKET_SIZE && SearchIn[ i ] != 0; i++ )
+	{
+		int j;
+		for( j = 0;  SearchIn[ i + j ] == SearchFor[j] && j < MAX_PACKET_SIZE; j++ );
+		if( SearchFor[j] == 0 )
+			return &SearchIn[ i ];
+	}
+	return NULL;
+}
+
 int FileExists( const char *fName )
 {
 	return ( ( _access( fName, 0 ) != -1 ) );
@@ -138,28 +150,35 @@ BYTE BinToDec( __int64 N )
 	return (BYTE)ret;
 }
 
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count, int OpcodeLocation )
+int ProjectSettingOnePacketBuffer = 0;
+void DuplicatePacket( BYTE **Data, int *DataLen, int Count, int OpcodeLocation )
 {
 	if( Count <= 1 )
-		return *Data;
-	BYTE *ret = (BYTE *)EmbededMalloc( *DataLen * ( 0 + Count ) );
-	for( int i=0;i<Count;i++ )
+		return;
+	BYTE *ret = *Data;
+	for( int i=1;i<Count;i++ )
 	{
 		memcpy( &ret[ i * *DataLen ], *Data, *DataLen );
 		if( OpcodeLocation >= 0 )
 			ret[ i * *DataLen + OpcodeLocation ] = GetRandomizedOpcode( ret[ i * *DataLen + OpcodeLocation ] );
 	}
 	*DataLen = *DataLen * ( Count + 0 );
-
-	EmbededFree( *Data );
-	*Data = NULL;
-
-	return ret;
 }
 
 BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line, int OpcodeLocation )
 {
-	return DuplicatePacket( Data, DataLen, GetLineParamXInteger( Line, -1 ), OpcodeLocation );
+	int PacketCount = GetLineParamXInteger( Line, -1 );
+	if( PacketCount <= 1 )
+		return *Data;
+	if( ProjectSettingOnePacketBuffer == 0 )
+	{
+		BYTE *NewBuff = (BYTE *)EmbededMalloc( *DataLen * PacketCount );
+		memcpy( NewBuff, *Data, *DataLen );
+		EmbededFree( *Data );
+		*Data = NewBuff;
+	}
+	DuplicatePacket( Data, DataLen, PacketCount, OpcodeLocation );
+	return *Data;
 }
 
 char *ReadUntilNextWord( char *Line )
@@ -280,7 +299,7 @@ char *GenericFormatPacketAsHex( BYTE *ByteStream, int ProcessedByteCount, int Pa
 unsigned int FlipBits( unsigned int In, unsigned int BlockLenght )
 {
 	unsigned int ret = 0;
-	for( int i=0;i<BlockLenght;i++)
+	for( unsigned int i=0;i<BlockLenght;i++)
 	{
 		ret = ret * 2 + (In & 1);
 		In = In / 2;

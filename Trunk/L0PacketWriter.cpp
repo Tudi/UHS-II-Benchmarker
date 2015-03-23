@@ -57,6 +57,13 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW )
 	Dprintf( DLVerbose, "\t Finished destroying L0 packet writer" );
 }
 
+void FormatPacket( const BYTE *Data, int DataLen, char *OutBuff, int OutBuffLen )
+{
+	strcpy_s( OutBuff, OutBuffLen, "" );
+	for( int i=0;i<DataLen && i<OutBuffLen;i++)
+		sprintf_s( OutBuff, OutBuffLen, "%s %02X", OutBuff, Data[i] );
+}
+
 int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 {
 	Dprintf( DLVerbose, "Started PW process 1 line. Write %d bytes", DataLen );
@@ -73,9 +80,7 @@ int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen )
 	size_t written = fwrite( Data, 1, DataLen, PW->File );
 
 	char FormattedPacket[ MAX_PACKET_SIZE ];
-	strcpy_s( FormattedPacket, MAX_PACKET_SIZE, "" );
-	for( int i=0;i<DataLen && i<MAX_PACKET_SIZE;i++)
-		sprintf_s( FormattedPacket, MAX_PACKET_SIZE, "%s %02X", FormattedPacket, Data[i] );
+	FormatPacket( Data, DataLen, FormattedPacket, MAX_PACKET_SIZE );
 
 	Dprintf( DLVerbose, "\t Finished PW process 1 line : %s", FormattedPacket );
 	return 0;

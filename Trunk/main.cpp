@@ -1,18 +1,46 @@
 #include "StdAfx.h"
+#include <conio.h>
 
 enum eValidExeModes
 {
-	EXE_MODE_H2D_L0	=	1,
-	EXE_MODE_D2H_L0	=	2,
+	EXE_MODE_H2D_L0			=	1,
+	EXE_MODE_D2H_L0			=	2,
+	EXE_MODE_H2D_LINEFEED	=	3,
 };
 
 int IsValidMode( char *mode )
 {
 	if( stristr( mode, "h2d" ) == mode )
 		return EXE_MODE_H2D_L0;
-	if( stristr( mode, "d2h" ) == mode )
+	else if( stristr( mode, "d2h" ) == mode )
 		return EXE_MODE_D2H_L0;
+	else if( stristr( mode, "linefeed" ) == mode )
+		return EXE_MODE_H2D_LINEFEED;
 	return 0;
+}
+
+int ConsoleReadLine( char *Buffer, int MaxLen )
+{
+	for(int i = 0; i < MaxLen; )
+	{   
+		int c = _getch(); 
+		if( c == '\t' )
+			c = ' ';
+		if( c == '\r' || c == '\n' )
+		{
+			Buffer[i] = 0;
+			printf("\n");
+			return i;
+		}
+		else if( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == ' ' )
+			Buffer[i] = (char)c;
+		else
+			continue;
+		printf( "%c", c );
+		i++;
+	}   
+
+	return 0; 
 }
 
 int main( int argc, char *argv[] )
@@ -69,6 +97,42 @@ int main( int argc, char *argv[] )
 		DestroyL0PacketReader( &PR );
 		DestroyL1PacketWriter( &PW );
 
+		Dprintf( DLVerbose, "\t Finished exe mode D2H" );
+	}
+	// linefeed 0 0
+	else if( IsValidMode( argv[1] ) == EXE_MODE_H2D_LINEFEED )
+	{
+		Dprintf( DLVerbose, "Started exe mode H2D linefeedmode" );
+
+		char	LineBuffer[MAX_PACKET_SIZE];
+		BYTE	OutData[MAX_PACKET_SIZE];
+		BYTE	*OutDataPointer = &OutData[0];
+		ProjectSettingOnePacketBuffer = 1;
+//		int Er = scanf_s( "%s", LineBuffer, MAX_PACKET_SIZE );
+		int ReadCount = ConsoleReadLine( LineBuffer, MAX_PACKET_SIZE );
+		while( ReadCount > 0 )
+		{
+			//check for packet type
+			int	SymbolDefIndex = IsValidL1Symbol( LineBuffer );
+			if( SymbolDefIndex < 0 || SymbolDefIndex > L1SymbolListSize )
+			{
+				printf("Did not understand line. Skipp processing it\n");
+				goto PROCESS_NEXT;
+			}
+
+			int		OutDataLen = 0;
+
+			L1SymbolList[ SymbolDefIndex ]->PacketBuilder( &OutDataPointer, &OutDataLen, LineBuffer );
+
+			if( OutDataLen > 0 )
+			{
+				char FormattedPacket[ MAX_PACKET_SIZE ];
+				FormatPacket( OutData, OutDataLen, FormattedPacket, MAX_PACKET_SIZE );
+				printf( "%s\n", FormattedPacket );
+			}
+PROCESS_NEXT:
+			ReadCount = ConsoleReadLine( LineBuffer, MAX_PACKET_SIZE );
+		}
 		Dprintf( DLVerbose, "\t Finished exe mode D2H" );
 	}
 	return 0;

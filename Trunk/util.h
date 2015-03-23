@@ -20,10 +20,11 @@ BYTE BinToDec( __int64 N );
 /*
 Reallocate buffer and copy old content N times into the new buffer
 */
-BYTE *DuplicatePacket( BYTE **Data, int *DataLen, int Count = 1, int OpcodeLocation = -1);
+void DuplicatePacket( BYTE **Data, int *DataLen, int Count = 1, int OpcodeLocation = -1);
 /*
 Same as above, just the lazy man version
 */
+extern int ProjectSettingOnePacketBuffer;
 BYTE *DuplicatePacket( BYTE **Data, int *DataLen, char *Line, int OpcodeLocation = -1 );
 /*
 Words are separated by " ". Skip N words and read the specific "int"
@@ -61,5 +62,9 @@ Playing with BITs
 Flip Bits. Can specify the length of data block
 */
 unsigned int FlipBits( unsigned int In, unsigned int BlockLenght = 8);
+/*
+In case Embeded library does not have one
+*/
+char *EmbededStrStr( char *SearchIn, char *SearchFor );
 
 #endif

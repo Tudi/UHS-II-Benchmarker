@@ -3,7 +3,8 @@
 void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = 1;
-	*Data = (BYTE *)EmbededMalloc( 1 );
+	if( *Data == NULL )
+		*Data = (BYTE *)EmbededMalloc( *DataLen );
 	memset( *Data, 0, *DataLen );
 	(*Data)[0] = 0;
 	*Data = DuplicatePacket( Data, DataLen, Line );
@@ -13,7 +14,8 @@ void	L1BuildPckt_STBL( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = 2;
-	*Data = (BYTE *)EmbededMalloc( 2 );
+	if( *Data == NULL )
+		*Data = (BYTE *)EmbededMalloc( *DataLen );
 	memset( *Data, 0, *DataLen );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_SYN0 );
@@ -24,8 +26,9 @@ void	L1BuildPckt_SYN( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketDCMD );
-	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketDCMD *p = (sFullLinkLayerPacketDCMD *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
@@ -62,7 +65,8 @@ void	L1BuildPckt_DCMD( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = 2;
-	*Data = (BYTE *)EmbededMalloc( *DataLen );
+	if( *Data == NULL )
+		*Data = (BYTE *)EmbededMalloc( *DataLen );
 	memset( *Data, 0, *DataLen );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_LIDL0 );
@@ -72,7 +76,8 @@ void	L1BuildPckt_LIDL( BYTE **Data, int *DataLen, char *Line )
 
 void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
 {
-	*Data = (BYTE *)EmbededMalloc( 2 );
+	if( *Data == NULL )
+		*Data = (BYTE *)EmbededMalloc( 2 );
 	(*Data)[0] = LSS_COM;
 	(*Data)[1] = GetRandomizedOpcode( LSS_DIDL0 );
 	*DataLen = 2;
@@ -83,8 +88,9 @@ void	L1BuildPckt_DIDL( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_RES( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketRES );
-	sFullLinkLayerPacketRES *p = (sFullLinkLayerPacketRES *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketRES *p = (sFullLinkLayerPacketRES *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
@@ -119,8 +125,9 @@ void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line )
 	int PayloadLength = GetLineParamXHexSTR( Line, 0, Payload, MAX_PACKET_SIZE );
 
 	*DataLen = sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength + sizeof( sFullLinkLayerPacketDATA1 );
-	sFullLinkLayerPacketDATA0 *p0 = (sFullLinkLayerPacketDATA0 *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p0;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketDATA0 *p0 = (sFullLinkLayerPacketDATA0 *)*Data;
 	memset( *Data, 0, *DataLen );
 	sFullLinkLayerPacketDATA1 *p1 = (sFullLinkLayerPacketDATA1 *)( *Data + sizeof( sFullLinkLayerPacketDATA0 ) + PayloadLength );
 
@@ -150,8 +157,9 @@ void	L1BuildPckt_DATA( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketCCMDDI );
-	sFullLinkLayerPacketCCMDDI *p = (sFullLinkLayerPacketCCMDDI *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketCCMDDI *p = (sFullLinkLayerPacketCCMDDI *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
@@ -190,8 +198,9 @@ void	L1BuildPckt_CCMDDI( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_CCMDDE( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketCCMDDE );
-	sFullLinkLayerPacketCCMDDE *p = (sFullLinkLayerPacketCCMDDE *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketCCMDDE *p = (sFullLinkLayerPacketCCMDDE *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
@@ -230,8 +239,9 @@ void	L1BuildPckt_CCMDDE( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketRegisterInquery );
-	sFullLinkLayerPacketRegisterInquery *p = (sFullLinkLayerPacketRegisterInquery *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketRegisterInquery *p = (sFullLinkLayerPacketRegisterInquery *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;
@@ -281,8 +291,9 @@ void	L1BuildPckt_GETSETREG( BYTE **Data, int *DataLen, char *Line )
 void	L1BuildPckt_MSG( BYTE **Data, int *DataLen, char *Line, int CTG, int IDX )
 {
 	*DataLen = sizeof( sFullLinkLayerPacketMSG );
-	sFullLinkLayerPacketMSG *p = (sFullLinkLayerPacketMSG *)EmbededMalloc( *DataLen );
-	*Data = (BYTE*)p;
+	if( *Data == NULL )
+		*Data = (BYTE*)EmbededMalloc( *DataLen );
+	sFullLinkLayerPacketMSG *p = (sFullLinkLayerPacketMSG *)*Data;
 	memset( *Data, 0, *DataLen );
 
 	p->SOPLSS[0] = LSS_COM;

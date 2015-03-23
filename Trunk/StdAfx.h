@@ -1,13 +1,16 @@
 #ifndef _STDAFX_H_
 #define _STDAFX_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <io.h>
-#include <assert.h>
-#include <string.h>
+//#define EMBEDED_BUILD
+#ifndef EMBEDED_BUILD
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <ctype.h>
+	#include <stdarg.h>
+	#include <io.h>
+	#include <assert.h>
+	#include <string.h>
+#endif
 
 //this was added because embeded API does not support malloc. !!! Current implementation does not support more than 1 reader / writer and has limited memory allocation
 //#define USE_INTERNAL_ALLOCATOR

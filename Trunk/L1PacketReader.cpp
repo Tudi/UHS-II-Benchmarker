@@ -65,7 +65,11 @@ int IsValidL1Symbol( char *Line )
 		return -1;
 
 	for( int i=0;i<L1SymbolListSize;i++)
+#ifndef USE_INTERNAL_ALLOCATOR
 		if( stristr( &Line[2], L1SymbolList[i]->Name ) == &Line[2] )
+#else
+		if( EmbededStrStr( &Line[2], L1SymbolList[i]->Name ) == &Line[2] )
+#endif
 			return i;
 
 	return -1;

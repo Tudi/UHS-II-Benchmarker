@@ -26,4 +26,8 @@ void DestroyL0PacketWriter( sL0PacketWriter **PW );
 Interpret an L1 command. Packetize the command. Write it to a binary file
 */
 int L1L0ProcessLine( sL0PacketWriter *PW, const BYTE *Data, int DataLen );
+/*
+Text representation of a binary packet. Used for debugging purpuses
+*/
+void FormatPacket( const BYTE *Data, int DataLen, char *OutBuff, int OutBuffLen );
 #endif
