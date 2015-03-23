@@ -10,11 +10,12 @@ enum eValidExeModes
 
 int IsValidMode( char *mode )
 {
-	if( stristr( mode, "h2d" ) == mode )
+	StrToUpper( mode );
+	if( EmbededStrStr( mode, "H2D" ) == mode )
 		return EXE_MODE_H2D_L0;
-	else if( stristr( mode, "d2h" ) == mode )
+	else if( EmbededStrStr( mode, "D2H" ) == mode )
 		return EXE_MODE_D2H_L0;
-	else if( stristr( mode, "linefeed" ) == mode )
+	else if( EmbededStrStr( mode, "LINEFEED" ) == mode )
 		return EXE_MODE_H2D_LINEFEED;
 	return 0;
 }
@@ -113,7 +114,7 @@ int main( int argc, char *argv[] )
 		while( ReadCount > 0 )
 		{
 			//check for packet type
-			int	SymbolDefIndex = IsValidL1Symbol( LineBuffer );
+			int	SymbolDefIndex = IsValidL1SymbolEmbeded( LineBuffer );
 			if( SymbolDefIndex < 0 || SymbolDefIndex > L1SymbolListSize )
 			{
 				printf("Did not understand line. Skipp processing it\n");

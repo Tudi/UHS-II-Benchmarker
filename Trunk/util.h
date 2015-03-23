@@ -66,5 +66,8 @@ unsigned int FlipBits( unsigned int In, unsigned int BlockLenght = 8);
 In case Embeded library does not have one
 */
 char *EmbededStrStr( char *SearchIn, char *SearchFor );
-
+/*
+In place string to upper string
+*/
+void StrToUpper( char *Str );
 #endif

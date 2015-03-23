@@ -22,6 +22,10 @@ Check if a string can be interpreted by us as a valid packet command
 */
 int IsValidL1Symbol( char *Line );
 /*
+Check if a string can be interpreted by us as a valid packet command 
+*/
+int IsValidL1SymbolEmbeded( char *Line );
+/*
 Create and initialize a command reader
 */
 sL1PacketReader *InitL1PacketReader( char *FName );

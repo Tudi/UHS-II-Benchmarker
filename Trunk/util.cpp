@@ -91,13 +91,13 @@ char *stristr (char *ch1, char *ch2)
     chNdx = chN1;
     while(*chNdx)
     {
-      *chNdx = (char) tolower(*chNdx);
+      *chNdx = (char) toupper(*chNdx);
       chNdx++;
     }
     chNdx = chN2;
     while(*chNdx)
     {
-      *chNdx = (char) tolower(*chNdx);
+      *chNdx = (char) toupper(*chNdx);
       chNdx++;
     }
 
@@ -116,6 +116,12 @@ char *stristr (char *ch1, char *ch2)
   }
 
   return chRet;
+}
+
+void StrToUpper( char *Str )
+{
+	for( int i = 0; i < MAX_PACKET_SIZE && Str[ i ] != 0; i++ )
+		Str[i] = (char)toupper( Str[i] );
 }
 
 char *EmbededStrStr( char *SearchIn, char *SearchFor )

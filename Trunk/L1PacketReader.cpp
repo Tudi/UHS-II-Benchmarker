@@ -75,6 +75,21 @@ int IsValidL1Symbol( char *Line )
 	return -1;
 }
 
+int IsValidL1SymbolEmbeded( char *Line )
+{
+	if( Line[0] != '0' && Line[0] != '1' && Line[1] != ' ' )
+		return -1;
+
+	//intrusive !!!
+	StrToUpper( Line );
+
+	for( int i=0;i<L1SymbolListSize;i++)
+		if( EmbededStrStr( &Line[2], L1SymbolList[i]->Name ) == &Line[2] )
+			return i;
+
+	return -1;
+}
+
 int ReadNextLine( sL1PacketReader *PR )
 {
 	Dprintf( DLVerbose, "Started PR Read 1 line" );

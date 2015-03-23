@@ -2,7 +2,8 @@
 
 int L1SymbolListSize = 0;
 
-#ifndef USE_INTERNAL_ALLOCATOR
+#define USE_NO_ALLOCATOR_FOR_PARSERS
+#ifndef USE_NO_ALLOCATOR_FOR_PARSERS
 	L1Symbol **L1SymbolList = NULL;
 #else
 	#define MAX_SIMBOLS_CAN_DEFINE	50
@@ -11,9 +12,9 @@ int L1SymbolListSize = 0;
 	L1Symbol **L1SymbolList = L1SymbolListListStatic;
 #endif
 
-L1Symbol *InitSymbol()
+L1Symbol *CreateInitSymbol()
 {
-#ifndef USE_INTERNAL_ALLOCATOR
+#ifndef USE_NO_ALLOCATOR_FOR_PARSERS
 	L1Symbol *ret = (L1Symbol *)EmbededMalloc( sizeof( L1Symbol ) );
 #else
 	assert( L1SymbolListSize < MAX_SIMBOLS_CAN_DEFINE );
@@ -27,8 +28,8 @@ int AddSymbol( const char *Name, BYTE pS1, BYTE pS01, BYTE pS02, void (*PB)( BYT
 {
 	Dprintf( DLVerbose, "\t\tL1 Symbol List %d: adding %s - %s", L1SymbolListSize, Name, Desc );
 
-	L1Symbol *NS = InitSymbol();
-#ifndef USE_INTERNAL_ALLOCATOR
+	L1Symbol *NS = CreateInitSymbol();
+#ifndef USE_NO_ALLOCATOR_FOR_PARSERS
 	L1SymbolList = (L1Symbol**)realloc( L1SymbolList, ( L1SymbolListSize + 1 ) * sizeof( L1Symbol* ) );
 #endif
 	L1SymbolList[ L1SymbolListSize ] = NS;
