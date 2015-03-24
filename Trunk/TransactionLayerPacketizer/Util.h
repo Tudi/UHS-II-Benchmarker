@@ -7,4 +7,4 @@ int ConsoleReadLine( char *Buffer, int MaxLen );
 /*
 Reinterpret a number that is supposed to be binary into decimal
 */
-BYTE BinToDec( __int64 N );
+unsigned char BinToDec( __int64 N );

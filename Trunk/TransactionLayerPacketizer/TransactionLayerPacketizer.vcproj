@@ -183,7 +183,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RegisterAddresses.h"
 				>
 			</File>
 			<File
@@ -218,6 +230,22 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="TestCases"
+			>
+			<File
+				RelativePath=".\TestCaseRegRead.c"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCaseRegRead.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCases.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

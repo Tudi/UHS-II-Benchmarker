@@ -1,9 +1,4 @@
-#ifndef _LINK_LAYER_PACKET_H_
-#define _LINK_LAYER_PACKET_H_
-
-#ifndef BYTE
-	typedef unsigned char BYTE;
-#endif
+#pragma once
 
 #define HOST_DEVICE_ID		0
 #define DEVICE_DEVICE_ID	1
@@ -58,6 +53,12 @@ struct sLinkLayerPacketMSG
 			Reserved:1,
 			CTG:3;
 	BYTE	Code:8;
+};
+
+enum TR_LAYER_RW_VALUES
+{
+	TRL_RW_Read		= 0,
+	TRL_RW_Write	= 1
 };
 
 struct sLinkLayerPacketCCMD
@@ -211,5 +212,3 @@ struct sFullLinkLayerPacketMSG
 };
 
 #pragma pack(pop)
-
-#endif
