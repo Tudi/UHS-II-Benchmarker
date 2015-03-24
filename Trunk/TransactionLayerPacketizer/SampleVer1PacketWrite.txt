@@ -1,0 +1,220 @@
+/*
+ * main.c
+ *
+ *  Created on: 28.01.2015
+ *      Author: DanielC
+ */
+
+#include "platform.h"
+#include "xil_io.h"
+#include "regs_map.h"
+
+u32 config_reg = 0x00000000;
+u32 contrl_reg = 0x00000000;
+u32 status_reg = 0x00000000;
+u32 transm_reg = 0x00000000;
+u32 receiv_reg = 0x00000000;
+
+//u32 device_init[] = {0x000003BC, 0x0000033C, 0x000006B1, 0x00000600, 0x000006AA, 0x000006BB, 0x000006CC, 0x000005BC, 0x000005FD};
+u32 device_init_0[] = {0x000003BC, 0x0000033C, 0x00000680, 0x00000600, 0x00000692, 0x00000602, 0x0000060F, 0x00000628, 0x00000600, 0x00000600, 0x00005BC, 0x000005FD}; // astea sunt pachetele 
+u32 device_init_1[] = {0x000003BC, 0x0000033C, 0x00000680, 0x00000600, 0x00000692, 0x00000602, 0x0000060D, 0x00000628, 0x00000600, 0x00000600, 0x00005BC, 0x000005FD};
+u32 enumeration_0[] = {0x000003BC, 0x0000033C, 0x00000680, 0x00000600, 0x00000692, 0x00000603, 0x000006F0, 0x00000600, 0x00000600, 0x00000600, 0x00005BC, 0x000005FD};
+
+//u32 config_write[] = {0x000003BC, 0x0000033C, 0x00000681, 0x00000600, 0x000006A0, 0x00000608, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000680, 0x00000600, 0x00000600, 0x00000600, 0x000005BC, 0x000005FD};
+u32 config_write[] = {0x000003BC, 0x0000033C, 0x00000681, 0x00000600, 0x000006A0, 0x00000609, 0x00000680, 0x00000600, 0x00000600, 0x00000600, 0x000005BC, 0x000005FD};
+u32 config_read[] = {0x000003BC, 0x0000033C, 0x00000681, 0x00000600, 0x00000620, 0x00000608, 0x00005BC, 0x000005FD};
+u32 config_read0[] = {0x000003BC, 0x0000033C, 0x00000681, 0x00000600, 0x00000620, 0x00000640, 0x00005BC, 0x000005FD};
+
+u32 dcmd_read[] = {0x000003BC, 0x0000033C, 0x00000691, 0x00000600, 0x00000620, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000680, 0x00000600, 0x00000600, 0x00000600, 0x00000602, 0x000005BC, 0x000005FD};
+u32 dcmd_write[] = {0x000003BC, 0x0000033C, 0x00000691, 0x00000600, 0x000006A0, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00000604, 0x000005BC, 0x000005FD};
+
+//u32 data_write0[] = {0x000003BC, 0x0000031C, 0x000003BC, 0x0000031C, 0x000003BC, 0x0000033C, 0x000006A1, 0x000006A5, 0x00005BC, 0x000005FD, 0x000005BC, 0x000005FB, 0x000005BC, 0x000005FB};
+//u32 data_write1[] = {0x000003BC, 0x0000031C, 0x000003BC, 0x0000031C, 0x000003BC, 0x0000033C, 0x000006A1, 0x000006F0, 0x00005BC, 0x000005FD, 0x000005BC, 0x000005FB, 0x000005BC, 0x000005FB};
+//u32 data_write2[] = {0x000003BC, 0x0000031C, 0x000003BC, 0x0000031C, 0x000003BC, 0x0000033C, 0x000006A1, 0x000006FF, 0x00005BC, 0x000005FD, 0x000005BC, 0x000005FB, 0x000005BC, 0x000005FB};
+//u32 data_write3[] = {0x000003BC, 0x0000031C, 0x000003BC, 0x0000031C, 0x000003BC, 0x0000033C, 0x000006A1, 0x00000600, 0x00005BC, 0x000005FD, 0x000005BC, 0x000005FB, 0x000005BC, 0x000005FB};
+
+u32 data_write0[] = {0x000003BC, 0x0000033C, 0x000006A1, 0x000006A5, 0x000006A5, 0x000006A5, 0x000006A5, 0x00005BC, 0x000005FD};
+u32 data_write1[] = {0x000003BC, 0x0000033C, 0x000006A1, 0x000006F0, 0x000006F0, 0x000006F0, 0x000006F0, 0x00005BC, 0x000005FD};
+u32 data_write2[] = {0x000003BC, 0x0000033C, 0x000006A1, 0x000006FF, 0x000006FF, 0x000006FF, 0x000006FF, 0x00005BC, 0x000005FD};
+u32 data_write3[] = {0x000003BC, 0x0000033C, 0x000006A1, 0x00000600, 0x00000600, 0x00000600, 0x00000600, 0x00005BC, 0x000005FD};
+
+u32 fcrdy[] = {0x000003BC, 0x0000033C, 0x000006F1, 0x00000600, 0x00000601, 0x00000600, 0x00005BC, 0x000005FD}; // {COM, SOP, HEADER, ARGUMENT, PAYLOAD, COM, EOP}
+u32 fcreq[] = {0x000003BC, 0x0000033C, 0x000006F0, 0x00000610, 0x00000600, 0x00000600, 0x00005BC, 0x000005FD};  // asta e formatul pachetelor,
+
+// 3BC = COM, 3 - cuprinde tipul pachetului si simbolul - daca e simbol sau nu (0 sau 1), de exemplu 01 - tip pachet si 1 - simbol k... si ar veni 011 = 3, BC e codul pentru COM, e un tabel undeva in spec cu toate astea ce valori au
+// 33C = SOP - start of pachet, 3BC si 33C se trimit la inceputul pachetului ca sa stie Link layer ca e pachet si la fel si cardul
+// 5BC = COM, dar e 5 pt ca e diferit tipul pachetului... asa cum a gandit luci in link / 00 - reserved, 01 - SOP, 10 - EOP, 11 - packet... asa a codat el
+// 5FD = EOP - end of packet
+//restul de byte din interior sunt continutul pachetului, de ex header, argument, payload, extended argument, etc... ce or mai fi
+
+
+u32 read;
+
+#define READ_MASK 0x00000600
+
+int main()
+{
+    int a;
+    int i;
+//    int j;
+
+	init_platform();
+
+    config_reg = Xil_In32(CONFIG_ADDR);// asa citesc de pe bus-ul microblaze un registru, aici citesc valoarea registrului config_reg
+    contrl_reg = Xil_In32(CONTRL_ADDR);
+    status_reg = Xil_In32(STATUS_ADDR);
+//de ex:     receive_reg = Xil_In32(RECEIVE_ADDR); // asa se citeste, in receive_reg o sa ai valoarea de la adresa RECEIVE_REG care reprezinta datele primite in registrul de receptie, si pe receptie o sa vina tot pachet sub forma aia {x,y,z,w}
+
+
+    for (a = 0; a < 50000000; a++) //asta l-am folosit ca delay... ca sa pot sa prind semnalele si sa le vad pe chipscope
+    {}
+
+    // DEACTIVATE RESET
+    contrl_reg |= 0x00000001; // asa am schimbat doar ultimul bit din registru
+    Xil_Out32(CONTRL_ADDR, contrl_reg); // asa scriu o valoare intr-un registru... asta e registru de control
+
+    // ACTIVATE PHY_INIT_START
+    contrl_reg |= 0x00000100;
+    Xil_Out32(CONTRL_ADDR, contrl_reg);
+
+    config_reg = 0x400083D0;
+    Xil_Out32(CONFIG_ADDR, config_reg); // asta e registru de config, intr-un document trimis de christian sunt explicati fiecare biti din registru ce reprezinta... dar in mare cum i-am facut aici cam asa trebuie
+//pama aici am facut initializarea PHY layer, si am primit inapoi semnalul ala PLL_LOCKED
+    for (a = 0; a < 50000000; a++)
+    {}
+
+//    Xil_Out32(DEB_02_ADDR, 0x00000001);
+
+    for (i = 0; i < 12; i++) 
+    {
+    	Xil_Out32(TRANSM_ADDR, device_init_0[i]); // aici am trimis un pachet de device_init prin registru de transmisie catre {TDM,TD} adica pe lane-ul de transmisie, asa am trimis toate pachetel
+    }											  // trebuie sa ii dai doar adresa registrului si ce sa valoare vrei
+
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+    for (i = 0; i < 12; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, device_init_1[i]); // am trimis de 2 ori device_init pentru ca prima data am primit raspuns cu GAP mai mic si cu CF = 0, abia a 2-a oara s-a facut device_init
+    }
+
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+   	for (i = 0; i < 12; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, enumeration_0[i]); // aici am facut enumeration, am primit raspuns inapoi cu SID - source ID = 1, adica cardul si-a alocat cum ar veni un numar... nu mai stiu exact ce se intampla in spec la enumeration
+    }
+
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+	for (i = 0; i < 8; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, config_read[i]); // asa am citit registri de configurare de pe card
+    }
+  	/*
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+   	for (i = 0; i < 12; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, config_write[i]); // asa am scris registri de configurare, am trimis intr-un pachet completion flag = 1 ca sa stie cardul ca s-a incheiat initializarea... 
+    }
+
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+	for (i = 0; i < 8; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, config_read[i]);
+    }
+
+	for (a = 0; a < 30000000; a++)
+	    		{}
+
+	for (i = 0; i < 16; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, dcmd_write[i]); // aici am trimis un pachet de tip DCMD sa scriu date pe card... 
+    }
+
+	for (a = 0; a < 500; a++)
+	    		{}
+
+	for (i = 0; i < 8; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, fcreq[i]); // asta e un pachet de tip MSG - FCREQ, astea o sa fie integrate in LINK layer in HW, dar pt moment pot fi trimise si primite si de microblaze
+    }
+
+
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+	for (i = 0; i < 8; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, config_read0[i]);
+    }
+
+	for (a = 0; a < 30000000; a++)
+	    		{}
+
+	for (i = 0; i < 16; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, dcmd_write[i]);
+    }
+
+    for (a = 0; a < 500; a++)
+    {}
+
+	for (i = 0; i < 9; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, data_write0[i]); // aici am scris pachet propriuzis de date, cel putin am incercat, mai trebuie lucrat aici...
+    }
+
+	for (i = 0; i < 9; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, data_write1[i]);
+    }
+
+    for (a = 0; a < 50; a++)
+    {}
+
+	for (i = 0; i < 9; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, data_write2[i]);
+    }
+
+	for (i = 0; i < 9; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, data_write3[i]);
+    }
+*/
+	for (a = 0; a < 50000000; a++)
+	    		{}
+
+	for (i = 0; i < 16; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, dcmd_read[i]); // am tot in
+    }
+
+/*
+	for (a = 0; a < 500; a++)
+	    		{}
+
+	for (i = 0; i < 8; i++)
+    {
+    	Xil_Out32(TRANSM_ADDR, fcrdy[i]);
+    }
+
+	u32 sop;
+	u32 com;
+	u32 msg;
+
+	while (1)
+	{
+
+	}
+	*/
+    return 0;
+}
+
