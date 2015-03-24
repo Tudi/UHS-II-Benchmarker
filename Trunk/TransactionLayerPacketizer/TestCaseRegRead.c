@@ -3,11 +3,6 @@
 void TestCaseReadRegisterValue()
 {
 	struct TransactionLayerPacket *PacketQueueStore;
-	char	PacketStoreBuffer[ 32767 ];
-	char	PayloadStoreBuffer[ 256 ];
-	int		DataUsedCounter;
-	DataUsedCounter = 0;
-
 	InitPacketQueueForNewTestCase();
 
 	PacketQueueStore = GetPacketQueueStore();
