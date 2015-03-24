@@ -5,3 +5,13 @@ Trunk/UHSIIBM.vcproj.User-PC.User.user
 Tools/BytesToVariable/Debug/
 Tools/FlipBits/Debug/
 Trunk/TransactionLayerPacketizer/Debug/
+Tools/BytesToVariable/BytesToVariable.ncb
+Tools/BytesToVariable/BytesToVariable.suo
+Tools/BytesToVariable/BytesToVariable.vcproj.User-PC.User.user
+Tools/FlipBits/FlipBits.ncb
+Tools/FlipBits/FlipBits.suo
+Tools/FlipBits/FlipBits.vcproj.User-PC.User.user
+Tools/FlipBits/L0_Sample_out.H2D
+Tools/FlipBits/L0_Sample_out_f32.H2D
+Trunk/TransactionLayerPacketizer/TransactionLayerPacketizer.ncb
+Trunk/TransactionLayerPacketizer/TransactionLayerPacketizer.suo

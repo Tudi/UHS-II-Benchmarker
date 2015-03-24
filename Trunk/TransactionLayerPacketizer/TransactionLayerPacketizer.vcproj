@@ -191,6 +191,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketQueue.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketQueue.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketTypes.h"
 				>
 			</File>
