@@ -61,6 +61,14 @@ enum TR_LAYER_RW_VALUES
 	TRL_RW_Write	= 1
 };
 
+enum CCMD_PAYLOAD_LENGTH_TYPES
+{
+	CCMD_PL_NONE	= 0,
+	CCMD_PL_4BYTES	= 1,
+	CCMD_PL_8BYTES	= 2,
+	CCMD_PL_16BYTES	= 3,
+};
+
 struct sLinkLayerPacketCCMD
 {
 	BYTE	IOADDR1:4,	//MSB
