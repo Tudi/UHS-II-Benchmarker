@@ -2,10 +2,12 @@
 
 struct HostTransactionStore
 {
+	int IDX;
 };
 
 struct DeviceTransactionStore
 {
+	int IDX;
 };
 
 extern struct HostTransactionStore		HostState;

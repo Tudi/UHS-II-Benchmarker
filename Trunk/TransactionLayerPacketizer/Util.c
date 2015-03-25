@@ -24,6 +24,7 @@ int ConsoleReadLine( char *Buffer, int MaxLen )
 
 	return 0; 
 }
+
 BYTE BinToDec( __int64 N )
 {
 	int ret = 0;
@@ -37,4 +38,11 @@ BYTE BinToDec( __int64 N )
 	}
 	assert( ret <= 255 );
 	return (BYTE)ret;
+}
+
+void EmbededMemSet( char *mem, char val, int size )
+{
+	int i;
+	for( i = 0; i < size; i++ )
+		mem[i] = val;
 }

@@ -7,6 +7,9 @@ void TestCaseReadRegisterValue()
 	//init the queue system for a new testcase
 	InitPacketQueueForNewTestCase();
 
+	//init host settings
+	HostState.IDX = 0;
+
 	//get a packet store from queue
 	PacketQueueStore = GetPacketQueueStore();
 	//fill the packet with what we need

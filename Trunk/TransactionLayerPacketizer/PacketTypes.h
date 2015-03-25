@@ -47,13 +47,17 @@ struct sLinkLayerPacketHeader
 			SourceID:4;
 };
 
-struct sLinkLayerPacketMSG
+typedef union
 {
-	BYTE	IDX:4,
-			Reserved:1,
-			CTG:3;
-	BYTE	Code:8;
-};
+	struct TLP_Header
+	{
+		BYTE	IDX:4,
+				Reserved:1,
+				CTG:3;
+		BYTE	Code:8;
+	}Fields;
+	unsigned short Data;
+}TLPU_Header;
 
 enum TR_LAYER_RW_VALUES
 {
@@ -69,154 +73,65 @@ enum CCMD_PAYLOAD_LENGTH_TYPES
 	CCMD_PL_16BYTES	= 3,
 };
 
-struct sLinkLayerPacketCCMD
+typedef union
 {
-	BYTE	IOADDR1:4,	//MSB
-			PLEN:2,
-			Reserved:1,
-			ReadWrite:1;
-	BYTE	IOADDR0:8;	//LSB
-};
+	struct TLP_CCMD_A
+	{
+		BYTE	IOADDR1:4,	//MSB
+				PLEN:2,
+				Reserved:1,
+				ReadWrite:1;
+		BYTE	IOADDR0:8;	//LSB
+	}Fields;
+	unsigned short Data;
+}TLPU_CCMD_A;
 
-struct sLinkLayerPacketDCMD
+typedef union
 {
-	BYTE	Reserved0:3,
-			TModeDuplexMode:1,
-			TModeLengthMode:1,
-			TModeTLUnitMode:1,
-			TModeDataAccessMode:1,
-			ReadWrite:1;
-	BYTE	Reserved1:8;
-	int		Addr:32;
-	int		DataLen:32;
-};
+	struct TLP_CCMD_Header
+	{
+		TLPU_Header		Header;
+		TLPU_CCMD_A		Argument;
+	}Fields;
+	unsigned char	DataC[4];
+}TLPU_CCMD;
 
-struct sLinkLayerPacketRES
+typedef union
 {
-	BYTE	NAck:1,
-			CMD_ECHO_BACK0:7;
-	BYTE	CMD_ECHO_BACK1:8;
-};
+	struct TLP_DCMD_A
+	{
+		BYTE	Reserved0:3,
+				TModeDuplexMode:1,
+				TModeLengthMode:1,
+				TModeTLUnitMode:1,
+				TModeDataAccessMode:1,
+				ReadWrite:1;
+		BYTE	Reserved1:8;
+		int		Addr:32;
+		int		DataLen:32;
+	}Fields;
+	unsigned char	DataC[10];
+}TLPU_DCMD_A;
 
-struct sFullLinkLayerPacketDCMD
+typedef union
 {
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketDCMD		Packet;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
+	struct TLP_DCMD_Header
+	{
+		TLPU_Header		Header;
+		TLPU_DCMD_A		Argument;
+	}Fields;
+	unsigned char	DataC[12];
+}TLPU_DCMD;
 
-struct sFullLinkLayerPacketCCMDR
+typedef union
 {
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketCCMD		Packet;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
-
-//write packet has variable length payload
-struct sFullLinkLayerPacketCCMDW0
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketCCMD		Packet;
-};
-
-struct sFullLinkLayerPacketCCMDW1
-{
-	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE					EOPLSS[2];
-};
-
-struct sFullLinkLayerPacketRES
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketRES		Packet;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
-
-struct sFullLinkLayerPacketDATA0
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-};
-
-struct sFullLinkLayerPacketDATA1
-{
-	unsigned short			CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE					EOPLSS[2];
-};
-
-struct sLinkLayerPacketCCMDDI
-{
-	BYTE	GAP:4,
-			GD:4;
-	BYTE	Reserved0:3,
-			CF:1,
-			DAP:4;
-	BYTE	Reserved1;
-	BYTE	Reserved2;
-};
-
-struct sFullLinkLayerPacketCCMDDI
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketCCMD		Packet;
-	struct sLinkLayerPacketCCMDDI	PacketDeviceInit;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
-
-struct sLinkLayerPacketCCMDDE
-{
-	BYTE	LastNodeID:4,
-			FirstNodeID:4;
-	BYTE	Reserved0;
-	BYTE	Reserved1;
-	BYTE	Reserved2;
-};
-struct sFullLinkLayerPacketCCMDDE
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketCCMD		Packet;
-	struct sLinkLayerPacketCCMDDE	PacketDeviceEnum;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
-
-#define READ_WRITE_REG_SIZE	4
-struct sFullLinkLayerPacketRegisterInquery
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketCCMD		HeaderCCMD;
-	BYTE							data[READ_WRITE_REG_SIZE];		//no idea about size. Maybe 8 bytes ? Depends on register location ?
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
-
-struct sFullLinkLayerPacketMSG
-{
-	//start of the packet is sent first
-	BYTE							SOPLSS[2];
-	struct sLinkLayerPacketHeader	Header;
-	struct sLinkLayerPacketMSG		Packet;
-	unsigned short					CRC;			//!!this is MSB. Most semnificative byte sent first but stored as normal int
-	BYTE							EOPLSS[2];
-};
+	struct sLinkLayerPacketRES
+	{
+		BYTE	NAck:1,
+				CMD_ECHO_BACK0:7;
+		BYTE	CMD_ECHO_BACK1:8;
+	}Fields;
+	unsigned short Data;
+}TLPU_RES;
 
 #pragma pack(pop)

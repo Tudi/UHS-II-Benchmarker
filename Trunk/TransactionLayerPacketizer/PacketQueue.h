@@ -17,6 +17,7 @@ struct TransactionLayerPacket
 	int		PacketSize;
 	char	Packet[MaxPacketSize];
 	char	PacketResponse[MaxPacketSize];
+	int		SendCount;				//number of times this packet should be sent out 
 	int		SentPacketCounter;
 	int		TimeStampQueue;
 	int		TimeStampSent;

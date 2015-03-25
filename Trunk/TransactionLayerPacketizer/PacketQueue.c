@@ -8,12 +8,10 @@ void InitPacketQueueForNewTestCase()
 	int i;
 	for( i = 0; i < MAX_PACKETS_TO_QUEUE; i++ )
 	{
-		int j;
-		char *PacketQ = (char *)&PacketStoreCache[i];
-		for( j = 0; j < sizeof( MAX_PACKETS_TO_QUEUE ); j++ )
-			PacketQ[j] = 0;
+		EmbededMemSet( (char *)&PacketStoreCache[i], 0 , sizeof( MAX_PACKETS_TO_QUEUE ) );
 		PacketStoreCache[i].PacketState = PS_PACKET_IS_FREE;
 		PacketStoreCache[i].SelfIndex = i;
+		PacketStoreCache[i].SendCount = 1;
 	}
 }
 
@@ -44,8 +42,10 @@ void QueryPacketToSend( char *OutData, int *PacketSize )
 	for( i = 0; i < MAX_PACKETS_TO_QUEUE; i++ )
 		if( PacketStoreCache[i].PacketState == PS_PACKET_IS_PENDING_SEND )
 		{
-			PacketStoreCache[i].PacketState = PS_PACKET_IS_SENT;
-			*OutData = &PacketStoreCache[i].Packet[0];
+			OutData = &PacketStoreCache[i].Packet[0];
 			*PacketSize = PacketStoreCache[i].PacketSize;
+			PacketStoreCache[i].SentPacketCounter++;
+			if( PacketStoreCache[i].SentPacketCounter >= PacketStoreCache[i].SendCount ) 
+				PacketStoreCache[i].PacketState = PS_PACKET_IS_SENT;
 		}
 }
