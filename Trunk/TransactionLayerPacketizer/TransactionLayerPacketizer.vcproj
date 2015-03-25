@@ -243,11 +243,11 @@
 			Name="TestCases"
 			>
 			<File
-				RelativePath=".\TestCaseRegRead.c"
+				RelativePath=".\TestCaseDanielExample.c"
 				>
 			</File>
 			<File
-				RelativePath=".\TestCaseRegRead.h"
+				RelativePath=".\TestCaseRegRead.c"
 				>
 			</File>
 			<File

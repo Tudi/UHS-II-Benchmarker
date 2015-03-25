@@ -1,13 +1,20 @@
 #pragma once
 
+// to make a broadcast, you need to have DID = 0 and SID = 0
 struct HostTransactionStore
 {
-	int IDX;
+	int HostID;
+	int DeviceID;
+	int	SessionID;
+	int	TransactionID;
+	int	PacketDoesNotHaveReply;		// broadcast read packets do not get a reply
+	int DeviceFinishedInitialize;
+	int DeviceFinishedEnum;
 };
 
 struct DeviceTransactionStore
 {
-	int IDX;
+	int None;
 };
 
 extern struct HostTransactionStore		HostState;

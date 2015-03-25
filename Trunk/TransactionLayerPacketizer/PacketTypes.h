@@ -35,28 +35,27 @@ enum eMSG_CODE_Types
 	MSG_CODE_UNRECOVERABLE_ERROR	=	128,
 };
 
-#pragma pack(push,1)
-
-struct sLinkLayerPacketHeader
+enum eRES_CODE_Types
 {
-	BYTE	DestinationID:4,
-			PacketType:3,
-			NativePacket:1;
-	BYTE	TransactionID:3,
-			Reserved:1,
-			SourceID:4;
+	RES_CODE_NO_ERROR		= 0,	
+	RES_CODE_COND_ERROR		= 1,	// Command issued does nto respect the standard
+	RES_CODE_ARG_ERROR		= 2,	// either Argument, Extended argument, or payload contains invalid value
+	RES_CODE_GENERIC_ERR	= 3,	// unknown error type
 };
 
+#pragma pack(push,1)
 typedef union
 {
 	struct TLP_Header
 	{
-		BYTE	IDX:4,
+		BYTE	DestinationID:4,
+				PacketType:3,
+				NativePacket:1;		// NP = 1
+		BYTE	TransactionID:3,
 				Reserved:1,
-				CTG:3;
-		BYTE	Code:8;
+				SourceID:4;
 	}Fields;
-	unsigned short Data;
+	unsigned char	DataC[2];
 }TLPU_Header;
 
 enum TR_LAYER_RW_VALUES
@@ -77,13 +76,13 @@ typedef union
 {
 	struct TLP_CCMD_A
 	{
-		BYTE	IOADDR1:4,	//MSB
-				PLEN:2,
-				Reserved:1,
-				ReadWrite:1;
-		BYTE	IOADDR0:8;	//LSB
+		BYTE		IOADDR1:4,	//MSB
+					PLEN:2,
+					Reserved:1,
+					ReadWrite:1;
+		BYTE		IOADDR0:8;	//LSB
 	}Fields;
-	unsigned short Data;
+	unsigned char	DataC[2];
 }TLPU_CCMD_A;
 
 typedef union
@@ -93,22 +92,53 @@ typedef union
 		TLPU_Header		Header;
 		TLPU_CCMD_A		Argument;
 	}Fields;
-	unsigned char	DataC[4];
+	unsigned char		DataC[4];
 }TLPU_CCMD;
 
 typedef union
 {
+	// page 153
+	struct TLP_CCMD_PayloadDeviceInit
+	{
+		BYTE		GAP:4,		// Group allocated power 1=360mw, 2=720mw....n=n*360mw
+					GD:4;		// Group descriptor
+		BYTE		Reserved0:3,
+					CF:1,		// Completion flag. Device clears this flag to 0 until he is initialized. Host needs to resend device init packet until this flag remains 1
+					DAP:4;		// Device allocated power n=n*360mw
+		BYTE		Reserved1;
+		BYTE		Reserved2;
+	}Fields;
+	unsigned char	DataC[4];
+}TLPU_CCMD_PayloadDeviceInit;
+
+typedef union
+{
+	// page 159
+	struct TLP_CCMD_PayloadDeviceEnum
+	{
+		BYTE		LastNodeID:4,		// 
+					FirstNodeID:4;		// 
+		BYTE		Reserved0;
+		BYTE		Reserved1;
+		BYTE		Reserved2;
+	}Fields;
+	unsigned char	DataC[4];
+}TLPU_CCMD_PayloadDeviceEnum;
+
+// !! this is not good. Need to remake this
+typedef union
+{
 	struct TLP_DCMD_A
 	{
-		BYTE	Reserved0:3,
-				TModeDuplexMode:1,
-				TModeLengthMode:1,
-				TModeTLUnitMode:1,
-				TModeDataAccessMode:1,
-				ReadWrite:1;
-		BYTE	Reserved1:8;
-		int		Addr:32;
-		int		DataLen:32;
+		BYTE		Reserved0:3,
+					TModeDataAccessMode:1,	// DAM=0 -> increase address by 1 unit ( byte / block ), DAM=1 -> write to the same addr
+					TModeTLUnitMode:1,		// byte or block ? 0 = block mode, 1 = byte mode. if TLU=1 than TL=1. if DM=1 than TLU=0
+					TModeLengthMode:1,		// is tlen present in the packet or not ? 0 = not specified, 1 = specified
+					TModeDuplexMode:1,		// full duplex or half duplex ? 0 = FD, 1 = 2L-HD, 
+					ReadWrite:1;
+		BYTE		Reserved1:8;
+		int			Addr:32;				// DAM=0 -> addr is measured in blocks. Transmited MSB first, LSB last
+		int			DataLen:32;				// if LM=0 this field is a data field !, TLUM=0 ( max 4GByte addr ), TLUM=1 than max TLEN is equal to 1 block size
 	}Fields;
 	unsigned char	DataC[10];
 }TLPU_DCMD_A;
@@ -120,7 +150,7 @@ typedef union
 		TLPU_Header		Header;
 		TLPU_DCMD_A		Argument;
 	}Fields;
-	unsigned char	DataC[12];
+	unsigned char		DataC[12];
 }TLPU_DCMD;
 
 typedef union

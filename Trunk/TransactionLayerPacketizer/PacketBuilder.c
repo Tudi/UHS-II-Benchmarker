@@ -21,10 +21,12 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	EmbededMemSet( packet->DataC, 0, SizeOfFullHeader ); 
 
 	//set the values for the packet Header
+	packet->Fields.Header.Fields.DestinationID = HostState.DeviceID;
+	packet->Fields.Header.Fields.PacketType = LLPT_CCMD;
+	packet->Fields.Header.Fields.NativePacket = 1;
+	packet->Fields.Header.Fields.TransactionID = HostState.TransactionID;
 	packet->Fields.Header.Fields.Reserved = 0;
-	packet->Fields.Header.Fields.Code = 0;
-	packet->Fields.Header.Fields.CTG = 0;
-	packet->Fields.Header.Fields.IDX = HostState.IDX;
+	packet->Fields.Header.Fields.SourceID = HostState.HostID;
 
 	//set the values for the packet Argument
 	packet->Fields.Argument.Fields.Reserved = 0;
@@ -42,6 +44,29 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	*OutDataLen = SizeOfFullHeader + InPayloadLen;
 }
 
+void BuildPcktCCMDDeviceInit( unsigned char *OutData, int *OutDataLen )
+{
+	TLPU_CCMD_PayloadDeviceInit		DeviceInitPayload;
+	DeviceInitPayload.Fields.GAP = 15;
+	DeviceInitPayload.Fields.GD = 0;
+	DeviceInitPayload.Fields.Reserved0 = 0;
+	DeviceInitPayload.Fields.CF = 1;
+	DeviceInitPayload.Fields.DAP = 2;
+	DeviceInitPayload.Fields.Reserved1 = 0;
+	DeviceInitPayload.Fields.Reserved2 = 0;
+	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_DEVICE_INIT, (char*)&DeviceInitPayload, CCMD_PL_4BYTES );
+}
+
+void BuildPcktCCMDDeviceEnum( unsigned char *OutData, int *OutDataLen )
+{
+	TLPU_CCMD_PayloadDeviceEnum		DeviceEnumPayload;
+	DeviceEnumPayload.Fields.LastNodeID = 0;
+	DeviceEnumPayload.Fields.FirstNodeID = 15;
+	DeviceEnumPayload.Fields.Reserved0 = 0;
+	DeviceEnumPayload.Fields.Reserved1 = 0;
+	DeviceEnumPayload.Fields.Reserved2 = 0;
+	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_ENUMERATE, (char*)&DeviceEnumPayload, CCMD_PL_4BYTES );
+}
 
 void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAddr, char *InPayload, int InPayloadLen, int DuplexMode, int LengthMode, int UnitMode, int DataMode )
 {
@@ -64,10 +89,12 @@ void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	EmbededMemSet( packet->DataC, 0, SizeOfFullHeader ); 
 
 	//set the values for the packet Header
+	packet->Fields.Header.Fields.DestinationID = HostState.DeviceID;
+	packet->Fields.Header.Fields.PacketType = LLPT_DCMD;
+	packet->Fields.Header.Fields.NativePacket = 1;
+	packet->Fields.Header.Fields.TransactionID = HostState.TransactionID;
 	packet->Fields.Header.Fields.Reserved = 0;
-	packet->Fields.Header.Fields.Code = 0;
-	packet->Fields.Header.Fields.CTG = 0;
-	packet->Fields.Header.Fields.IDX = HostState.IDX;
+	packet->Fields.Header.Fields.SourceID = HostState.HostID;
 
 	//set the values for the packet Argument
 	packet->Fields.Argument.Fields.Reserved0 = 0;

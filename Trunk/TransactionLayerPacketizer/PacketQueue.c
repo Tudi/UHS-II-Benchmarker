@@ -49,3 +49,13 @@ void QueryPacketToSend( char *OutData, int *PacketSize )
 				PacketStoreCache[i].PacketState = PS_PACKET_IS_SENT;
 		}
 }
+
+void WaitDevicePacketReply()
+{
+	//packet read is not implemented yet
+
+	//end transaction of send -> receive if packet does not require a reply
+	// used for broadcast read CCMD packet ( SID = DID = 0 )
+	if( HostState.PacketDoesNotHaveReply == 1 )
+		return;
+}

@@ -23,6 +23,7 @@
 #include "RegisterAddresses.h"
 #include "PacketQueue.h"
 #include "TransactionHandler.h"
+#include "PacketParser.h"
 
 //contains all test case headers in 1
 #include "TestCases.h"

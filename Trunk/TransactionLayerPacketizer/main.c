@@ -27,7 +27,7 @@ int main( int argc, char *argv[] )
 	else
 		RunTestCase = 0;
 
-	TestCaseReadRegisterValue();
+	TestCaseReproduceDanielExample();
 
 	return 0;
 }

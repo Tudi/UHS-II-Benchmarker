@@ -16,6 +16,7 @@ struct TransactionLayerPacket
 {
 	int		PacketSize;
 	char	Packet[MaxPacketSize];
+	int		PacketSizeResponse;
 	char	PacketResponse[MaxPacketSize];
 	int		SendCount;				//number of times this packet should be sent out 
 	int		SentPacketCounter;
@@ -42,3 +43,7 @@ void QueuePacket( struct TransactionLayerPacket *Packet );
 Used by Microblaze to ask for a new packet to be sent out
 */
 void QueryPacketToSend( char *OutData, int *PacketSize );
+/*
+Using the Microblaze provided Link Layer API, wait for the reply to the last sent packet and read the reply
+*/
+void WaitDevicePacketReply();
