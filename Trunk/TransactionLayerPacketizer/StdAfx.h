@@ -11,10 +11,14 @@
 
 #ifndef assert
 	#ifdef _DEBUG
-		#define assert(x) if( !x ) *(int*)0 = 1;
+		#define assert(x) if( !(x) ) *(int*)0 = 1;
 	#else
-		#define assert(x) 1=1;
+		#define assert(x) 1==1;
 	#endif
+#endif
+
+#if !defined( XILINX_PROJECT_BUILD )
+	#define Xil_Out32( a, b ) 1==1;
 #endif
 
 #include "Util.h"

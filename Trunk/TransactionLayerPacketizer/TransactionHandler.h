@@ -7,7 +7,6 @@ struct HostTransactionStore
 	int DeviceID;
 	int	SessionID;
 	int	TransactionID;
-	int	PacketDoesNotHaveReply;		// broadcast read packets do not get a reply
 	int DeviceFinishedInitialize;
 	int DeviceFinishedEnum;
 };

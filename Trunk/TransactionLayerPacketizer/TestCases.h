@@ -2,3 +2,4 @@
 
 void TestCaseReadRegisterValue();
 void TestCaseReproduceDanielExample();
+void TestCaseDeviceInit();

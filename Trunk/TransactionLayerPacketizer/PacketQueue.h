@@ -18,13 +18,14 @@ struct TransactionLayerPacket
 	char	Packet[MaxPacketSize];
 	int		PacketSizeResponse;
 	char	PacketResponse[MaxPacketSize];
-	int		SendCount;				//number of times this packet should be sent out 
+	int		SendCount;						//number of times this packet should be sent out 
 	int		SentPacketCounter;
 	int		TimeStampQueue;
 	int		TimeStampSent;
 	int		ReplyReceived;
-	int		SelfIndex;	//for debugging purpuses when not using 
+	int		SelfIndex;						//for debugging purpuses when not using 
 	int		PacketState;
+	int		PacketDoesNotHaveDeviceReply;	// broadcast read packets do not get a reply
 };
 
 /*
@@ -44,6 +45,10 @@ Used by Microblaze to ask for a new packet to be sent out
 */
 void QueryPacketToSend( char *OutData, int *PacketSize );
 /*
+Xilinx project does not support async packet sending
+*/
+void SendPacketToDevice( struct TransactionLayerPacket *Packet );
+/*
 Using the Microblaze provided Link Layer API, wait for the reply to the last sent packet and read the reply
 */
-void WaitDevicePacketReply();
+void WaitDevicePacketReply( struct TransactionLayerPacket *Packet );

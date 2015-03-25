@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestCaseDeviceInit.c"
+				>
+			</File>
+			<File
 				RelativePath=".\TestCaseRegRead.c"
 				>
 			</File>

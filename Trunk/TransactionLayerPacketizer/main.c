@@ -27,6 +27,7 @@ int main( int argc, char *argv[] )
 	else
 		RunTestCase = 0;
 
+	TestCaseDeviceInit();
 	TestCaseReproduceDanielExample();
 
 	return 0;

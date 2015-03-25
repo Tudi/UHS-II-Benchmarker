@@ -54,7 +54,7 @@ RESEND_DEVICE_INIT_PACKET:
 	QueuePacket( PacketQueueStore );
 
 	//wait for device reply
-	WaitDevicePacketReply();
+	WaitDevicePacketReply( PacketQueueStore );
 
 	// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 	// after 30 send tries Host needs to treat init configuration as BAD
@@ -107,7 +107,7 @@ RESEND_DEVICE_ENUM_PACKET:
 	QueuePacket( PacketQueueStore );
 
 	//wait for device reply
-	WaitDevicePacketReply();
+	WaitDevicePacketReply( PacketQueueStore );
 
 	// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 	// after 30 send tries Host needs to treat init configuration as BAD
@@ -124,7 +124,11 @@ RESEND_DEVICE_ENUM_PACKET:
 	// Device enum end
 	/////////////////////////////////////////
 
-	//wait for the packet to arrive to the device and read the reply
-	WaitDevicePacketReply();
+	/////////////////////////////////////////
+	// Device config begin
+	/////////////////////////////////////////
 
+	/////////////////////////////////////////
+	// Device config end
+	/////////////////////////////////////////
 }

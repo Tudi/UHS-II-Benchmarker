@@ -6,12 +6,15 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	TLPU_CCMD		*packet;
 	char			*payload;
 	int				SizeOfFullHeader;
+	int				RealPayloadSize;
 
 	//sanity checks. Best case these are not used
 	*OutDataLen	= 0;
 	packet = (TLPU_CCMD *)OutData;
 	if( packet == NULL )
 		return;
+	// payload is measured in 4 byte units not bytes
+	assert( InPayloadLen <= CCMD_PL_MAX_PAYLOAD_LEN );
 
 	//it's bad if we mess this up
 	SizeOfFullHeader = sizeof( packet->Fields );
@@ -35,9 +38,19 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	packet->Fields.Argument.Fields.IOADDR0 = ( InAddr >> 0 ) & 0xFF;
 	packet->Fields.Argument.Fields.IOADDR1 = ( InAddr >> 8 ) & 0x0F;
 
+	// payload size is not exactly multiple of 4....
+	if( InPayloadLen == CCMD_PL_4BYTES )
+		RealPayloadSize = 4;
+	else if( InPayloadLen == CCMD_PL_8BYTES )
+		RealPayloadSize = 8;
+	else if( InPayloadLen == CCMD_PL_16BYTES )
+		RealPayloadSize = 16;
+	else
+		RealPayloadSize = 0;
+
 	//set the payload of the packet
 	payload = &OutData[ SizeOfFullHeader ];
-	for( i = 0; i < InPayloadLen; i++ )
+	for( i = 0; i < RealPayloadSize; i++ )
 		payload[i] = InPayload[i];
 
 	//set the amount of bytes we should send to the link layer
@@ -47,6 +60,7 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 void BuildPcktCCMDDeviceInit( unsigned char *OutData, int *OutDataLen )
 {
 	TLPU_CCMD_PayloadDeviceInit		DeviceInitPayload;
+
 	DeviceInitPayload.Fields.GAP = 15;
 	DeviceInitPayload.Fields.GD = 0;
 	DeviceInitPayload.Fields.Reserved0 = 0;
@@ -54,6 +68,7 @@ void BuildPcktCCMDDeviceInit( unsigned char *OutData, int *OutDataLen )
 	DeviceInitPayload.Fields.DAP = 2;
 	DeviceInitPayload.Fields.Reserved1 = 0;
 	DeviceInitPayload.Fields.Reserved2 = 0;
+
 	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_DEVICE_INIT, (char*)&DeviceInitPayload, CCMD_PL_4BYTES );
 }
 

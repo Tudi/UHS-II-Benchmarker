@@ -50,12 +50,38 @@ void QueryPacketToSend( char *OutData, int *PacketSize )
 		}
 }
 
-void WaitDevicePacketReply()
+void SendPacketToDevice( struct TransactionLayerPacket *Packet )
 {
-	//packet read is not implemented yet
+	int i;
 
+	//sanity check
+	if( Packet->SelfIndex >= MAX_PACKETS_TO_QUEUE )
+		assert( 0 );
+
+	//in case packet is sheduled to be sent out multiple times
+	Packet->SentPacketCounter++;
+	if( Packet->SentPacketCounter >= Packet->SendCount ) 
+		Packet->PacketState = PS_PACKET_IS_SENT;
+
+	//signal packet start for link layer
+	Xil_Out32(TRANSM_ADDR, 0x000003BC );
+	Xil_Out32(TRANSM_ADDR, 0x0000033C );
+
+	//send actual transaction layer packet
+	for( i = 0; i < PacketStoreCache[i].PacketSize; i++ )
+		Xil_Out32( TRANSM_ADDR, (int)Packet->Packet[i] | (int)0x00000600 );
+
+	//signal packet end for link layer
+	Xil_Out32(TRANSM_ADDR, 0x000005BC );
+	Xil_Out32(TRANSM_ADDR, 0x000005FD );
+}
+
+void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
+{
 	//end transaction of send -> receive if packet does not require a reply
 	// used for broadcast read CCMD packet ( SID = DID = 0 )
-	if( HostState.PacketDoesNotHaveReply == 1 )
+	if( Packet != NULL && Packet->PacketDoesNotHaveDeviceReply == 1 )
 		return;
+
+	//packet read is not implemented yet
 }
