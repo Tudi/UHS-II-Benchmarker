@@ -46,3 +46,10 @@ void EmbededMemSet( char *mem, char val, int size )
 	for( i = 0; i < size; i++ )
 		mem[i] = val;
 }
+
+void EmbededMemCpy( char *Src, char *Dst, int count )
+{
+	int i;
+	for( i = 0; i < count; i++ )
+		Dst[i] = Src[i];
+}

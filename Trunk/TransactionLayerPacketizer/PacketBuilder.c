@@ -50,11 +50,22 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 
 	//set the payload of the packet
 	payload = &OutData[ SizeOfFullHeader ];
-	for( i = 0; i < RealPayloadSize; i++ )
-		payload[i] = InPayload[i];
+	if( payload != NULL )
+	{
+		for( i = 0; i < RealPayloadSize; i++ )
+			payload[i] = InPayload[i];
+	}
+	else
+	{
+		for( i = 0; i < RealPayloadSize; i++ )
+			payload[i] = 0;
+	}
 
 	//set the amount of bytes we should send to the link layer
-	*OutDataLen = SizeOfFullHeader + InPayloadLen;
+	if( InRW == TRL_RW_Write )
+		*OutDataLen = SizeOfFullHeader + RealPayloadSize;
+	else
+		*OutDataLen = SizeOfFullHeader;	// for read operation, payload is not sent only received
 }
 
 void BuildPcktCCMDDeviceInit( unsigned char *OutData, int *OutDataLen )
@@ -81,6 +92,20 @@ void BuildPcktCCMDDeviceEnum( unsigned char *OutData, int *OutDataLen )
 	DeviceEnumPayload.Fields.Reserved1 = 0;
 	DeviceEnumPayload.Fields.Reserved2 = 0;
 	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_ENUMERATE, (char*)&DeviceEnumPayload, CCMD_PL_4BYTES );
+}
+
+void BuildPcktCCMDDeviceQueryReg( unsigned char *OutData, int *OutDataLen, int RegisterAddress )
+{
+	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Read, RegisterAddress, NULL, CCMD_PL_8BYTES );
+
+	// This needs to be a broadcast packet ?
+	// Have to test this in practice. We should be able to issue device specific query and device should respond with RES instead broadcast CCMD
+/*	{
+		TLPU_CCMD		*packet;
+		packet = (TLPU_CCMD *)OutData;
+		packet->Fields.Header.Fields.DestinationID = 0;
+		packet->Fields.Header.Fields.SourceID = 0;
+	}/**/
 }
 
 void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAddr, char *InPayload, int InPayloadLen, int DuplexMode, int LengthMode, int UnitMode, int DataMode )

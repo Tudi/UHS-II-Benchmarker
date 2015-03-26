@@ -11,7 +11,7 @@ void TestCaseDeviceInit()
 	InitPacketQueueForNewTestCase();
 
 	//init host settings
-	EmbededMemSet( (char*)&HostState, 0, sizeof( HostState ) );
+	InitHostTransactionStore();
 
 	/////////////////////////////////////////
 	// Device Init begin

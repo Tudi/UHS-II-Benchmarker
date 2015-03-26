@@ -156,13 +156,37 @@ typedef union
 
 typedef union
 {
-	struct sLinkLayerPacketRES
+	struct TLP_RES_A
 	{
-		BYTE	NAck:1,
-				CMD_ECHO_BACK0:7;
-		BYTE	CMD_ECHO_BACK1:8;
+		BYTE		NAck:1,
+					Plen:7;
+		BYTE		CMD_ECHO_BACK1:8;
 	}Fields;
-	unsigned short Data;
+	unsigned char	DataC[2];
+}TLPU_RES_A;
+
+typedef union
+{
+	struct TLP_RES_A_CCMD
+	{
+		BYTE		IOADDR1:4,	//MSB
+					PLEN:2,
+					Reserved:1,
+					NACK:1;		// 0 = CCMD was accepted
+		BYTE		IOADDR0:8;	//LSB
+	}Fields;
+	unsigned char	DataC[2];
+}TLPU_RES_A_CCMD;
+
+// page 144 for example
+typedef union
+{
+	struct TLPU_RES
+	{
+		TLPU_Header		Header;
+		TLPU_RES_A_CCMD	Argument;
+	}Fields;
+	unsigned char		DataC[12];
 }TLPU_RES;
 
 #pragma pack(pop)

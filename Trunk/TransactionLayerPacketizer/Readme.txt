@@ -9,10 +9,18 @@ Milestones
 - Do read / write speed test
 - Read from usb test case ID. Report back test case 
 
+Usage
+----------
+- you need to include source files( except StdAfx.h and main.c ) in your Xilinx project
+- merge StdAfx.f 
+- make sure you compile with XILINX_PROJECT_BUILD defined
+
 Documentation
 ----------
 Right now there is none. Read test cases in this order 
 - device init
+- device enum
+- device config
 - read register
 - set register
 - config device for read

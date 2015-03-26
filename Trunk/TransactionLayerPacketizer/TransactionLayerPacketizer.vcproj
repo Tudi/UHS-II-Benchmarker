@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestCaseDeviceCapabilities.c"
+				>
+			</File>
+			<File
 				RelativePath=".\TestCaseDeviceInit.c"
 				>
 			</File>

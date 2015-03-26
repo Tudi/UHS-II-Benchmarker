@@ -16,6 +16,11 @@ Device enum specific CCMD
 void BuildPcktCCMDDeviceEnum( unsigned char *OutData, int *OutDataLen );
 
 /*
+Device register read specific CCMD
+*/
+void BuildPcktCCMDDeviceQueryReg( unsigned char *OutData, int *OutDataLen, int RegisterAddress );
+
+/*
 Construct a DCMD packet
 */
 void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAddr, char *InPayload, int InPayloadLen, int DuplexMode, int LengthMode, int UnitMode, int DataMode );
