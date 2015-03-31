@@ -45,9 +45,9 @@ int ParsePcktCCMDDeviceRegisterQuery( struct TransactionLayerPacket *Packet, int
 		return -1;
 	if( P_RES->Fields.Header.Fields.Reserved != 0 )
 		return -1;
-	if( P_RES->Fields.Header.Fields.DestinationID != P_CCMD->Fields.Header.Fields.DestinationID )
+	if( P_RES->Fields.Header.Fields.DestinationID != P_CCMD->Fields.Header.Fields.SourceID )	//destination id should be 0 ( page 191 )
 		return -1;
-	if( P_RES->Fields.Header.Fields.SourceID != P_CCMD->Fields.Header.Fields.SourceID )
+	if( P_RES->Fields.Header.Fields.SourceID != P_CCMD->Fields.Header.Fields.DestinationID )	// source id is probably 1 
 		return -1;
 	if( P_RES->Fields.Header.Fields.TransactionID != P_CCMD->Fields.Header.Fields.TransactionID )
 		return -1;
@@ -89,14 +89,20 @@ int ParsePcktCCMDDeviceRegisterSet( struct TransactionLayerPacket *Packet, int R
 		return -1;
 	if( P_RES->Fields.Header.Fields.Reserved != 0 )
 		return -1;
-	if( P_RES->Fields.Header.Fields.DestinationID != P_CCMD->Fields.Header.Fields.DestinationID )
+	if( P_RES->Fields.Header.Fields.DestinationID != P_CCMD->Fields.Header.Fields.SourceID )	//destination id should be 0 ( page 191 )
 		return -1;
-	if( P_RES->Fields.Header.Fields.SourceID != P_CCMD->Fields.Header.Fields.SourceID )
+	if( P_RES->Fields.Header.Fields.SourceID != P_CCMD->Fields.Header.Fields.DestinationID )	// source id is probably 1 
 		return -1;
 	if( P_RES->Fields.Header.Fields.TransactionID != P_CCMD->Fields.Header.Fields.TransactionID )
 		return -1;
 	if( P_RES->Fields.Argument.Fields.NACK != 0 )	//error, for some reason the packet was rejected. We can try to resend it
 		return -1;
+	if( P_RES->Fields.Argument.Fields.IOADDR0 != P_CCMD->Fields.Argument.Fields.IOADDR0 )
+		return -1;
+	if( P_RES->Fields.Argument.Fields.IOADDR1 != P_CCMD->Fields.Argument.Fields.IOADDR1 )
+		return -1;
+//	if( P_RES->Fields.Argument.Fields.PLEN != 0 )	//we issued a write command, there should be no content
+//		return -1;
 
 	return 0;
 }

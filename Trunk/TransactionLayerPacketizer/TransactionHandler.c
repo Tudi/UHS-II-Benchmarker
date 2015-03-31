@@ -13,5 +13,6 @@ void InitHostTransactionStore()
 
 void InitNewHostDeviceTransaction()
 {
+	//on page 190 it says trasaction id is always 0 ?
 	HostState.TransactionID++;
 }
