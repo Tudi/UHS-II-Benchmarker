@@ -20,9 +20,9 @@ Documentation
 Right now there is none. Read test cases in this order 
 - device init
 - device enum
-- device config
 - read register
 - set register
+- device config
 - config device for read
 - config device for write
 

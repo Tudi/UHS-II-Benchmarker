@@ -34,6 +34,8 @@ enum REGISTER_ADDRESS_NAMES_CFG
 	RA_CFG_RESERVED2		= 0x108,
 };
 
+#pragma pack(push,1)
+
 //page 171
 //read only register values
 typedef union
@@ -104,3 +106,5 @@ typedef union
 	}Fields;
 	unsigned char	DataC[8];
 }u_CFG_LINK_TRAN_SETTING_REG;
+
+#pragma pack(pop)

@@ -11,5 +11,9 @@ void ParsePcktCCMDDeviceEnum( unsigned char *InData, int InDataLen );
 /*
 Device register query response ( with RES and not broadcast CCMD )
 */
-void ParsePcktCCMDDeviceRegisterQuery( struct TransactionLayerPacket *Packet, int RegisterAddress );
+int ParsePcktCCMDDeviceRegisterQuery( struct TransactionLayerPacket *Packet, int RegisterAddress );
+/*
+Device register query response ( with RES and not broadcast CCMD )
+*/
+int ParsePcktCCMDDeviceRegisterSet( struct TransactionLayerPacket *Packet, int RegisterAddress );
 

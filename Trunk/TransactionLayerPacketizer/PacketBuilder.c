@@ -108,6 +108,20 @@ void BuildPcktCCMDDeviceQueryReg( unsigned char *OutData, int *OutDataLen, int R
 	}/**/
 }
 
+void BuildPcktCCMDDeviceSetReg( unsigned char *OutData, int *OutDataLen, int RegisterAddress, char *OutRegValue )
+{
+	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RegisterAddress, OutRegValue, CCMD_PL_8BYTES );
+
+	// This needs to be a broadcast packet ?
+	// Have to test this in practice. We should be able to issue device specific query and device should respond with RES instead broadcast CCMD
+/*	{
+		TLPU_CCMD		*packet;
+		packet = (TLPU_CCMD *)OutData;
+		packet->Fields.Header.Fields.DestinationID = 0;
+		packet->Fields.Header.Fields.SourceID = 0;
+	}/**/
+}
+
 void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAddr, char *InPayload, int InPayloadLen, int DuplexMode, int LengthMode, int UnitMode, int DataMode )
 {
 	int				i;

@@ -255,15 +255,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestCaseRegRead.c"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCases.c"
-				>
-			</File>
-			<File
 				RelativePath=".\TestCases.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCaseSetRegister.c"
 				>
 			</File>
 		</Filter>
