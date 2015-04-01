@@ -262,6 +262,10 @@
 				RelativePath=".\TestCaseSetRegister.c"
 				>
 			</File>
+			<File
+				RelativePath=".\TestCaseWriteRead.c"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

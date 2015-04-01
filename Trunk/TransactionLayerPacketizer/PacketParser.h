@@ -16,4 +16,9 @@ int ParsePcktCCMDDeviceRegisterQuery( struct TransactionLayerPacket *Packet, int
 Device register query response ( with RES and not broadcast CCMD )
 */
 int ParsePcktCCMDDeviceRegisterSet( struct TransactionLayerPacket *Packet, int RegisterAddress );
+/*
+DCMD response ( with RES and not broadcast CCMD )
+*/
+int ParsePcktDCMDFCURes( struct TransactionLayerPacket *Packet );
+
 

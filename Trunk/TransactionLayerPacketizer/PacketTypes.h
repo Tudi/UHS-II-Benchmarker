@@ -126,6 +126,30 @@ typedef union
 	unsigned char	DataC[4];
 }TLPU_CCMD_PayloadDeviceEnum;
 
+enum DAMModes
+{
+	DAM_ADDRESS	= 0,
+	DAM_PORT	= 1,
+};
+
+enum TLUModes
+{
+	TLUM_BLOCK_MODE	= 0,
+	TLUM_BYTE_MODE	= 1,
+};
+
+enum TLModes
+{
+	TLM_TL_NOT_PRESENT	= 0,
+	TLM_TL_PRESENT	= 1,
+};
+
+enum TModes
+{
+	TM_FULL_DUPLEX		= 0,
+	TM_HALF_DUPLEX_2L	= 1,
+};
+
 // !! this is not good. Need to remake this
 typedef union
 {
@@ -144,6 +168,7 @@ typedef union
 	unsigned char	DataC[10];
 }TLPU_DCMD_A;
 
+// ex page 192
 typedef union
 {
 	struct TLP_DCMD_Header
@@ -153,6 +178,15 @@ typedef union
 	}Fields;
 	unsigned char		DataC[12];
 }TLPU_DCMD;
+
+typedef union
+{
+	struct TLP_DATA_Header
+	{
+		TLPU_Header		Header;
+	}Fields;
+	unsigned char	DataC[2];
+}TLPU_DATA_A;
 
 typedef union
 {

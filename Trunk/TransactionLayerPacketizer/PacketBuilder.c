@@ -27,7 +27,7 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	packet->Fields.Header.Fields.DestinationID = HostState.DeviceID;
 	packet->Fields.Header.Fields.PacketType = LLPT_CCMD;
 	packet->Fields.Header.Fields.NativePacket = 1;
-	packet->Fields.Header.Fields.TransactionID = HostState.TransactionID;
+	packet->Fields.Header.Fields.TransactionID = HostState.TransactionID;	//always 0 for non FCU packets ?
 	packet->Fields.Header.Fields.Reserved = 0;
 	packet->Fields.Header.Fields.SourceID = HostState.HostID;
 
@@ -91,7 +91,7 @@ void BuildPcktCCMDDeviceEnum( unsigned char *OutData, int *OutDataLen )
 	DeviceEnumPayload.Fields.Reserved0 = 0;
 	DeviceEnumPayload.Fields.Reserved1 = 0;
 	DeviceEnumPayload.Fields.Reserved2 = 0;
-	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_ENUMERATE, (char*)&DeviceEnumPayload, CCMD_PL_4BYTES );
+	BuildPcktCCMD( OutData, OutDataLen, TRL_RW_Write, RA_Command + RA_CMD_ENUMERATE, DeviceEnumPayload.DataC, CCMD_PL_4BYTES );
 }
 
 void BuildPcktCCMDDeviceQueryReg( unsigned char *OutData, int *OutDataLen, int RegisterAddress )
@@ -153,13 +153,22 @@ void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 	//set the values for the packet Argument
 	packet->Fields.Argument.Fields.Reserved0 = 0;
 	packet->Fields.Argument.Fields.Reserved1 = 0;
-	packet->Fields.Argument.Fields.TModeDuplexMode = DuplexMode;
+	packet->Fields.Argument.Fields.TModeDuplexMode = DuplexMode;	// fullDuples or 2L-HalfDuplex
 	packet->Fields.Argument.Fields.TModeLengthMode = LengthMode;
 	packet->Fields.Argument.Fields.TModeTLUnitMode = UnitMode;
 	packet->Fields.Argument.Fields.TModeDataAccessMode = DataMode;
 	packet->Fields.Argument.Fields.ReadWrite = InRW;
 	packet->Fields.Argument.Fields.Addr = InPayloadLen;
 	packet->Fields.Argument.Fields.DataLen = InAddr;
+
+	if( UnitMode == TLUM_BYTE_MODE )
+	{
+		assert( InPayloadLen <= DeviceState.DeviceLinkTranSettingReg.Fields.MAX_BLK_LEN );
+	}
+	else
+	{
+		assert( InPayloadLen <= DeviceState.DeviceLinkTranSettingReg.Fields.MAX_BLK_LEN * DeviceState.DeviceLinkTranSettingReg.Fields.N_FCU );
+	}
 
 	//set the payload of the packet
 	payload = &OutData[ SizeOfFullHeader ];
@@ -168,4 +177,55 @@ void BuildPcktDCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 
 	//set the amount of bytes we should send to the link layer
 	*OutDataLen = SizeOfFullHeader + InPayloadLen;
+}
+
+int BuildPcktDATA( struct TransactionLayerPacket *CCMDPacket, unsigned char *OutData, int *OutDataLen )
+{
+	int				i;
+	TLPU_DATA_A		*packet;
+	char			*payload;
+	int				SizeOfFullHeader;
+	TLPU_DCMD		*packetCCMD;
+	int				TotalBytesToSend;
+	int				RemainingBytesToSend;
+	int				BytesCanSendNow;
+
+	//sanity checks. Best case these are not used
+	*OutDataLen	= 0;
+	packet = (TLPU_DATA_A *)OutData;
+	if( packet == NULL )
+		return -1;
+
+	//it's bad if we mess this up
+	SizeOfFullHeader = sizeof( packet->Fields );
+
+	//set the packet header + argument to "0". In case in the future we change the header this will ensure we set those fields to 0 also.
+	assert( sizeof( packet->Fields ) == sizeof( packet->DataC ) );
+	EmbededMemSet( packet->DataC, 0, SizeOfFullHeader ); 
+
+	packetCCMD = (TLPU_DCMD*)CCMDPacket->Packet;
+	//set the values for the packet Header
+	packet->Fields.Header.Fields.DestinationID = HostState.DeviceID;
+	packet->Fields.Header.Fields.PacketType = LLPT_DATA;
+	packet->Fields.Header.Fields.NativePacket = 1;
+	packet->Fields.Header.Fields.TransactionID = HostState.TransactionID;	//always 0 for non FCU packets ?
+	packet->Fields.Header.Fields.Reserved = 0;
+	packet->Fields.Header.Fields.SourceID = HostState.HostID;
+
+	payload = &OutData[ SizeOfFullHeader ];
+
+	TotalBytesToSend = packetCCMD->Fields.Argument.Fields.DataLen;
+	RemainingBytesToSend = TotalBytesToSend - CCMDPacket->TransactionBytesSent;
+	BytesCanSendNow = RemainingBytesToSend;
+	if( BytesCanSendNow > DeviceState.DeviceLinkTranSettingReg.Fields.MAX_BLK_LEN )	//N_FCU from CFG_REG
+		BytesCanSendNow = DeviceState.DeviceLinkTranSettingReg.Fields.MAX_BLK_LEN;
+
+	for( i = CCMDPacket->TransactionBytesSent; i < CCMDPacket->TransactionBytesSent + BytesCanSendNow; i++ )
+		payload[i] = CCMDPacket->Packet[ sizeof( TLPU_DCMD ) + i];
+
+	CCMDPacket->TransactionBytesSent += BytesCanSendNow;
+
+	*OutDataLen = SizeOfFullHeader + BytesCanSendNow;
+
+	return ( RemainingBytesToSend - BytesCanSendNow ); 
 }

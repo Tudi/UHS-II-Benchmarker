@@ -10,7 +10,7 @@ struct HostTransactionStore
 	int	TransactionID;							// can be used to ensure we are reading a packet that we were waiting the reply for. Can be used for async communication
 	int DeviceFinishedInitialize;
 	int DeviceFinishedEnum;
-	int	DeviceMaxBlockLength,UsedBlockLength;	// by default it's 512
+//	int	DeviceMaxBlockLength,UsedBlockLength;	// by default it's 512
 };
 
 struct DeviceTransactionStore

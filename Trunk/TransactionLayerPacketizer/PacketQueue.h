@@ -26,6 +26,7 @@ struct TransactionLayerPacket
 	int		SelfIndex;						//for debugging purpuses when not using 
 	int		PacketState;
 	int		PacketDoesNotHaveDeviceReply;	// broadcast read packets do not get a reply
+	int		TransactionBytesSent;			// in byte mode data transfer this will mean the number of bytes sent
 };
 
 /*

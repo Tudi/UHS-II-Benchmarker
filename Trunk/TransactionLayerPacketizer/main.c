@@ -29,7 +29,9 @@ int main( int argc, char *argv[] )
 
 	TestCaseDeviceInit();
 	TestCaseDeviceCapabilities();
-	TestCaseReproduceDanielExample();
+	TestCaseDeviceSetRegister();
+	TestCaseWriteRead();
+//	TestCaseReproduceDanielExample();
 
 	return 0;
 }

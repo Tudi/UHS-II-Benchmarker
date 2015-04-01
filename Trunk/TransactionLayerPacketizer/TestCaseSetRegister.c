@@ -11,7 +11,7 @@ void TestCaseDeviceSetRegister()
 		TestCaseDeviceInit();
 
 	//read configs
-	if( HostState.DeviceMaxBlockLength = 0 )
+	if( DeviceState.DeviceLinkTranSettingReg.Fields.MAX_BLK_LEN == 0 || DeviceState.DeviceLinkTranSettingReg.Fields.N_FCU == 0 )
 		TestCaseDeviceCapabilities();
 
 	/////////////////////////////////////////

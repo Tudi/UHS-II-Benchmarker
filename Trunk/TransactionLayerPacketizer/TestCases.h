@@ -16,3 +16,7 @@ void TestCaseDeviceSetRegister();
 This is how the device was tested and it was confirmed to be working. Will be used a software self test sample
 */
 void TestCaseReproduceDanielExample();
+/*
+Test Data write and readback
+*/
+void TestCaseWriteRead();
