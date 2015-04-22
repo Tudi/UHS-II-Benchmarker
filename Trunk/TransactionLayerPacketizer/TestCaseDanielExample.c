@@ -57,14 +57,14 @@ RESEND_DEVICE_INIT_PACKET:
 	WaitDevicePacketReply( PacketQueueStore );
 
 	// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-	// after 30 send tries Host needs to treat init configuration as BAD
+	// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 	ParsePcktCCMDDeviceInit( &PacketQueueStore->PacketResponse[0], PacketQueueStore->PacketSizeResponse );
 
 	DeviceInitRetryCounter++;
-	if( HostState.DeviceFinishedInitialize == 0 && DeviceInitRetryCounter < 30 )
+	if( HostState.DeviceFinishedInitialize == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 		goto RESEND_DEVICE_INIT_PACKET;
 
-	if( DeviceInitRetryCounter >= 30 )
+	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
 		assert( 0 );
 
 	/////////////////////////////////////////
@@ -110,14 +110,14 @@ RESEND_DEVICE_ENUM_PACKET:
 	WaitDevicePacketReply( PacketQueueStore );
 
 	// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-	// after 30 send tries Host needs to treat init configuration as BAD
+	// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 	ParsePcktCCMDDeviceEnum( &PacketQueueStore->PacketResponse[0], PacketQueueStore->PacketSizeResponse );
 
 	DeviceInitRetryCounter++;
-	if( HostState.DeviceFinishedEnum == 0 && DeviceInitRetryCounter < 30 )
+	if( HostState.DeviceFinishedEnum == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 		goto RESEND_DEVICE_ENUM_PACKET;
 
-	if( DeviceInitRetryCounter >= 30 )
+	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
 		assert( 0 );
 
 	/////////////////////////////////////////

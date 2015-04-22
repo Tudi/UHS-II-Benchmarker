@@ -1,6 +1,18 @@
 #pragma once
 
 /*
+Daniel test at lowest possible level
+*/
+void TestCaseDanielLowLevel();
+/*
+Daniel test replaced some code with basic send functions
+*/
+void TestCaseDanielMidLevel();
+/*
+Daniel test replaced multi write / multiread with step by step read / write
+*/
+void TestCaseDanielHighLevel();
+/*
 Send device Init and Device enum packets
 */
 void TestCaseDeviceInit();
@@ -20,3 +32,4 @@ void TestCaseReproduceDanielExample();
 Test Data write and readback
 */
 void TestCaseWriteRead();
+

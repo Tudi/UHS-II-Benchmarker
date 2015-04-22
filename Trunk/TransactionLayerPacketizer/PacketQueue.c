@@ -64,24 +64,63 @@ void SendPacketToDevice( struct TransactionLayerPacket *Packet )
 		Packet->PacketState = PS_PACKET_IS_SENT;
 
 	//signal packet start for link layer
-	Xil_Out32(TRANSM_ADDR, 0x000003BC );
-	Xil_Out32(TRANSM_ADDR, 0x0000033C );
+	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_HEADER0 );
+	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_HEADER1 );
 
+	xil_printf( "Sending Data :");
 	//send actual transaction layer packet
-	for( i = 0; i < PacketStoreCache[i].PacketSize; i++ )
-		Xil_Out32( TRANSM_ADDR, (int)Packet->Packet[i] | (int)0x00000600 );
+	for( i = 0; i < Packet->PacketSize; i++ )
+	{
+		unsigned int FormatedData = READ_MASK | ((int)Packet->Packet[i]);
+		xil_printf( " 0x%X(0x%X)", FormatedData, (int)(Packet->Packet[i]) );
+		Xil_Out32( TRANSM_ADDR, FormatedData );
+	}
+	xil_printf( "\n");
 
 	//signal packet end for link layer
-	Xil_Out32(TRANSM_ADDR, 0x000005BC );
-	Xil_Out32(TRANSM_ADDR, 0x000005FD );
+	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_FOOTER0 );
+	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_FOOTER1 );
 }
 
 void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
 {
+	int WaitTimeout;
+	unsigned int DataOnPort;
+
+	// set it even if we do not have a reply to avoid bugs
+	Packet->PacketSizeResponse = 0;
+
 	//end transaction of send -> receive if packet does not require a reply
 	// used for broadcast read CCMD packet ( SID = DID = 0 )
 	if( Packet != NULL && Packet->PacketDoesNotHaveDeviceReply == 1 )
 		return;
 
-	//packet read is not implemented yet
+	//have to sleep. No idea why
+	SleepMS( 10 );
+
+//xil_printf( "\n");
+	//wait until we see data header
+	do{
+		DataOnPort = Xil_In32( RECEIV_ADDR );
+		WaitTimeout = WaitTimeout + 1 ;
+//xil_printf( " 0x%X", data_in0 );
+	}while( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER && ( DataOnPort & DATA_READ_FLAGS_NOT_DATA ) == DATA_READ_FLAGS_NOT_DATA );
+//	xil_printf( "wait count : %d \n", WaitTimeout );
+//xil_printf( "\n");
+
+	//read packet content
+//	xil_printf( "data read : " );
+	if( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER )
+	{
+		do{
+			if( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA && Packet->PacketSizeResponse < MaxPacketSize )
+			{
+				Packet->PacketResponse[ Packet->PacketSizeResponse ] = ( DataOnPort & ( ~DATA_READ_FLAGS_IS_DATA ) );
+//xil_printf( " 0x%X(0x%X)", data_in0, (int)(Data[ ReturnLen ]) );
+				Packet->PacketSizeResponse = Packet->PacketSizeResponse + 1;
+			}
+			DataOnPort = Xil_In32( RECEIV_ADDR );
+		}while( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA );
+	}
+//xil_printf( "\n");
 }

@@ -14,19 +14,19 @@ enum PacketStates
 
 struct TransactionLayerPacket
 {
-	int		PacketSize;
-	char	Packet[MaxPacketSize];
-	int		PacketSizeResponse;
-	char	PacketResponse[MaxPacketSize];
-	int		SendCount;						//number of times this packet should be sent out 
-	int		SentPacketCounter;
-	int		TimeStampQueue;
-	int		TimeStampSent;
-	int		ReplyReceived;
-	int		SelfIndex;						//for debugging purpuses when not using 
-	int		PacketState;
-	int		PacketDoesNotHaveDeviceReply;	// broadcast read packets do not get a reply
-	int		TransactionBytesSent;			// in byte mode data transfer this will mean the number of bytes sent
+	int				PacketSize;
+	unsigned char	Packet[MaxPacketSize];
+	int				PacketSizeResponse;
+	unsigned char	PacketResponse[MaxPacketSize];
+	int				SendCount;						//number of times this packet should be sent out
+	int				SentPacketCounter;
+	int				TimeStampQueue;
+	int				TimeStampSent;
+	int				ReplyReceived;
+	int				SelfIndex;						//for debugging purpuses when not using
+	int				PacketState;
+	int				PacketDoesNotHaveDeviceReply;	// broadcast read packets do not get a reply
+	int				TransactionBytesSent;			// in byte mode data transfer this will mean the number of bytes sent
 };
 
 /*

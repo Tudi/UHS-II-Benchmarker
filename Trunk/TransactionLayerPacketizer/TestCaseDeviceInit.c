@@ -16,6 +16,9 @@ void TestCaseDeviceInit()
 	/////////////////////////////////////////
 	// Device Init begin
 	/////////////////////////////////////////
+#ifdef	XILINX_PROJECT_BUILD
+	xil_printf( "Started Device Init\n");
+#endif
 
 	//get a packet store from queue
 	PacketQueueStore = GetPacketQueueStore();
@@ -26,7 +29,7 @@ void TestCaseDeviceInit()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	while( HostState.DeviceFinishedInitialize == 0 && DeviceInitRetryCounter < 30 )
+	while( HostState.DeviceFinishedInitialize == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -48,6 +51,10 @@ void TestCaseDeviceInit()
 	if( DeviceInitRetryCounter >= 30 )
 		assert( 0 );
 
+#ifdef	XILINX_PROJECT_BUILD
+	//seems like device will not signal us completion flag ? :O
+	HostState.DeviceFinishedInitialize = 1;
+#endif
 	/////////////////////////////////////////
 	// Device Init end
 	/////////////////////////////////////////
@@ -55,6 +62,10 @@ void TestCaseDeviceInit()
 	/////////////////////////////////////////
 	// Device enum begin
 	/////////////////////////////////////////
+
+#ifdef	XILINX_PROJECT_BUILD
+	xil_printf( "Started Device Enum\n");
+#endif
 
 	//get a packet store from queue
 	PacketQueueStore = GetPacketQueueStore();
@@ -64,7 +75,7 @@ void TestCaseDeviceInit()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	while( HostState.DeviceFinishedEnum == 0 && DeviceInitRetryCounter < 30 )
+	while( HostState.DeviceFinishedEnum == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		PacketQueueStore->SendCount++;
 		QueuePacket( PacketQueueStore );
