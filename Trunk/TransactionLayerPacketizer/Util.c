@@ -24,21 +24,6 @@ int ConsoleReadLine( char *Buffer, int MaxLen )
 
 	return 0; 
 }
-/*
-BYTE BinToDec( __int64 N )
-{
-	int ret = 0;
-	int Index = 1;
-	while( N )
-	{
-		assert( ( N % 10 ) == 0 || ( N % 10 ) == 1 );
-		ret += ( N % 10 ) * Index;
-		N = N / 10;
-		Index *= 2;
-	}
-	assert( ret <= 255 );
-	return (BYTE)ret;
-}*/
 
 void EmbededMemSet( char *mem, char val, int size )
 {
@@ -53,3 +38,54 @@ void EmbededMemCpy( char *Src, char *Dst, int count )
 	for( i = 0; i < count; i++ )
 		Dst[i] = Src[i];
 }
+
+void FlipPacketBytes( char *PacketData, int PacketLen )
+{
+	int Byte, Int;
+	for( Int = 0; Int <= PacketLen - 4; Int += 4 )
+		for( Byte = 0; Byte < 2; Byte++ )
+		{
+			int Temp = PacketData[ Int + Byte ];
+			PacketData[ Int + Byte ] = PacketData[ Int + 3 - Byte ];
+			PacketData[ Int + 3 - Byte ] = Temp;
+		}
+}
+
+int GetByteLenFromPLen( int PLen )
+{
+	if( PLen == CCMD_PL_4BYTES )
+		return 4;
+	else if( PLen == CCMD_PL_8BYTES )
+		return 8;
+	else if( PLen == CCMD_PL_16BYTES )
+		return 16;
+	return 0;
+}
+#ifndef XILINX_PROJECT_BUILD
+BYTE BinToDec( __int64 N )
+{
+	int ret = 0;
+	int Index = 1;
+	while( N )
+	{
+		assert( ( N % 10 ) == 0 || ( N % 10 ) == 1 );
+		ret += ( N % 10 ) * Index;
+		N = N / 10;
+		Index *= 2;
+	}
+	assert( ret <= 255 );
+	return (BYTE)ret;
+}
+
+void SleepMS( int Count )
+{
+	volatile int a;
+	for( a = 0; a < Count; a++ );
+}
+
+int Xil_In32( int x )
+{
+	return PHY0_PACKET_FOOTER1;
+}
+
+#endif

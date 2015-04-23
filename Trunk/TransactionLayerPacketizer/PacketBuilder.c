@@ -50,7 +50,7 @@ void BuildPcktCCMD( unsigned char *OutData, int *OutDataLen, int InRW, int InAdd
 
 	//set the payload of the packet
 	payload = &OutData[ SizeOfFullHeader ];
-	if( payload != NULL )
+	if( InPayload != NULL )
 	{
 		for( i = 0; i < RealPayloadSize; i++ )
 			payload[i] = InPayload[i];
@@ -87,7 +87,7 @@ void BuildPcktCCMDDeviceEnum( unsigned char *OutData, int *OutDataLen )
 {
 	TLPU_CCMD_PayloadDeviceEnum		DeviceEnumPayload;
 	DeviceEnumPayload.Fields.LastNodeID = 0;
-	DeviceEnumPayload.Fields.FirstNodeID = 15;
+	DeviceEnumPayload.Fields.FirstNodeID = 0xF;
 	DeviceEnumPayload.Fields.Reserved0 = 0;
 	DeviceEnumPayload.Fields.Reserved1 = 0;
 	DeviceEnumPayload.Fields.Reserved2 = 0;

@@ -42,7 +42,7 @@ void TestCaseWriteRead()
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
 	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < 30 )
+	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -54,13 +54,13 @@ void TestCaseWriteRead()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// after 30 send tries Host needs to treat init configuration as BAD
+		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		PacketWasAccepted = ParsePcktDCMDFCURes( PacketQueueStore );
 
 		DeviceInitRetryCounter++;
 	}
 
-	if( DeviceInitRetryCounter >= 30 )
+	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
 		assert( 0 );
 
 

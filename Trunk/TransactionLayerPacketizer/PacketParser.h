@@ -7,7 +7,7 @@ void ParsePcktCCMDDeviceInit( unsigned char *InData, int InDataLen );
 /*
 Device enum specific CCMD
 */
-void ParsePcktCCMDDeviceEnum( unsigned char *InData, int InDataLen );
+void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet );
 /*
 Device register query response ( with RES and not broadcast CCMD )
 */

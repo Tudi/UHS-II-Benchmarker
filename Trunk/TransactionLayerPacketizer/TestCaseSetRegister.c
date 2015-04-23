@@ -36,7 +36,7 @@ void TestCaseDeviceSetRegister()
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
 	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < 30 )
+	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -48,14 +48,13 @@ void TestCaseDeviceSetRegister()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-		// after 30 send tries Host needs to treat init configuration as BAD
+		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		ParsePcktCCMDDeviceRegisterSet( PacketQueueStore, RA_Configuration + RA_CFG_GENERIC_SETTINGS );
 
 		DeviceInitRetryCounter++;
 	}
 
-	if( DeviceInitRetryCounter >= 30 )
+	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
 		assert( 0 );
 
 	/////////////////////////////////////////
@@ -80,7 +79,7 @@ void TestCaseDeviceSetRegister()
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
 	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < 30 )
+	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -92,14 +91,13 @@ void TestCaseDeviceSetRegister()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-		// after 30 send tries Host needs to treat init configuration as BAD
+		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		PacketWasAccepted = ParsePcktCCMDDeviceRegisterQuery( PacketQueueStore, RA_Configuration + RA_CFG_LINK_TRAN );
 
 		DeviceInitRetryCounter++;
 	}
 
-	if( DeviceInitRetryCounter >= 30 )
+	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
 		assert( 0 );
 
 	/////////////////////////////////////////

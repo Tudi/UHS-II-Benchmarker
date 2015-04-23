@@ -111,7 +111,7 @@ RESEND_DEVICE_ENUM_PACKET:
 
 	// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 	// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
-	ParsePcktCCMDDeviceEnum( &PacketQueueStore->PacketResponse[0], PacketQueueStore->PacketSizeResponse );
+	ParsePcktCCMDDeviceEnum( PacketQueueStore );
 
 	DeviceInitRetryCounter++;
 	if( HostState.DeviceFinishedEnum == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )

@@ -199,6 +199,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketToText.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketToText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketTypes.h"
 				>
 			</File>

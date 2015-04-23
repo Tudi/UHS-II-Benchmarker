@@ -42,25 +42,26 @@ void TestCaseDeviceInit()
 		WaitDevicePacketReply( PacketQueueStore );
 
 		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-		// after 30 send tries Host needs to treat init configuration as BAD
+		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		ParsePcktCCMDDeviceInit( PacketQueueStore->PacketResponse, PacketQueueStore->PacketSizeResponse );
 
 		DeviceInitRetryCounter++;
 	}
 
-	if( DeviceInitRetryCounter >= 30 )
-		assert( 0 );
+//	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
+//		assert( 0 );
 
-#ifdef	XILINX_PROJECT_BUILD
 	//seems like device will not signal us completion flag ? :O
 	HostState.DeviceFinishedInitialize = 1;
-#endif
+	if( HostState.DeviceID == HostState.HostID )
+		HostState.DeviceID = 1;
+
 	/////////////////////////////////////////
 	// Device Init end
 	/////////////////////////////////////////
 
 	/////////////////////////////////////////
-	// Device enum begin
+	// Device enum begin - page 159 for enumeration mechanism
 	/////////////////////////////////////////
 
 #ifdef	XILINX_PROJECT_BUILD
@@ -87,14 +88,17 @@ void TestCaseDeviceInit()
 		WaitDevicePacketReply( PacketQueueStore );
 
 		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-		// after 30 send tries Host needs to treat init configuration as BAD
-		ParsePcktCCMDDeviceEnum( PacketQueueStore->PacketResponse, PacketQueueStore->PacketSizeResponse );
+		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
+		ParsePcktCCMDDeviceEnum( PacketQueueStore );
 
 		DeviceInitRetryCounter++;
 	}
 
-	if( DeviceInitRetryCounter >= 30 )
-		assert( 0 );
+//	if( DeviceInitRetryCounter >= MAX_PACKET_RESEND_ON_NO_REPLY )
+//		assert( 0 );
+
+	//seems like device will not signal us completion flag ? :O
+	HostState.DeviceFinishedEnum = 1;
 
 	/////////////////////////////////////////
 	// Device enum end

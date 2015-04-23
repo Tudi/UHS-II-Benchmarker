@@ -24,7 +24,7 @@ void TestCaseDeviceCapabilities()
 	PacketQueueStore = GetPacketQueueStore();
 
 	// can be used to ensure we are reading a packet that we were waiting the reply for. Can be used for async communication
-	InitNewHostDeviceTransaction();
+//	InitNewHostDeviceTransaction();
 
 	//build packet to be sent
 	BuildPcktCCMDDeviceQueryReg( PacketQueueStore->Packet, &PacketQueueStore->PacketSize, RA_Configuration + RA_CFG_LINK_TRAN );
@@ -32,8 +32,8 @@ void TestCaseDeviceCapabilities()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
+	PacketWasAccepted = 1;
+	while( PacketWasAccepted > 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -45,7 +45,6 @@ void TestCaseDeviceCapabilities()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		PacketWasAccepted = ParsePcktCCMDDeviceRegisterQuery( PacketQueueStore, RA_Configuration + RA_CFG_LINK_TRAN );
 
@@ -76,7 +75,7 @@ void TestCaseDeviceCapabilities()
 	PacketQueueStore = GetPacketQueueStore();
 
 	// can be used to ensure we are reading a packet that we were waiting the reply for. Can be used for async communication
-	InitNewHostDeviceTransaction();
+//	InitNewHostDeviceTransaction();
 
 	//build packet to be sent
 	BuildPcktCCMDDeviceQueryReg( PacketQueueStore->Packet, &PacketQueueStore->PacketSize, RA_Configuration + RA_CFG_GENERIC_SETTINGS );
@@ -84,8 +83,8 @@ void TestCaseDeviceCapabilities()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
+	PacketWasAccepted = 1;
+	while( PacketWasAccepted > 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -97,7 +96,6 @@ void TestCaseDeviceCapabilities()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		PacketWasAccepted = ParsePcktCCMDDeviceRegisterQuery( PacketQueueStore, RA_Configuration + RA_CFG_GENERIC_SETTINGS );
 
@@ -128,7 +126,7 @@ void TestCaseDeviceCapabilities()
 	PacketQueueStore = GetPacketQueueStore();
 
 	// can be used to ensure we are reading a packet that we were waiting the reply for. Can be used for async communication
-	InitNewHostDeviceTransaction();
+//	InitNewHostDeviceTransaction();
 
 	//build packet to be sent
 	BuildPcktCCMDDeviceQueryReg( PacketQueueStore->Packet, &PacketQueueStore->PacketSize, RA_Configuration + RA_CFG_PHY_SETTINGS );
@@ -136,8 +134,8 @@ void TestCaseDeviceCapabilities()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
+	PacketWasAccepted = 1;
+	while( PacketWasAccepted > 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -149,7 +147,6 @@ void TestCaseDeviceCapabilities()
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
 		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
 		PacketWasAccepted = ParsePcktCCMDDeviceRegisterQuery( PacketQueueStore, RA_Configuration + RA_CFG_PHY_SETTINGS );
 
@@ -181,7 +178,7 @@ void TestCaseDeviceCapabilities()
 	PacketQueueStore = GetPacketQueueStore();
 
 	// can be used to ensure we are reading a packet that we were waiting the reply for. Can be used for async communication
-	InitNewHostDeviceTransaction();
+//	InitNewHostDeviceTransaction();
 
 	//build packet to be sent
 	BuildPcktCCMDDeviceQueryReg( PacketQueueStore->Packet, &PacketQueueStore->PacketSize, RA_Configuration + RA_CFG_LINK_TRAN_SETTINS );
@@ -189,8 +186,8 @@ void TestCaseDeviceCapabilities()
 	//queue the packet to be sent to the device
 	PacketQueueStore->SendCount = 0;
 	DeviceInitRetryCounter = 0;
-	PacketWasAccepted = 0;
-	while( PacketWasAccepted == 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
+	PacketWasAccepted = 1;
+	while( PacketWasAccepted > 0 && DeviceInitRetryCounter < MAX_PACKET_RESEND_ON_NO_REPLY )
 	{
 		// queue the packet to be sent. Could be an async implementation in the future
 		PacketQueueStore->SendCount++;
@@ -221,3 +218,56 @@ void TestCaseDeviceCapabilities()
 	/////////////////////////////////////////
 
 }
+
+/*
+Start Program
+Started Device Init
+Sending Data : 0x680(0x80) 0x600(0x0) 0x692(0x92) 0x602(0x2) 0x60F(0xF) 0x628(0x28) 0x600(0x0) 0x600(0x0)
+data read : 
+Sending Data : 0x680(0x80) 0x600(0x0) 0x692(0x92) 0x602(0x2) 0x60F(0xF) 0x628(0x28) 0x600(0x0) 0x600(0x0)
+data read : 
+Sending Data : 0x680(0x80) 0x600(0x0) 0x692(0x92) 0x602(0x2) 0x60F(0xF) 0x628(0x28) 0x600(0x0) 0x600(0x0)
+data read : 
+Sending Data : 0x680(0x80) 0x600(0x0) 0x692(0x92) 0x602(0x2) 0x60F(0xF) 0x628(0x28) 0x600(0x0) 0x600(0x0)
+data read : 
+Sending Data : 0x680(0x80) 0x600(0x0) 0x692(0x92) 0x602(0x2) 0x60F(0xF) 0x628(0x28) 0x600(0x0) 0x600(0x0)
+data read : 
+Started Device Enum
+Sending Data : 0x681(0x81) 0x600(0x0) 0x692(0x92) 0x603(0x3) 0x6F0(0xF0) 0x600(0x0) 0x600(0x0) 0x600(0x0)
+data read :  0x6A0(0xA0) 0x610(0x10) 0x612(0x12) 0x603(0x3)
+Error : Device Enum packet is missing data ( 4 bytes of content! ) 
+CCMD->Header->DestinationID : 1 
+CCMD->Header->PacketType : 0 
+CCMD->Header->NativePacket : 1 
+CCMD->Header->TransactionID : 0 
+CCMD->Header->Reserved : 0 
+CCMD->Header->SourceID : 0 
+CCMD->Header->DestinationID : 1 
+CCMD->Argument->IOADDR1 : 2 
+CCMD->Argument->PLEN : 1 
+CCMD->Argument->Reserved : 0 
+CCMD->Argument->ReadWrite : 1 
+CCMD->Argument->IOADDR0 : 3 
+Device Enum  FirstNodeID : 0 
+Device Enum  LastNodeID : 0 
+Error : Device id set to 1 due to missing data 
+Started Device Capability Query
+Sending Data : 0x681(0x81) 0x600(0x0) 0x620(0x20) 0x604(0x4)
+data read :  0x6A0(0xA0) 0x610(0x10) 0x620(0x20) 0x604(0x4) 0x620(0x20) 0x602(0x2) 0x610(0x10) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0)
+RA_CFG_LINK_TRAN -> MaxBlkLen : 512 
+RA_CFG_LINK_TRAN -> N_FCU : 16 
+RA_CFG_LINK_TRAN -> N_DATA_GAP : 0 
+Started Device Capability Query
+Sending Data : 0x681(0x81) 0x600(0x0) 0x620(0x20) 0x608(0x8)
+data read :  0x6A0(0xA0) 0x610(0x10) 0x620(0x20) 0x608(0x8) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x680(0x80) 0x600(0x0) 0x600(0x0) 0x600(0x0)
+Generic Settings Register -> Completion Flag : 0 
+Started Device Capability Query
+Sending Data : 0x681(0x81) 0x600(0x0) 0x620(0x20) 0x60A(0xA)
+data read :  0x6A0(0xA0) 0x610(0x10) 0x620(0x20) 0x60A(0xA) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x612(0x12)
+RA_CFG_PHY_SETTINGS -> N_LSS_DIR : 1 
+RA_CFG_PHY_SETTINGS -> N_LSS_SYN : 2 
+Started Device Capability Query
+Sending Data : 0x681(0x81) 0x600(0x0) 0x620(0x20) 0x60C(0xC)
+data read :  0x6A0(0xA0) 0x610(0x10) 0x620(0x20) 0x60C(0xC) 0x620(0x20) 0x603(0x3) 0x602(0x2) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0) 0x600(0x0)
+RA_CFG_LINK_TRAN_SETTINS -> MAX_BLK_LEN : 512 
+*/

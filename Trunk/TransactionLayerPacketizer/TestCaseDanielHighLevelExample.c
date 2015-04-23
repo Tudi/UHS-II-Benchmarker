@@ -123,12 +123,13 @@ void SendRawPacketDebug( u32 *FullPacket, int Sleep, char *dbgMsg )
 
 void TestCaseDanielHighLevel()
 {
+
 	SendRawPacketDebug( device_init_0, 1, "Send : Device Init 0\n" );
 	SendRawPacketDebug( device_init_1, 1, "Send : Device Init 1\n" );
 
 	SendRawPacketDebug( enumeration_0, 1, "Send : Device Enum 1\n" );
-
-	{
+	/**/
+/*	{
 		unsigned char PacketStore[50];
 		int SendLen, RecvLen, i;
 		TLPU_RES						*P_RES;

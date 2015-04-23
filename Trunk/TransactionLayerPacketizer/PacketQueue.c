@@ -84,7 +84,7 @@ void SendPacketToDevice( struct TransactionLayerPacket *Packet )
 
 void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
 {
-	int WaitTimeout;
+	int WaitTimeout = 0;
 	unsigned int DataOnPort;
 
 	// set it even if we do not have a reply to avoid bugs
@@ -109,18 +109,18 @@ void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
 //xil_printf( "\n");
 
 	//read packet content
-//	xil_printf( "data read : " );
+	xil_printf( "data read : " );
 	if( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER )
 	{
 		do{
 			if( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA && Packet->PacketSizeResponse < MaxPacketSize )
 			{
 				Packet->PacketResponse[ Packet->PacketSizeResponse ] = ( DataOnPort & ( ~DATA_READ_FLAGS_IS_DATA ) );
-//xil_printf( " 0x%X(0x%X)", data_in0, (int)(Data[ ReturnLen ]) );
+xil_printf( " 0x%X(0x%X)", DataOnPort, (int)(Packet->PacketResponse[ Packet->PacketSizeResponse ]) );
 				Packet->PacketSizeResponse = Packet->PacketSizeResponse + 1;
 			}
 			DataOnPort = Xil_In32( RECEIV_ADDR );
 		}while( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA );
 	}
-//xil_printf( "\n");
+xil_printf( "\n");
 }
