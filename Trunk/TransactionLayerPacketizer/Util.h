@@ -31,6 +31,4 @@ Required to simulate Xilinx API
 */
 #define xil_printf printf
 void SleepMS( int Count );
-int Xil_in32( int x );
-
 #endif

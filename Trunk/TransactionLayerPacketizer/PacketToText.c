@@ -16,3 +16,9 @@ void FormatToTextCCMD( TLPU_CCMD *P_CCMD )
 	xil_printf( "CCMD->Argument->ReadWrite : %d \n", P_CCMD->Fields.Argument.Fields.ReadWrite );
 	xil_printf( "CCMD->Argument->IOADDR0 : %d \n", P_CCMD->Fields.Argument.Fields.IOADDR0 );
 }
+
+void FormatToTextCCMDResp( TLPU_RES *P_RES )
+{
+	//header is compatible, Only payload is different
+	FormatToTextCCMD( (TLPU_CCMD *)P_RES );
+}

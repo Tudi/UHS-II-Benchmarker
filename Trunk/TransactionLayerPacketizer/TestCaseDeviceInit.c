@@ -14,7 +14,7 @@ void TestCaseDeviceInit()
 	InitHostTransactionStore();
 
 	/////////////////////////////////////////
-	// Device Init begin
+	// Device Init begin - page 153
 	/////////////////////////////////////////
 #ifdef	XILINX_PROJECT_BUILD
 	xil_printf( "Started Device Init\n");

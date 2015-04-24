@@ -236,18 +236,18 @@ Started Device Enum
 Sending Data : 0x681(0x81) 0x600(0x0) 0x692(0x92) 0x603(0x3) 0x6F0(0xF0) 0x600(0x0) 0x600(0x0) 0x600(0x0)
 data read :  0x6A0(0xA0) 0x610(0x10) 0x612(0x12) 0x603(0x3)
 Error : Device Enum packet is missing data ( 4 bytes of content! ) 
-CCMD->Header->DestinationID : 1 
-CCMD->Header->PacketType : 0 
-CCMD->Header->NativePacket : 1 
-CCMD->Header->TransactionID : 0 
-CCMD->Header->Reserved : 0 
-CCMD->Header->SourceID : 0 
-CCMD->Header->DestinationID : 1 
-CCMD->Argument->IOADDR1 : 2 
-CCMD->Argument->PLEN : 1 
-CCMD->Argument->Reserved : 0 
-CCMD->Argument->ReadWrite : 1 
-CCMD->Argument->IOADDR0 : 3 
+CCMD->Header->DestinationID : 0
+CCMD->Header->PacketType : 2
+CCMD->Header->NativePacket : 1
+CCMD->Header->TransactionID : 0
+CCMD->Header->Reserved : 0
+CCMD->Header->SourceID : 1
+CCMD->Header->DestinationID : 0
+CCMD->Argument->IOADDR1 : 2
+CCMD->Argument->PLEN : 1
+CCMD->Argument->Reserved : 0
+CCMD->Argument->ReadWrite : 0
+CCMD->Argument->IOADDR0 : 3
 Device Enum  FirstNodeID : 0 
 Device Enum  LastNodeID : 0 
 Error : Device id set to 1 due to missing data 

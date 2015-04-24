@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 
+// page 82 for packet framing
+// page 193 for flow control
 void TestCaseWriteRead()
 {
 	struct TransactionLayerPacket	*PacketQueueStore,*PacketQueueStoreData;
@@ -83,5 +85,9 @@ void TestCaseWriteRead()
 
 	/////////////////////////////////////////
 	// Write some data - page 192 - end
+	/////////////////////////////////////////
+
+	/////////////////////////////////////////
+	// Read some data - page 196 - start
 	/////////////////////////////////////////
 }

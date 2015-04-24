@@ -1,7 +1,7 @@
 #pragma once
 
 // set / enable proper build implementations
-#define XILINX_PROJECT_BUILD
+//#define XILINX_PROJECT_BUILD
 
 //standard says 30
 #define MAX_PACKET_RESEND_ON_NO_REPLY	5
@@ -45,7 +45,8 @@
 		#define NULL 0
 	#endif
 
-	#define Xil_Out32( a, b ) 1==1;
+	#define Xil_Out32( a, b )	1==1;
+	#define Xil_In32( a )		PHY0_PACKET_FOOTER1
 //	#define Xil_Out32( a, b ) printf( "0x%03 ", b );
 
 	#if !defined( assert )
@@ -56,6 +57,7 @@
 		#endif
 	#endif
 
+	#include <stdio.h>
 	#include "Util.h"
 	#include "PacketTypes.h"
 	#include "PacketBuilder.h"

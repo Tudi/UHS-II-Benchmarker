@@ -175,38 +175,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PacketBuilder.c"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketBuilder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketParser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketQueue.c"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketQueue.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketToText.c"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketToText.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PacketTypes.h"
 				>
 			</File>
@@ -219,14 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TransactionHandler.c"
-				>
-			</File>
-			<File
-				RelativePath=".\TransactionHandler.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util.c"
 				>
 			</File>
@@ -236,16 +196,36 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="Formatters"
 			>
+			<File
+				RelativePath=".\PacketToText.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketToText.h"
+				>
+			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Transaction"
 			>
+			<File
+				RelativePath=".\PacketQueue.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketQueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransactionHandler.c"
+				>
+			</File>
+			<File
+				RelativePath=".\TransactionHandler.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="TestCases"
@@ -272,6 +252,26 @@
 			</File>
 			<File
 				RelativePath=".\TestCaseWriteRead.c"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="PacketHandlers"
+			>
+			<File
+				RelativePath=".\PacketBuilder.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketBuilder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketParser.h"
 				>
 			</File>
 		</Filter>

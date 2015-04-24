@@ -51,7 +51,7 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 
 	if( InvalidSizeDetected != 0 )
 	{
-		FormatToTextCCMD( P_CCMD );
+		FormatToTextCCMDResp( P_RES );
 		xil_printf( "Device Enum  FirstNodeID : %d \n", DeviceEnumPayload->Fields.FirstNodeID );
 		xil_printf( "Device Enum  LastNodeID : %d \n", DeviceEnumPayload->Fields.LastNodeID );
 	}
@@ -65,7 +65,7 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 			HostState.DeviceID = DeviceEnumPayload->Fields.FirstNodeID;
 		else
 		{
-			HostState.DeviceID = 1;
+			HostState.DeviceID = P_RES->Fields.Header.Fields.SourceID;
 			xil_printf( "Error : Device id set to 1 due to missing data \n" );
 		}
 	}

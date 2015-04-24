@@ -61,6 +61,7 @@ int GetByteLenFromPLen( int PLen )
 		return 16;
 	return 0;
 }
+
 #ifndef XILINX_PROJECT_BUILD
 BYTE BinToDec( __int64 N )
 {
@@ -81,11 +82,6 @@ void SleepMS( int Count )
 {
 	volatile int a;
 	for( a = 0; a < Count; a++ );
-}
-
-int Xil_In32( int x )
-{
-	return PHY0_PACKET_FOOTER1;
 }
 
 #endif
