@@ -1,30 +1,5 @@
 #include "StdAfx.h"
 
-int ConsoleReadLine( char *Buffer, int MaxLen )
-{
-	int i;
-	for(i = 0; i < MaxLen; )
-	{   
-		int c = _getch(); 
-		if( c == '\t' )
-			c = ' ';
-		if( c == '\r' || c == '\n' )
-		{
-			Buffer[i] = 0;
-			printf("\n");
-			return i;
-		}
-		else if( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == ' ' )
-			Buffer[i] = (char)c;
-		else
-			continue;
-		printf( "%c", c );
-		i++;
-	}   
-
-	return 0; 
-}
-
 void EmbededMemSet( char *mem, char val, int size )
 {
 	int i;
@@ -62,7 +37,16 @@ int GetByteLenFromPLen( int PLen )
 	return 0;
 }
 
+void SafeStrCpy( char *Src, char *Dst, int MaxDestLen )
+{
+	int i;
+	for( i=0;i<MaxDestLen-1 && Src[i]!=0; i++ )
+		Dst[i] = Src[i];
+	Dst[i] = 0;
+}
+
 #ifndef XILINX_PROJECT_BUILD
+#include <conio.h>
 BYTE BinToDec( __int64 N )
 {
 	int ret = 0;
@@ -82,6 +66,31 @@ void SleepMS( int Count )
 {
 	volatile int a;
 	for( a = 0; a < Count; a++ );
+}
+
+int ConsoleReadLine( char *Buffer, int MaxLen )
+{
+	int i;
+	for(i = 0; i < MaxLen; )
+	{   
+		int c = _getch(); 
+		if( c == '\t' )
+			c = ' ';
+		if( c == '\r' || c == '\n' )
+		{
+			Buffer[i] = 0;
+			printf("\n");
+			return i;
+		}
+		else if( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == ' ' )
+			Buffer[i] = (char)c;
+		else
+			continue;
+		printf( "%c", c );
+		i++;
+	}   
+
+	return 0; 
 }
 
 #endif

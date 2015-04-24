@@ -1,5 +1,7 @@
 #pragma once
 
+#define PACKET_WAIT_ARRIVE_SAFE_TIME_MS	10
+
 // to make a broadcast, you need to have DID = 0 and SID = 0
 // right now broadcast / ring connection is not supported. Need to add multiple device IDs ( first / last ) to be able to broadcast / comunicate with them
 struct HostTransactionStore
@@ -11,6 +13,7 @@ struct HostTransactionStore
 	int DeviceFinishedInitialize;
 	int DeviceFinishedEnum;
 //	int	DeviceMaxBlockLength,UsedBlockLength;	// by default it's 512
+	int	PhysicalLayerSendFirstPacket;
 };
 
 struct DeviceTransactionStore
@@ -25,4 +28,4 @@ extern struct HostTransactionStore		HostState;
 extern struct DeviceTransactionStore	DeviceState;
 
 void InitHostTransactionStore();
-void InitNewHostDeviceTransaction();
+int InitNewHostDeviceTransaction();

@@ -219,6 +219,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketTimer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketTimer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TransactionHandler.c"
 				>
 			</File>

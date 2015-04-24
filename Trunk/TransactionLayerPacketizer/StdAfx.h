@@ -62,6 +62,7 @@
 	#include "PacketTypes.h"
 	#include "PacketBuilder.h"
 	#include "PacketToText.h"
+	#include "PacketTimer.h"
 	#include "RegisterAddresses.h"
 	#include "PacketQueue.h"
 	#include "TransactionHandler.h"

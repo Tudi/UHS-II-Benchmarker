@@ -20,6 +20,10 @@ void FlipPacketBytes( char *PacketData, int PacketLen );
 Convert Packet Plen type to byte length
 */
 int GetByteLenFromPLen( int PLen );
+/*
+Safe String Copy
+*/
+void SafeStrCpy( char *Src, char *Dst, int MaxDestLen );
 
 #ifndef XILINX_PROJECT_BUILD
 /*

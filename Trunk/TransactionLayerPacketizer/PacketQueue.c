@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 
-#define MAX_PACKETS_TO_QUEUE	50
 struct TransactionLayerPacket	PacketStoreCache[MAX_PACKETS_TO_QUEUE];
 
 void InitPacketQueueForNewTestCase()
@@ -63,6 +62,9 @@ void SendPacketToDevice( struct TransactionLayerPacket *Packet )
 	if( Packet->SentPacketCounter >= Packet->SendCount ) 
 		Packet->PacketState = PS_PACKET_IS_SENT;
 
+	//memorize TransactionId for later packet processing
+	Packet->TransactionId = HostState.TransactionID;
+
 	//signal packet start for link layer
 	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_HEADER0 );
 	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_HEADER1 );
@@ -80,6 +82,9 @@ void SendPacketToDevice( struct TransactionLayerPacket *Packet )
 	//signal packet end for link layer
 	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_FOOTER0 );
 	Xil_Out32(TRANSM_ADDR, (unsigned int)PHY0_PACKET_FOOTER1 );
+
+	//initialize timer for the roundtrip of the packet
+	PacketSendStartTimer( Packet );
 }
 
 void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
@@ -93,10 +98,13 @@ void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
 	//end transaction of send -> receive if packet does not require a reply
 	// used for broadcast read CCMD packet ( SID = DID = 0 )
 	if( Packet != NULL && Packet->PacketDoesNotHaveDeviceReply == 1 )
+	{
+		PacketRecvStopTimer( Packet );
 		return;
+	}
 
 	//have to sleep. No idea why
-	SleepMS( 10 );
+//	SleepMS( 10 );
 
 //xil_printf( "\n");
 	//wait until we see data header
@@ -112,6 +120,11 @@ void WaitDevicePacketReply( struct TransactionLayerPacket *Packet )
 	xil_printf( "data read : " );
 	if( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER )
 	{
+		//we recevied usable data. Stop the timer for the packet roundtrip
+		if( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA )
+			PacketRecvStopTimer( Packet );
+
+		//read data until we will find packet footer in the FIFO
 		do{
 			if( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA && Packet->PacketSizeResponse < MaxPacketSize )
 			{

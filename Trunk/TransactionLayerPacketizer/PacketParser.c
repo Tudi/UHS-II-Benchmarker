@@ -23,6 +23,10 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 	TLPU_CCMD_PayloadDeviceEnum		*DeviceEnumPayload;
 	int								InvalidSizeDetected;
 
+	P_CCMD = (TLPU_CCMD*)&Packet->Packet[0];
+	P_RES = (TLPU_RES*)&Packet->PacketResponse[0];
+	DeviceEnumPayload = (TLPU_CCMD_PayloadDeviceEnum*)&Packet->PacketResponse[sizeof(P_RES->Fields)];
+
 	if( Packet->PacketSizeResponse < sizeof( P_RES->Fields ) )
 	{
 		xil_printf( "Error : Device Enum packet is too small. Expecting %d, got %d \n", sizeof( P_RES->Fields ) + 1, Packet->PacketSizeResponse );
@@ -44,10 +48,6 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 		InvalidSizeDetected = 1;
 		xil_printf( "Error : Device Enum packet is missing data ( 4 bytes of content! ) \n" );
 	}
-
-	P_CCMD = (TLPU_CCMD*)&Packet->Packet[0];
-	P_RES = (TLPU_RES*)&Packet->PacketResponse[0];
-	DeviceEnumPayload = (TLPU_CCMD_PayloadDeviceEnum*)&Packet->PacketResponse[sizeof(P_RES->Fields)];
 
 	if( InvalidSizeDetected != 0 )
 	{

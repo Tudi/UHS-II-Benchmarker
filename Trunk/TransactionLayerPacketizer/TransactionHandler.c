@@ -11,8 +11,9 @@ void InitHostTransactionStore()
 	EmbededMemSet( (char*)&DeviceState, 0, sizeof( DeviceState ) );
 }
 
-void InitNewHostDeviceTransaction()
+int InitNewHostDeviceTransaction()
 {
 	//on page 190 it says trasaction id is always 0 ?
 	HostState.TransactionID++;
+	return HostState.TransactionID;
 }

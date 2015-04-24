@@ -84,11 +84,17 @@ void TestCaseDeviceInit()
 		//non async implementation of data send
 		SendPacketToDevice( PacketQueueStore );
 
+		//if the FIFO of the physical layer is not initialized, you can read bad data from it. Make sure we wait enough for the first packet to arrive in it.
+		if( HostState.PhysicalLayerSendFirstPacket == 0 )
+		{
+			HostState.PhysicalLayerSendFirstPacket = 1;
+			SleepMS( PACKET_WAIT_ARRIVE_SAFE_TIME_MS );
+		}
+
 		//wait for device reply
 		WaitDevicePacketReply( PacketQueueStore );
 
-		// parse the reply and in case CF is set to 0 than resend this packet until CF = 1
-		// after MAX_PACKET_RESEND_ON_NO_REPLY send tries Host needs to treat init configuration as BAD
+		// we are waiting for device to give us he's device ID
 		ParsePcktCCMDDeviceEnum( PacketQueueStore );
 
 		DeviceInitRetryCounter++;
