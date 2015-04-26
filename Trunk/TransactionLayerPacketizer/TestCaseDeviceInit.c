@@ -53,12 +53,15 @@ void TestCaseDeviceInit()
 
 	//seems like device will not signal us completion flag ? :O
 	HostState.DeviceFinishedInitialize = 1;
-	if( HostState.DeviceID == HostState.HostID )
-		HostState.DeviceID = 1;
+//	if( HostState.DeviceID == HostState.HostID )
+//		HostState.DeviceID = 1;
 
 	/////////////////////////////////////////
 	// Device Init end
 	/////////////////////////////////////////
+
+	//throw remaining data from FIFO
+	WaitPhysicalLayerEmptyFifo();
 
 	/////////////////////////////////////////
 	// Device enum begin - page 159 for enumeration mechanism
@@ -109,4 +112,7 @@ void TestCaseDeviceInit()
 	/////////////////////////////////////////
 	// Device enum end
 	/////////////////////////////////////////
+
+	//throw remaining data from FIFO
+	WaitPhysicalLayerEmptyFifo();
 }

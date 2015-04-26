@@ -1,7 +1,7 @@
 #pragma once
 
 // set / enable proper build implementations
-//#define XILINX_PROJECT_BUILD
+#define XILINX_PROJECT_BUILD
 
 //standard says 30
 #define MAX_PACKET_RESEND_ON_NO_REPLY	5

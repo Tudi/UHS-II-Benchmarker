@@ -135,5 +135,38 @@ xil_printf( " 0x%X(0x%X)", DataOnPort, (int)(Packet->PacketResponse[ Packet->Pac
 			DataOnPort = Xil_In32( RECEIV_ADDR );
 		}while( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA );
 	}
+	else
+		xil_printf( " Data read wait timeout !" );
 xil_printf( "\n");
+}
+
+void WaitPhysicalLayerEmptyFifo()
+{
+	int WaitTimeout = 0;
+	unsigned int DataOnPort;
+	int FoundPacketInFiFO;
+
+	do{
+		FoundPacketInFiFO = 0;
+		//wait for non data
+		do{
+			DataOnPort = Xil_In32( RECEIV_ADDR );
+			WaitTimeout = WaitTimeout + 1 ;
+	//xil_printf( " 0x%X", data_in0 );
+		}while( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER && ( DataOnPort & DATA_READ_FLAGS_NOT_DATA ) == DATA_READ_FLAGS_NOT_DATA );
+	//	xil_printf( "wait count : %d \n", WaitTimeout );
+	//xil_printf( "\n");
+
+		//read packet content
+	//	xil_printf( "data read : " );
+		if( WaitTimeout < MAX_WAIT_READ_PACKET_HEADER )
+		{
+			//read data until we will find packet footer in the FIFO
+			while( ( DataOnPort & DATA_READ_FLAGS_IS_DATA ) == DATA_READ_FLAGS_IS_DATA )
+			{
+				FoundPacketInFiFO = 1;
+				DataOnPort = Xil_In32( RECEIV_ADDR );
+			}
+		}
+	}while( FoundPacketInFiFO == 1 );
 }

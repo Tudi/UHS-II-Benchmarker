@@ -49,11 +49,17 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 		xil_printf( "Error : Device Enum packet is missing data ( 4 bytes of content! ) \n" );
 	}
 
+	xil_printf( "Device Enum  FirstNodeID : %d \n", DeviceEnumPayload->Fields.FirstNodeID );
+	xil_printf( "Device Enum  LastNodeID : %d \n", DeviceEnumPayload->Fields.LastNodeID );
+	if( InvalidSizeDetected == 0 && DeviceEnumPayload->Fields.FirstNodeID != DeviceEnumPayload->Fields.LastNodeID )
+	{
+		xil_printf( "Error : Device Enum did not give us a valid device ID. Retry Query \n" );
+		return;
+	}
+
 	if( InvalidSizeDetected != 0 )
 	{
 		FormatToTextCCMDResp( P_RES );
-		xil_printf( "Device Enum  FirstNodeID : %d \n", DeviceEnumPayload->Fields.FirstNodeID );
-		xil_printf( "Device Enum  LastNodeID : %d \n", DeviceEnumPayload->Fields.LastNodeID );
 	}
 
 	// device finished enum if DID = SID
@@ -62,7 +68,9 @@ void ParsePcktCCMDDeviceEnum( struct TransactionLayerPacket *Packet )
 		HostState.DeviceFinishedEnum = 1;
 		//get the device ID
 		if( InvalidSizeDetected == 0 )
+		{
 			HostState.DeviceID = DeviceEnumPayload->Fields.FirstNodeID;
+		}
 		else
 		{
 			HostState.DeviceID = P_RES->Fields.Header.Fields.SourceID;

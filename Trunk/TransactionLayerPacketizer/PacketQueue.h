@@ -58,3 +58,7 @@ void SendPacketToDevice( struct TransactionLayerPacket *Packet );
 Using the Microblaze provided Link Layer API, wait for the reply to the last sent packet and read the reply
 */
 void WaitDevicePacketReply( struct TransactionLayerPacket *Packet );
+/*
+Using the Microblaze provided Link Layer API, read every usable packet until FIFO is empty. Should only be used when we expect duplicate packets that can be thrown away
+*/
+void WaitPhysicalLayerEmptyFifo( );
